@@ -904,17 +904,29 @@ def rendered(
             managed_block(text, BEGIN, END, body).encode(),
             state(path)["mode"] or 0o644,
         )
+    verification = row.get("verification", {})
+    public_verification = {
+        key: value
+        for key, value in verification.items()
+        if key != "execution_environment"
+    }
     metadata = {
         "schema_version": SCHEMA,
         "release": {k: release[k] for k in ("name", "version", "revision")},
         "release_manifest_sha256": identity,
         "profile": row.get("profile", "tools"),
         "integration_mode": row["integration_mode"],
-        "verification": row.get("verification", {}),
+        "verification": public_verification,
         "authorities": list(dict.fromkeys(row.get("authorities", []))),
         "instruction_aliases": aliases,
         "skill_adapters": row.get("skill_adapters", []),
     }
+    if "execution_environment" in verification:
+        metadata["execution_environment_binding"] = {
+            "version": execution_policy(verification)["version"],
+            "source": "private-registry",
+            "sha256": digest(canonical(verification["execution_environment"])),
+        }
     generated[".governance/fleet.json"] = (canonical(metadata), 0o644)
     for entry in row.get("managed_files", []):
         name = relative(entry["path"])

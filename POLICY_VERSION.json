@@ -1,7 +1,7 @@
 {
   "last_updated": "2026-10-04",
   "notes": "Guarded explicit fleet distribution; compatibility/1.1.3 preserves the original legacy baseline. Distribution and pack versions differ.",
-  "pack_version": "1.3.0",
-  "policy_version": "1.3.0",
-  "release_manifest_sha256": "0750e59a082972ac4dfa08d73aafa079e3be4dc024b2887920a54d396b9a7ddb"
+  "pack_version": "1.3.1",
+  "policy_version": "1.3.1",
+  "release_manifest_sha256": "0dbb35dc8fcccc60f32de726eb0131a24759a6c683a8a5a6ea6b4a2d6d405856"
 }
