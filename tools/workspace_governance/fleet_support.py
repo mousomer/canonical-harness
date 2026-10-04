@@ -11,6 +11,7 @@ import json
 import os
 import re
 import secrets
+import shlex
 import stat
 import subprocess
 from collections.abc import Iterator
@@ -24,6 +25,7 @@ END = "<!-- END workspace-governance managed dispatch -->"
 VERIFY_BEGIN = "# BEGIN workspace-governance managed verification"
 VERIFY_END = "# END workspace-governance managed verification"
 PROTECTED = {
+    "governance_distribution_source",
     "application_private_git_store",
     "repository_metadata_store",
     "dependency_or_tool_cache",
@@ -36,6 +38,55 @@ PROTECTED = {
 }
 MODES = {"direct", "inherited_checkout", "external", "blocked"}
 MAKE_ENVIRONMENT_VARIABLES = ("MAKEFLAGS", "MFLAGS", "MAKEFILES", "GNUMAKEFLAGS")
+EXECUTION_POLICY = "workspace-governance-execution-v2"
+DEFAULT_TOOL_PATH = ("/usr/bin", "/bin", "/usr/sbin", "/sbin", "/opt/homebrew/bin")
+DEFAULT_TOOLS = {
+    "sh": "/bin/sh",
+    "bash": "/bin/bash",
+    "zsh": "/bin/zsh",
+    "make": "/usr/bin/make",
+    "gmake": "/opt/homebrew/bin/gmake",
+}
+DEFAULT_INHERITED_NAMES = frozenset(
+    {
+        "HOME",
+        "USER",
+        "LOGNAME",
+        "LANG",
+        "LC_ALL",
+        "LC_CTYPE",
+        "TERM",
+        "TMPDIR",
+        "TMP",
+        "TEMP",
+        "XDG_CONFIG_HOME",
+        "XDG_STATE_HOME",
+        "XDG_CACHE_HOME",
+        "CODEX_MODE",
+        "CI",
+    }
+)
+PROHIBITED_ENVIRONMENT_NAMES = frozenset(
+    {
+        *MAKE_ENVIRONMENT_VARIABLES,
+        "PATH",
+        "BASH_ENV",
+        "ENV",
+        "ZDOTDIR",
+        "SHELLOPTS",
+        "BASHOPTS",
+        "CDPATH",
+        "IFS",
+        "PYTHONPATH",
+        "PYTHONHOME",
+        "PYTHONINSPECT",
+        "LD_PRELOAD",
+        "LD_LIBRARY_PATH",
+        "DYLD_INSERT_LIBRARIES",
+        "DYLD_LIBRARY_PATH",
+        "DYLD_FRAMEWORK_PATH",
+    }
+)
 
 
 class FleetError(ValueError):
@@ -136,6 +187,7 @@ def atomic(path: Path, data: bytes, mode: int = 0o600) -> None:
                 os.fchmod(stream.fileno(), mode)
                 os.fsync(stream.fileno())
             os.replace(temporary, path.name, src_dir_fd=directory, dst_dir_fd=directory)
+            os.fsync(directory)
         finally:
             try:
                 os.unlink(temporary, dir_fd=directory)
@@ -149,8 +201,27 @@ def remove(path: Path) -> None:
 
 
 def git_query(root: Path, *args: str, optional: bool = False) -> bytes | None:
+    environment = {
+        key: value
+        for key, value in os.environ.items()
+        if key in DEFAULT_INHERITED_NAMES
+    }
+    environment.update(PATH=":".join(DEFAULT_TOOL_PATH), GIT_PAGER="cat", PAGER="cat")
     result = subprocess.run(
-        ["git", "-C", str(root), *args], capture_output=True, check=False, timeout=15
+        [
+            "/usr/bin/git",
+            "-c",
+            "core.fsmonitor=false",
+            "-c",
+            "core.untrackedCache=false",
+            "-C",
+            str(root),
+            *args,
+        ],
+        capture_output=True,
+        check=False,
+        timeout=15,
+        env=environment,
     )
     if result.returncode:
         if optional:
@@ -182,6 +253,10 @@ def untracked_entry(root: Path, name: str) -> dict[str, Any]:
                 for chunk in iter(lambda: stream.read(1024 * 1024), b""):
                     content.update(chunk)
             record["sha256"] = content.hexdigest()
+        elif stat.S_ISDIR(info.st_mode):
+            raise FleetError(
+                "Git-visible directory identity unsupported; declare a child checkout scope"
+            )
         else:
             record["device"] = info.st_rdev
     return record
@@ -215,11 +290,46 @@ def git_identity(root: Path) -> dict[str, Any]:
     head, head_state = git_head(root)
     status = git_query(root, "status", "--porcelain", "-z", "--untracked-files=all")
     delta = (
-        git_query(root, "diff", "--binary", "HEAD")
+        git_query(
+            root,
+            "diff",
+            "--binary",
+            "--no-ext-diff",
+            "--no-textconv",
+            "--no-color",
+            "--full-index",
+            "--no-renames",
+            "--src-prefix=a/",
+            "--dst-prefix=b/",
+            "HEAD",
+        )
         if head
         else (
-            git_query(root, "diff", "--binary", "--cached")
-            + git_query(root, "diff", "--binary")
+            git_query(
+                root,
+                "diff",
+                "--binary",
+                "--no-ext-diff",
+                "--no-textconv",
+                "--no-color",
+                "--full-index",
+                "--no-renames",
+                "--src-prefix=a/",
+                "--dst-prefix=b/",
+                "--cached",
+            )
+            + git_query(
+                root,
+                "diff",
+                "--binary",
+                "--no-ext-diff",
+                "--no-textconv",
+                "--no-color",
+                "--full-index",
+                "--no-renames",
+                "--src-prefix=a/",
+                "--dst-prefix=b/",
+            )
         )
     )
     names = git_query(root, "ls-files", "--others", "--exclude-standard", "-z")
@@ -240,30 +350,105 @@ def git_identity(root: Path) -> dict[str, Any]:
     }
 
 
+def _runtime_release_files(
+    source_root: Path, entries: list[dict[str, Any]], expected_sources: set[Path]
+) -> dict[str, bytes]:
+    payload = {}
+    for entry in entries:
+        name = relative(entry["path"])
+        if name in payload:
+            raise FleetError("Duplicate release destination")
+        source = confined(source_root, entry["source"])
+        data = source.read_bytes()
+        if digest(data) != entry["sha256"]:
+            raise FleetError("Release byte mismatch")
+        if entry.get("mode", 0o644) not in {0o644, 0o755}:
+            raise FleetError("Unsupported release mode")
+        if state(source)["mode"] != entry.get("mode", 0o644):
+            raise FleetError("Release source mode mismatch")
+        expected_sources.add(source)
+        payload[name] = data
+    if not payload:
+        raise FleetError("Release has no files")
+    return payload
+
+
+def _component_release_files(
+    source_root: Path, name: str, component: dict[str, Any], expected_sources: set[Path]
+) -> None:
+    if (
+        not isinstance(component, dict)
+        or type(component.get("schema_version")) is not int
+        or component["schema_version"] != 1
+    ):
+        raise FleetError("Unsupported release component")
+    files = component.get("files")
+    if (
+        not isinstance(files, list)
+        or not files
+        or digest(canonical(files)) != component.get("identity_sha256")
+    ):
+        raise FleetError("Release component file identity mismatch")
+    destinations = set()
+    for entry in files:
+        destination = relative(entry["path"])
+        if destination in destinations or not entry["source"].startswith(name + "/"):
+            raise FleetError("Duplicate or misplaced release component file")
+        destinations.add(destination)
+        source = confined(source_root, entry["source"])
+        if (
+            source in expected_sources
+            or entry.get("mode", 0o644) not in {0o644, 0o755}
+            or state(source)
+            != {"sha256": entry["sha256"], "mode": entry.get("mode", 0o644)}
+        ):
+            raise FleetError("Release component bytes or modes differ")
+        expected_sources.add(source)
+
+
+def _release_source_set(source_root: Path, expected_sources: set[Path]) -> None:
+    for base, directories, names in os.walk(source_root, followlinks=False):
+        if any((Path(base) / name).is_symlink() for name in directories):
+            raise FleetError("Symlink directory in immutable release")
+        for name in names:
+            if Path(base) / name not in expected_sources:
+                raise FleetError("Undeclared file in immutable release")
+
+
 def release_files(
     path: Path, expected: str | None = None
 ) -> tuple[dict[str, Any], str, dict[str, bytes]]:
-    release = load(path)
+    if path.is_symlink() or not path.is_file():
+        raise FleetError("Release manifest must be a regular file")
+    release = json.loads(path.read_text(encoding="utf-8"))
+    if (
+        not isinstance(release, dict)
+        or type(release.get("schema_version")) is not int
+        or release["schema_version"] not in {1, 2}
+    ):
+        raise FleetError("Unsupported release schema")
     identity = digest(canonical(release))
     if expected is not None and identity != expected:
         raise FleetError("Release manifest changed since planning")
     for key in ("name", "version", "revision"):
         if not isinstance(release.get(key), str) or not release[key]:
-            raise FleetError(f"Release missing {key}")
-    source_root = (path.parent / release.get("release_root", ".")).resolve()
-    payload: dict[str, bytes] = {}
-    for entry in release.get("files", []):
-        name = relative(entry["path"])
-        if name in payload:
-            raise FleetError(f"Duplicate release destination: {name}")
-        data = confined(source_root, entry["source"]).read_bytes()
-        if digest(data) != entry["sha256"]:
-            raise FleetError(f"Release byte mismatch: {name}")
-        if entry.get("mode", 0o644) not in {0o644, 0o755}:
-            raise FleetError(f"Unsupported release mode: {name}")
-        payload[name] = data
-    if not payload:
-        raise FleetError("Release has no files")
+            raise FleetError("Release identity is incomplete")
+    root_name = release.get("release_root", ".")
+    source_root = (
+        path.parent.resolve()
+        if root_name == "."
+        else confined(path.parent.resolve(), root_name)
+    )
+    expected_sources = {path.resolve()}
+    payload = _runtime_release_files(
+        source_root, release.get("files", []), expected_sources
+    )
+    for name in ("verification", "distribution"):
+        if name in release:
+            if release["schema_version"] != 2:
+                raise FleetError("Release components require schema two")
+            _component_release_files(source_root, name, release[name], expected_sources)
+    _release_source_set(source_root, expected_sources)
     return release, identity, payload
 
 
@@ -295,9 +480,15 @@ def managed_block(
         raise FleetError("Malformed or duplicate managed section")
     block = f"{start}\n{body.rstrip()}\n{end}\n"
     if start in original:
-        first, last = original.index(start), original.index(end) + len(end)
-        if last < first:
+        first, end_start = original.index(start), original.index(end)
+        if end_start <= first:
             raise FleetError("Managed section ends before it begins")
+        for position, marker in ((first, start), (end_start, end)):
+            if (position and original[position - 1] != "\n") or original[
+                position + len(marker) : position + len(marker) + 1
+            ] not in {"", "\n"}:
+                raise FleetError("Managed markers must occupy complete lines")
+        last = end_start + len(end)
         if original[last : last + 1] == "\n":
             last += 1
         return original[:first] + block + original[last:]
@@ -348,13 +539,101 @@ def make_runner(text: str, runner: dict[str, Any]) -> str:
     return managed_block(text, VERIFY_BEGIN, VERIFY_END, hook)
 
 
+def prohibited_environment_name(name: str) -> bool:
+    return name in PROHIBITED_ENVIRONMENT_NAMES or name.startswith(
+        ("BASH_FUNC_", "GIT_", "LD_", "DYLD_")
+    )
+
+
+def execution_policy(verification: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Explicit approved inputs, not a sandbox against an actor with this UID."""
+    declaration = (verification or {}).get("execution_environment", {})
+    if not isinstance(declaration, dict) or set(declaration) - {
+        "version",
+        "inherit",
+        "path",
+        "approved_tools",
+    }:
+        raise FleetError("Invalid execution environment declaration")
+    if declaration.get("version", EXECUTION_POLICY) != EXECUTION_POLICY:
+        raise FleetError("Unsupported execution environment policy")
+    inherited = declaration.get("inherit", sorted(DEFAULT_INHERITED_NAMES))
+    if (
+        not isinstance(inherited, list)
+        or any(
+            not isinstance(name, str)
+            or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name)
+            or prohibited_environment_name(name)
+            for name in inherited
+        )
+        or len(set(inherited)) != len(inherited)
+    ):
+        raise FleetError("Unsafe execution environment inheritance")
+    paths = declaration.get("path", list(DEFAULT_TOOL_PATH))
+    if (
+        not isinstance(paths, list)
+        or not paths
+        or any(
+            not isinstance(path, str)
+            or not Path(path).is_absolute()
+            or ":" in path
+            or str(Path(path)) != path
+            or ".." in Path(path).parts
+            for path in paths
+        )
+    ):
+        raise FleetError("Execution PATH requires approved absolute directories")
+    tools = dict(DEFAULT_TOOLS)
+    declared_tools = declaration.get("approved_tools", {})
+    if not isinstance(declared_tools, dict) or set(declared_tools) - set(DEFAULT_TOOLS):
+        raise FleetError("Unknown approved shell or Make executable")
+    for name, path in declared_tools.items():
+        if (
+            not isinstance(path, str)
+            or not Path(path).is_absolute()
+            or str(Path(path)) != path
+            or ".." in Path(path).parts
+        ):
+            raise FleetError("Approved executable requires an absolute path")
+        tools[name] = path
+    return {
+        "version": EXECUTION_POLICY,
+        "inherit": sorted(inherited),
+        "path": paths,
+        "approved_tools": tools,
+    }
+
+
+def approved_executable(
+    value: str, verification: dict[str, Any] | None = None
+) -> tuple[str, dict[str, Any]]:
+    policy = execution_policy(verification)
+    name = Path(value).name
+    expected = policy["approved_tools"].get(name)
+    if expected is None or value not in {name, expected}:
+        raise FleetError("Executable differs from the approved execution policy")
+    path = Path(expected)
+    if not path.is_file() or not os.access(path, os.X_OK):
+        raise FleetError("Approved executable is unavailable")
+    return expected, {
+        "path": expected,
+        "resolved_path": str(path.resolve()),
+        "sha256": digest(path.read_bytes()),
+        "mode": stat.S_IMODE(path.stat().st_mode),
+    }
+
+
 def command_without_env(argv: list[str]) -> list[str]:
     if Path(argv[0]).name != "env":
         return argv
+    if argv[0] not in {"env", "/usr/bin/env"}:
+        raise FleetError("Foreign env executable is forbidden")
     index = 1
     while index < len(argv) and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*=.*", argv[index]):
-        if argv[index].split("=", 1)[0] in MAKE_ENVIRONMENT_VARIABLES:
-            raise FleetError("Make environment must not replace or bypass the verifier")
+        if prohibited_environment_name(argv[index].split("=", 1)[0]):
+            raise FleetError(
+                "Environment assignment may replace or bypass the verifier"
+            )
         index += 1
     if index < len(argv) and argv[index] == "--":
         index += 1
@@ -397,11 +676,17 @@ def make_command_targets(
         "Makefile",
     )
     index = 1
+    explicit_file = False
     while index < len(command):
         argument = command[index]
         if argument in {"-f", "--file"} and index + 1 < len(command):
+            if explicit_file:
+                raise FleetError("Repeated Makefile arguments are forbidden")
+            explicit_file = True
             index += 1
             makefile = command[index]
+            if not runner_path_matches(makefile, runner["path"], root):
+                raise FleetError("Verification makefile differs from the hooked runner")
         elif (
             argument in {"-j", "--jobs"}
             and index + 1 < len(command)
@@ -438,13 +723,117 @@ def validate_verification_argv(verification: dict[str, Any], root: Path) -> None
     command = command_without_env(argv)
     if runner["kind"] == "shell":
         matched = shell_command_matches(command, relative(runner["path"]), root)
+        if matched:
+            resolve_shell_command(command, root, verification)
     elif runner["kind"] == "make" and Path(command[0]).name in {"make", "gmake"}:
+        approved_executable(command[0], verification)
         targets = make_command_targets(command, runner, root)
         matched = bool(targets) and set(targets).issubset(runner.get("targets", []))
     else:
         matched = False
     if not matched:
         raise FleetError("Verification argv does not invoke the hooked runner")
+
+
+def resolve_shell_command(
+    command: list[str], root: Path, verification: dict[str, Any]
+) -> tuple[list[str], dict[str, Any]]:
+    """Execute scripts with an approved shell, bypassing PATH-based shebang lookup."""
+    if Path(command[0]).name in {"sh", "bash", "zsh"}:
+        executable, identity = approved_executable(command[0], verification)
+        index = 1
+        while index < len(command) and command[index] in {
+            "-e",
+            "-u",
+            "-eu",
+            "-ue",
+            "--",
+        }:
+            index += 1
+        if index >= len(command):
+            raise FleetError("Shell argv requires the declared script")
+        name = (
+            str(Path(command[index]).relative_to(root))
+            if Path(command[index]).is_absolute()
+            else command[index].removeprefix("./")
+        )
+        script = confined(root, name)
+        return [
+            executable,
+            *command[1:index],
+            str(script),
+            *command[index + 1 :],
+        ], identity
+    name = (
+        str(Path(command[0]).relative_to(root))
+        if Path(command[0]).is_absolute()
+        else command[0].removeprefix("./")
+    )
+    script = confined(root, name)
+    text = (
+        script.read_text()
+        if script.is_file()
+        else verification.get("runner", {}).get("seed_content", "")
+    )
+    if not text.startswith("#!"):
+        raise FleetError("Declared runner requires a supported shell shebang")
+    parts = shlex.split(text.splitlines()[0][2:])
+    if parts and parts[0] == "/usr/bin/env":
+        parts = parts[1:]
+    if not parts or len(parts) != 1 or Path(parts[0]).name not in {"sh", "bash", "zsh"}:
+        raise FleetError("Declared runner requires an approved shell shebang")
+    executable, identity = approved_executable(parts[0], verification)
+    return [executable, str(script), *command[1:]], identity
+
+
+def resolved_verification(
+    verification: dict[str, Any], root: Path, *, argv: list[str] | None = None
+) -> tuple[list[str], dict[str, str], dict[str, Any]]:
+    """Return executed argv, explicit safe assignments, and executable identity."""
+    declared = verification["argv"] if argv is None else argv
+    command = command_without_env(declared)
+    assignments = {}
+    if Path(declared[0]).name == "env":
+        for argument in declared[1:]:
+            if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*=.*", argument):
+                break
+            key, value = argument.split("=", 1)
+            assignments[key] = value
+    if Path(command[0]).name in {"make", "gmake"}:
+        executable, identity = approved_executable(command[0], verification)
+        return [executable, *command[1:]], assignments, identity
+    executed, identity = resolve_shell_command(command, root, verification)
+    return executed, assignments, identity
+
+
+def instruction_aliases(row: dict[str, Any], root: Path) -> dict[str, Any]:
+    declared = row.get("instruction_aliases", {})
+    if not isinstance(declared, dict) or set(declared) - {"CLAUDE.md"}:
+        raise FleetError("Only the bounded CLAUDE.md instruction alias is supported")
+    result = {}
+    path = root / "CLAUDE.md"
+    if declared:
+        target = declared["CLAUDE.md"]
+        if (
+            target not in {"AGENTS.md", "./AGENTS.md"}
+            or not path.is_symlink()
+            or os.readlink(path) != target
+        ):
+            raise FleetError("Declared instruction alias is missing or changed")
+        authority = confined(root, "AGENTS.md")
+        if not authority.is_file():
+            raise FleetError("Instruction alias requires a regular AGENTS.md authority")
+        info = path.lstat()
+        result["CLAUDE.md"] = {
+            "target": target,
+            "type": stat.S_IFMT(info.st_mode),
+            "mode": stat.S_IMODE(info.st_mode),
+        }
+    elif path.is_symlink():
+        raise FleetError(
+            "Declare the bounded CLAUDE.md instruction alias before adoption"
+        )
+    return result
 
 
 def verification_text(verification: dict[str, Any], root: Path) -> tuple[str, str, int]:
@@ -474,7 +863,20 @@ def verification_binding(row: dict[str, Any], root: Path) -> tuple[str, bytes, i
     name, text, mode = verification_text(verification, root)
     runner = verification["runner"]
     if runner["kind"] == "shell":
-        text = shell_runner(text, name, runner.get("governance_runner", "gov"))
+        integration = runner.get("integration", "managed-hook")
+        if integration == "native":
+            if runner.get("native_sha256") != digest(text.encode()):
+                raise FleetError("Reviewed native verifier body has drifted")
+            if text.count(VERIFY_BEGIN) != 1 or text.count(VERIFY_END) != 1:
+                raise FleetError(
+                    "Native verifier requires one complete managed declaration"
+                )
+            # Validate grammar, without replacing the reviewed native graph.
+            managed_block(text, VERIFY_BEGIN, VERIFY_END, "native graph declaration")
+        elif integration == "managed-hook":
+            text = shell_runner(text, name, runner.get("governance_runner", "gov"))
+        else:
+            raise FleetError("Unsupported governance verification integration")
     elif runner["kind"] == "make":
         text = make_runner(text, runner)
     else:
@@ -492,7 +894,10 @@ def rendered(
         "Run the declared project verifier; its managed hook checks the pack first."
     )
     generated: dict[str, tuple[bytes, int]] = {}
+    aliases = instruction_aliases(row, root)
     for name in ("AGENTS.md", "CLAUDE.md"):
+        if name in aliases:
+            continue
         path = confined(root, name)
         text = path.read_text() if path.exists() else ""
         generated[name] = (
@@ -506,7 +911,9 @@ def rendered(
         "profile": row.get("profile", "tools"),
         "integration_mode": row["integration_mode"],
         "verification": row.get("verification", {}),
-        "authorities": row.get("authorities", []),
+        "authorities": list(dict.fromkeys(row.get("authorities", []))),
+        "instruction_aliases": aliases,
+        "skill_adapters": row.get("skill_adapters", []),
     }
     generated[".governance/fleet.json"] = (canonical(metadata), 0o644)
     for entry in row.get("managed_files", []):

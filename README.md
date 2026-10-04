@@ -1,4 +1,4 @@
-# Workspace policy-kit 1.2.0
+# Workspace policy-kit 1.3.0
 
 This directory is the local owner of reusable workspace governance. The editable
 general mechanism, shared skills and general policy live in
@@ -7,16 +7,19 @@ data or environment constraints remain owned by each consumer. Editing the kit
 does not transfer those authorities or automatically activate deferred policy.
 
 `.governance/distribution.json` pins the reviewed active release under
-`.releases/1.2.0/`. That immutable release contains its complete manifest and every
+`.releases/1.3.0/`. That immutable release contains its complete manifest and every
 declared source byte. It reconstructs the general pack and its legacy baseline;
 changing editable sources requires another reviewed release and guarded adoption.
 To reconstruct a candidate release, use the general exporter's explicit destination:
 `python tools/workspace_governance/release.py --pack tools/workspace_governance
---policy-kit . --output /private/path/release`. Its distribution version defaults to 1.2.0; use an explicit next `--version`
-for a later release. Review and pin its result before adoption;
+--policy-kit . --output /private/path/release --version 1.3.0
+--verification-root /private/path/verification-component
+--distribution-root /private/path/distribution-component`. Stage the complete test
+and public control file sets into those component roots first. The exporter
+retains its legacy API default; provide the reviewed successor version explicitly. Review and pin its result before adoption;
 exporting alone does not activate it. The exporter reads the archived 1.1.3 baseline
 when present, preserving compatibility bytes across a distribution upgrade.
-The distribution version 1.2.0 and pack version are separate identities.
+The distribution version 1.3.0 and pack version are separate identities.
 
 `compatibility/1.1.3/` preserves all 19 captured original source files byte for
 byte, with modes and hashes recorded in `manifest.json`. Existing template paths
@@ -71,3 +74,51 @@ Selftest checks the immutable release, editable general pack, complete 1.1.3
 archive, active metadata and discovery links. It does not execute consumer
 verification or claim whole-computer coverage. The archived 1.1.3 selftest remains
 historical source; its old blind-copy fixture is not the active distribution gate.
+
+The 1.3 release has separately hashed runtime, verification and distribution
+control components. Consumers receive only the runtime payload. Public-safe
+source, tests and publication tooling have independent Git history; `_machine/`,
+private evidence, telemetry and keys remain excluded. Operational fleet state is
+permanent private state, with an independently verified backup and restoration
+receipt. The original session copy and original release remain retained. Copies
+on one device provide no device-loss protection.
+
+The full kit gate is distinct from the quick integrity selftest:
+
+```sh
+./scripts/verify_policy_kit.sh
+./scripts/verify_policy_kit.sh --candidate /absolute/path/to/policy-kit
+./scripts/sync_workspace_policy.sh baseline --checkout <registry-id>
+./scripts/sync_workspace_policy.sh verify --checkout <registry-id>
+```
+
+The full gate defaults to active immutable code and separately pinned tests.
+Editable code needs explicit candidate selection. It checks the declared Python,
+pytest, packaging, Git and Bash dependencies without installing packages or
+creating an environment. Selected origins, schemas, fixtures, modes and hashes
+are validated. Ambient Python startup/import paths and pytest plugins cannot
+substitute developer checkout code. Ordinary context commands stay bounded.
+
+Default audit reads current collector-reported evidence and bounded structural
+observations. It does not silently refresh a baseline or start products. Baseline
+refresh explicitly runs the declared governance runner with the same approved
+execution policy and process-group timeout as collection. The v2 evidence
+envelope binds completed runs, declared selections, registry/release identities,
+actual argv, outcomes and stable inputs. Mixed-result batches retain both passing
+and failing records. The trust model is collector-reported execution; a same-user
+actor who can rewrite the collector and evidence remains outside authentication
+guarantees. No local readable signing key changes that boundary.
+
+Global skill discovery targets active immutable skill directories. Each consumer
+adapter declares name, link, canonical body hash and fleet release identity, and
+ordinary `gov check` validates that relationship. Installer ownership covers
+reviewed machinery and dispatch sections; mutable human authorities, backlog and
+current-state text are not frozen historical postimages. Declared local relative
+CLAUDE-to-AGENTS aliases are preserved and checked without following writes.
+
+`gov telemetry status --json` reports configuration and the last observed signed
+append/readback readiness, including store identity and observation time. It does
+not infer current writability. `gov telemetry selftest --json` performs an explicit
+private synthetic write probe; disabled telemetry writes nothing. Probe results
+never establish product evidence. Recording failures preserve the observed
+command's status. P1b/P1c/P6 and global automatic logging remain gated.

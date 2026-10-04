@@ -40,7 +40,12 @@ def main(check_only=False):
         )
         if floor is None:
             raise ValueError("Bootstrap requires an explicit >= Python version floor")
-        if sys.version_info[:3] < tuple(int(n) for n in floor.group(1).split(".")):
+        numeric_floor = runpy.run_path(
+            str(Path(__file__).parents[1] / "runtime_floor.py")
+        )["numeric_python_floor"]
+        if not numeric_floor(
+            ".".join(str(n) for n in sys.version_info[:3]), ">=" + floor.group(1)
+        ):
             raise ValueError("Bootstrap Python does not satisfy " + requirement)
         if check_only:
             return 0

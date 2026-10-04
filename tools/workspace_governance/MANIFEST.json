@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "name": "workspace-governance",
-  "version": "0.5.0",
-  "revision": "v0.5-all-repository-adoption-1",
+  "version": "0.6.0",
+  "revision": "v0.6-durable-state-evidence-meta-tests-1",
   "version_file": "VERSION",
   "lock_algorithm": "sha256-path-and-content-v1",
   "pack_hash_excludes": [
@@ -17,7 +17,8 @@
     "explain",
     "doctor",
     "sync",
-    "env"
+    "env",
+    "telemetry"
   ],
   "diagnostics": [
     "DUPLICATE_AUTHORITY",
@@ -50,6 +51,10 @@
       "role": "executable_machinery"
     },
     {
+      "path": "baseline.py",
+      "role": "executable_machinery"
+    },
+    {
       "path": "cli/__init__.py",
       "role": "executable_machinery"
     },
@@ -63,6 +68,10 @@
     },
     {
       "path": "dependency_compatibility.py",
+      "role": "executable_machinery"
+    },
+    {
+      "path": "diagnostics.py",
       "role": "executable_machinery"
     },
     {
@@ -107,6 +116,10 @@
     },
     {
       "path": "resolver/roles.py",
+      "role": "executable_machinery"
+    },
+    {
+      "path": "runtime_floor.py",
       "role": "executable_machinery"
     },
     {

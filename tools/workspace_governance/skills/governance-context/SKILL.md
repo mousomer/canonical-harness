@@ -17,6 +17,8 @@ determine semantics. This skill guides the workflow and does not enforce gates.
    central preservation does not certify installation or product acceptance.
 2. Run the declared governance launcher, normally `./gov check`. Use
    `./gov resolve` and `./gov explain <key>` for facts and their provenance.
+   Context validation checks declared adapter body/target/release relationships;
+   global discovery must resolve to the active immutable release.
    `./gov explain --task "<description>"` probes representative scenarios.
    Scenario matching has declared overlap rules; a fallback is not proof that
    the task belongs only to its default route. Select every route the actual
@@ -42,6 +44,12 @@ Use the consumer's declared interpreter and runtime profile. Run `./gov doctor`
 when execution identity is uncertain; governance-runtime success does not certify
 an application toolchain. Run focused checks before the required full gate and
 serialize full gates. Report exact commands against the checked tree.
+
+When logging observations matter, read `gov telemetry status --json` for the
+last observed append/readback readiness and its time/store identity. An explicit
+`gov telemetry selftest --json` is a synthetic private write probe, never product
+evidence. Disabled logging creates no observations. Preserve deferred telemetry
+gates and do not infer present writability or complete agent activity from status.
 
 A partial mechanical check establishes only its documented boundary. Preserve
 remaining human review and platform/device acceptance. A build, metric, lock,

@@ -48,6 +48,22 @@ for a consumer that only needs governance. Run focused checks, the applicable
 full gate, integrity/provenance checks and whitespace/sanitation checks. Follow
 the release contract for schema/version/revision changes and explicit lock sync.
 
+Shared kit changes run the kit-owned full verification gate against the explicit
+candidate, then the selected immutable components. Keep runtime installation
+separate from verification/control components. Source HEAD and publication time
+are receipt provenance rather than content identity. Test positive and rejecting
+contracts, selected module/catalog origins and unchanged-content reconstruction.
+
+For fleet adoption, use the private explicit registry and guarded saved plans.
+Keep default audit structural/evidence-only; request baseline refresh separately
+from approved product collection. Preserve execution holds, failed records and
+scan gaps. Completed v2 records are collector-reported attestations, not execution
+authentication against a same-user actor. Do not retag historical evidence.
+Keep private state and undo preimages durable, lock writers during migration,
+verify backup restoration and preserve subsequent owner edits. Installer ownership
+must not freeze mutable human authorities or backlog text. Activate discovery
+links to immutable bodies through guarded preimages and rollback.
+
 ## Handoff and evaluation
 
 Update the owning design, affected documentation and open-work tracker before

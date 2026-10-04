@@ -60,7 +60,15 @@ OVERLAY_REASONS = {
     "local": "approved local overlay",
     "workspace": "inherited workspace overlay",
 }
-SUPPORTED_COMMANDS = {"check", "resolve", "explain", "doctor", "sync", "env"}
+SUPPORTED_COMMANDS = {
+    "check",
+    "resolve",
+    "explain",
+    "doctor",
+    "sync",
+    "env",
+    "telemetry",
+}
 PYTHON_APPLICATION_FIELDS = {
     "python_requires",
     "dependency_authority",
@@ -1120,54 +1128,47 @@ def _generated_mutation_reason(
     return None
 
 
-def _generated_output_issue(
-    root: Path,
-    project: dict[str, Any],
-    surface: dict[str, Any],
-    local: dict[str, Any] | None = None,
-    *,
-    local_tiers: dict[str, str] | None = None,
-    generated: bool = True,
-) -> list[Diagnostic]:
-    """Execute the consumer's renderer and detect protected-file mutations."""
-    source, target = surface["source"], surface["target"]
+def _generated_contract(root, project, surface, local, local_tiers):
     command = surface["check_command"]
-    reason = _generated_output_defect(root, surface)
-    if reason is not None:
-        return [
-            _diag(
-                "BROKEN_REFERENCE",
-                surface["surface_id"],
-                "project",
-                [source, target],
-                reason,
-                "declare existing checkout-local renderer and output paths",
-            )
-        ]
-    if not generated:
-        return []
     if command[0] == "{python}":
         interpreter, _, issues = resolve_interpreter(
             root, project, local, local_tiers=local_tiers
         )
         if issues or interpreter is None:
-            return issues
+            return None, issues
         argv = [str(interpreter), *command[1:]]
     else:
         argv = [str(root / command[0]), *command[1:]]
     _, _, issues = resolve_execution_mode(project, local=local)
     if issues:
-        return issues
-    binding = binding_environment(root, project, local=local)
+        return None, issues
+    environment = {
+        **os.environ,
+        **binding_environment(root, project, local=local),
+        "PYTHONDONTWRITEBYTECODE": "1",
+    }
+    contract = (
+        tuple(argv),
+        str(root.resolve()),
+        tuple(sorted(environment.items())),
+        surface.get("timeout_seconds", 120),
+    )
+    return contract, []
+
+
+def _generated_output_group(root, project, surfaces, contract):
+    """Run one exact contract, preserving protection and attribution for all outputs."""
+    argv, cwd, environment, timeout = contract
     before = _protected_check_snapshot(root, project)
+    reason = None
     try:
         result = subprocess.run(
-            argv,
-            cwd=root,
+            list(argv),
+            cwd=Path(cwd),
             capture_output=True,
-            timeout=surface.get("timeout_seconds", 120),
+            timeout=timeout,
             check=False,
-            env={**os.environ, **binding, "PYTHONDONTWRITEBYTECODE": "1"},
+            env=dict(environment),
         )
         if result.returncode:
             outputs = "; ".join(
@@ -1179,7 +1180,19 @@ def _generated_output_issue(
         reason = "generated output check exceeded its declared timeout"
     except OSError as exc:
         reason = f"generated output check could not execute (errno={exc.errno})"
-    reason = _generated_mutation_reason(root, project, target, before) or reason
+    mutation = next(
+        (
+            issue
+            for surface in surfaces
+            if (
+                issue := _generated_mutation_reason(
+                    root, project, surface["target"], before
+                )
+            )
+        ),
+        None,
+    )
+    reason = mutation or reason
     if reason is None:
         return []
     return [
@@ -1187,14 +1200,36 @@ def _generated_output_issue(
             "CONFLICTING_VALUE",
             surface["surface_id"],
             "project",
-            [source, target],
+            [surface["source"], surface["target"]],
             reason,
             "regenerate through the declared renderer and rerun its read-only check",
         )
+        for surface in surfaces
     ]
 
 
-def _generated_surface_issues(
+def _generated_output_issue(
+    root, project, surface, local=None, *, local_tiers=None, generated=True
+):
+    reason = _generated_output_defect(root, surface)
+    if reason:
+        return [
+            _diag(
+                "BROKEN_REFERENCE",
+                surface["surface_id"],
+                "project",
+                [surface["source"], surface["target"]],
+                reason,
+                "declare existing checkout-local renderer and output paths",
+            )
+        ]
+    if not generated:
+        return []
+    contract, issues = _generated_contract(root, project, surface, local, local_tiers)
+    return issues or _generated_output_group(root, project, [surface], contract)
+
+
+def _generated_surface_issues(  # noqa: C901 - declaration preflight, exact grouping and facade transaction
     root: Path,
     project: dict[str, Any],
     local: dict[str, Any] | None = None,
@@ -1203,18 +1238,32 @@ def _generated_surface_issues(
     generated: bool = False,
 ) -> list[Diagnostic]:
     issues: list[Diagnostic] = []
+    outputs = [
+        surface
+        for surface in project["generated_surfaces"]
+        if surface["kind"] == "generated_output"
+    ]
+    # Validate every declaration before any renderer can run.
+    for surface in outputs:
+        issues.extend(
+            _generated_output_issue(root, project, surface, local, generated=False)
+        )
+    if generated and not issues:
+        groups = {}
+        for surface in outputs:
+            contract, defects = _generated_contract(
+                root, project, surface, local, local_tiers
+            )
+            issues.extend(defects)
+            if contract is not None:
+                groups.setdefault(contract, []).append(surface)
+        if not issues:
+            for contract, surfaces in groups.items():
+                issues.extend(
+                    _generated_output_group(root, project, surfaces, contract)
+                )
     for surface in project["generated_surfaces"]:
         if surface["kind"] == "generated_output":
-            issues.extend(
-                _generated_output_issue(
-                    root,
-                    project,
-                    surface,
-                    local,
-                    local_tiers=local_tiers,
-                    generated=generated,
-                )
-            )
             continue
         source_path, source_pointer = _split_reference(root, surface["source"])
         target_path, target_pointer = _split_reference(root, surface["target"])
@@ -1266,6 +1315,103 @@ def _generated_surface_issues(
     return issues
 
 
+def _skill_adapter_issues(root: Path, project: dict[str, Any]) -> list[Diagnostic]:  # noqa: C901 - bounded adapter identity transaction
+    """Tie discoverable adapters to canonical bytes and the adopted release."""
+    issues = []
+    seen = set()
+    for entry in project.get("skill_adapters", []):
+        path, target = entry["path"], entry["target"]
+        reason = None
+        if path in seen:
+            reason = "duplicate skill adapter path"
+        seen.add(path)
+        if any(declaration_path_defect(item) for item in (path, target)):
+            reason = "skill adapter paths must be confined repository-relative files"
+        elif not _regular_generated_paths(root, (path, target)) or not all(
+            (root / item).resolve().is_relative_to(root.resolve())
+            for item in (path, target)
+        ):
+            reason = "skill adapter and canonical target must be confined regular files"
+        else:
+            expected_target = (
+                "tools/workspace_governance/skills/" + entry["name"] + "/SKILL.md"
+            )
+            text = (root / path).read_text(encoding="utf-8")
+            canonical = (root / target).read_text(encoding="utf-8")
+            canonical_names = re.findall(r"^name: ([^\n]+)$", canonical, re.MULTILINE)
+            descriptions = re.findall(
+                r"^description: ([^\n]+)$", canonical, re.MULTILINE
+            )
+            names = re.findall(r"^name: ([^\n]+)$", text, re.MULTILINE)
+            links = re.findall(r"\[canonical shared skill\]\(([^)]+)\)", text)
+            pins = re.findall(r"Canonical source SHA-256: `([0-9a-f]{64})`", text)
+            binding = root / ".governance/fleet.json"
+            if not re.fullmatch(r"[0-9a-f]{64}", entry["sha256"]) or not re.fullmatch(
+                r"[0-9a-f]{64}", entry["release_manifest_sha256"]
+            ):
+                reason = (
+                    "skill adapter digests must be full lowercase SHA-256 identities"
+                )
+            elif (
+                target != expected_target
+                or names != [entry["name"]]
+                or len(links) != 1
+                or canonical_names != [entry["name"]]
+                or len(descriptions) != 1
+            ):
+                reason = (
+                    "skill adapter name or canonical target disagrees with declaration"
+                )
+            elif (
+                Path(links[0]).is_absolute()
+                or (root / path).parent.joinpath(links[0]).resolve()
+                != (root / target).resolve()
+            ):
+                reason = "skill adapter discovery link disagrees with canonical target"
+            elif text != (
+                "---\nname: "
+                + entry["name"]
+                + "\ndescription: "
+                + descriptions[0]
+                + "\n---\n\nRead and apply the [canonical shared skill]("
+                + links[0]
+                + ") before performing this workflow.\n\n"
+                + "Canonical source SHA-256: `"
+                + entry["sha256"]
+                + "`. This discovery adapter does not own policy.\n"
+            ):
+                reason = (
+                    "skill adapter body diverges from its bounded discovery contract"
+                )
+            elif (
+                pins != [entry["sha256"]]
+                or hashlib.sha256((root / target).read_bytes()).hexdigest()
+                != entry["sha256"]
+            ):
+                reason = "skill adapter canonical source hash is stale"
+            elif (
+                binding.is_symlink()
+                or not _regular_generated_paths(root, (".governance/fleet.json",))
+                or load_manifest_json(binding).get("release_manifest_sha256")
+                != entry["release_manifest_sha256"]
+            ):
+                reason = (
+                    "skill adapter release differs from the adopted release binding"
+                )
+        if reason:
+            issues.append(
+                _diag(
+                    "BROKEN_REFERENCE",
+                    "skill_adapter:" + path,
+                    "project",
+                    [path, target],
+                    reason,
+                    "regenerate the adapter contract from the reviewed adopted release",
+                )
+            )
+    return issues
+
+
 def validate_manifests(
     root: Path,
     workspace: dict[str, Any],
@@ -1294,6 +1440,7 @@ def validate_manifests(
     if issues:
         return issues
     issues.extend(_semantic_manifest_issues(root, workspace, project))
+    issues.extend(_skill_adapter_issues(root, project))
     issues.extend(_artifact_role_issues(root, workspace, project, pack_root))
     issues.extend(_authority_graph_issues(root, project, source))
     if not issues:
@@ -1672,13 +1819,12 @@ def resolve_interpreter(
                 raise ValueError(
                     "pack runtime requires an explicit >= Python version floor"
                 )
-            predicate = "tuple(map(int, v.split('.'))) >= " + repr(
-                tuple(map(int, floor[1].split(".")))
-            )
             probe_code = (
-                "import platform; v=platform.python_version(); print(v); raise SystemExit(0 if "
-                + predicate
-                + " else 1)"
+                "import platform,runpy; v=platform.python_version(); print(v); "
+                "floor=runpy.run_path("
+                + repr(str(Path(__file__).resolve().parents[1] / "runtime_floor.py"))
+                + ")['numeric_python_floor']; "
+                "raise SystemExit(0 if floor(v," + repr(specifier_text) + ") else 1)"
             )
         else:
             probe_code = (
