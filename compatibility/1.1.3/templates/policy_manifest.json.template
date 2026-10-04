@@ -1,0 +1,20 @@
+{
+  "project_name": "example-project",
+  "owner": "team-or-owner",
+  "risk_level": "medium",
+  "verification_command": "./scripts/verify.sh",
+  "ci_entrypoint": "./scripts/verify.sh",
+  "design_sources": [
+    "docs/RDS.md"
+  ],
+  "secret_scan": "gitleaks detect --source . --config .gitleaks.toml --no-banner",
+  "policy_id": "workspace-github-sanitation-and-security",
+  "policy_source": "workspace/policy-kit",
+  "policy_source_path": "${HOME}/workspace/policy-kit",
+  "enforcement": [
+    "scripts/check_policy_compliance.sh",
+    "scripts/check_git_sanitation.sh",
+    "scripts/check_policy_template_drift.sh"
+  ],
+  "extended_enforcement": []
+}

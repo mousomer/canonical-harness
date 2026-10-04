@@ -1,0 +1,122 @@
+{
+  "files": [
+    {
+      "bytes": 255,
+      "mode": 420,
+      "path": "POLICY_VERSION.json",
+      "sha256": "ddba9b636e255b8c1566986a8885dc29116e4630c8350b865a5754c43ac078d4"
+    },
+    {
+      "bytes": 7330,
+      "mode": 420,
+      "path": "README.md",
+      "sha256": "fa52754ae813fa131f310e91a8ba4acf0461404a501db2809c7f0b294ea116e6"
+    },
+    {
+      "bytes": 557,
+      "mode": 420,
+      "path": "optional/architecture_metrics/README.md",
+      "sha256": "6592f4ba6d83c8547a99d8ca04d710656d8d51f33f0f380aecf28cf8bf1c90dd"
+    },
+    {
+      "bytes": 830,
+      "mode": 420,
+      "path": "optional/architecture_metrics/architecture_metrics/__init__.py",
+      "sha256": "0d36b8785354a04bc705ce8e220837eb6a49976fe71e7b01a0b7ff6b317db653"
+    },
+    {
+      "bytes": 25358,
+      "mode": 420,
+      "path": "optional/architecture_metrics/architecture_metrics/core.py",
+      "sha256": "f0e5629d996f47f0d0f1fe9d092038bc5ac49d8769025a62b654a54093153d8e"
+    },
+    {
+      "bytes": 11366,
+      "mode": 420,
+      "path": "optional/architecture_metrics/architecture_metrics/gates.py",
+      "sha256": "55fe24ae7f0d591cbe1883fb549e3d1d0e860f30b946c93f6aa74dabbfb6507b"
+    },
+    {
+      "bytes": 336,
+      "mode": 420,
+      "path": "required_files_manifest.json",
+      "sha256": "0b7df49182645ff99b110603cff40c122270d39835f0449bc4f6c4a7403265d1"
+    },
+    {
+      "bytes": 155,
+      "mode": 420,
+      "path": "sanitation_baseline.gitignore",
+      "sha256": "b762f835e84dfb8548ebb81705a25d037973420e6c447e91c8e984bf8bf37246"
+    },
+    {
+      "bytes": 1330,
+      "mode": 493,
+      "path": "scripts/audit_workspace_policy.sh",
+      "sha256": "caa578781c7cebf62f7b28b54c2a7b74a8b1bc8daf3fdfeb4ed36fce49c01c8c"
+    },
+    {
+      "bytes": 1852,
+      "mode": 493,
+      "path": "scripts/check_git_sanitation_template.sh",
+      "sha256": "8ca954fda1c9fa04565e9eece747d83f0d0257d8cdda90b18bd14471a04bd7af"
+    },
+    {
+      "bytes": 774,
+      "mode": 493,
+      "path": "scripts/check_policy_compliance_template.sh",
+      "sha256": "9ca9725f88a31253d556c2e2a557264f66ddb45870e4cd5dcc87efd3ea9b7484"
+    },
+    {
+      "bytes": 5119,
+      "mode": 493,
+      "path": "scripts/check_policy_kit_selftest.sh",
+      "sha256": "d4e59f92c3d3d331d29eefac5672cd663d4fa38af0abc48b9e31c33cf0bf1de8"
+    },
+    {
+      "bytes": 1630,
+      "mode": 493,
+      "path": "scripts/check_policy_template_drift_template.sh",
+      "sha256": "2cf3d14d7ffdfa710aff8b68c7e515f5a94f1c446095a1183d3a138018710a4f"
+    },
+    {
+      "bytes": 7032,
+      "mode": 493,
+      "path": "scripts/sync_workspace_policy.sh",
+      "sha256": "f64858ecbafac3f35b741089e85d793f28f28c499f1ddf4e690b913b54c7205c"
+    },
+    {
+      "bytes": 1288,
+      "mode": 493,
+      "path": "scripts/update_policy_template_hashes_template.sh",
+      "sha256": "08941c1b727a8ff3acc37a69690068990f11311488a4218725ba74899a64b245"
+    },
+    {
+      "bytes": 61,
+      "mode": 420,
+      "path": "templates/.workspace_policy_version.json.template",
+      "sha256": "da6c6fb01f9ae8e1bc5722fd5220b6f1aa2ea2d96e9c804670c13d5cd0537fcc"
+    },
+    {
+      "bytes": 651,
+      "mode": 420,
+      "path": "templates/policy_manifest.json.template",
+      "sha256": "892f24b4f6f2ac5f2523cfa699a5ee6dd54f9663ff2e8e9f7846cb21f75295ae"
+    },
+    {
+      "bytes": 246,
+      "mode": 420,
+      "path": "templates/policy_template_hashes.json.template",
+      "sha256": "bb70864e2d174cb0d0f7b9e9197529a030456beefddfd3e8eee8c9bca6c9658c"
+    },
+    {
+      "bytes": 843,
+      "mode": 493,
+      "path": "templates/verify_template.sh",
+      "sha256": "c60d4ac60129a92d67504b3aac4dd4715b0dd1f53689e6741e63566b831bcf20"
+    }
+  ],
+  "kind": "legacy-policy-kit-source-archive",
+  "policy_version": "1.1.3",
+  "schema_version": 1,
+  "source_owner": "workspace/policy-kit"
+}

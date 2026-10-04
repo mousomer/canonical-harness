@@ -1,0 +1,247 @@
+{
+  "files": [
+    {
+      "mode": 493,
+      "path": ".governance/baseline/check_git_sanitation.sh",
+      "sha256": "8ca954fda1c9fa04565e9eece747d83f0d0257d8cdda90b18bd14471a04bd7af",
+      "source": "payload/.governance/baseline/check_git_sanitation.sh"
+    },
+    {
+      "mode": 493,
+      "path": ".governance/baseline/check_policy_compliance.sh",
+      "sha256": "9ca9725f88a31253d556c2e2a557264f66ddb45870e4cd5dcc87efd3ea9b7484",
+      "source": "payload/.governance/baseline/check_policy_compliance.sh"
+    },
+    {
+      "mode": 493,
+      "path": ".governance/baseline/check_policy_template_drift.sh",
+      "sha256": "2cf3d14d7ffdfa710aff8b68c7e515f5a94f1c446095a1183d3a138018710a4f",
+      "source": "payload/.governance/baseline/check_policy_template_drift.sh"
+    },
+    {
+      "mode": 420,
+      "path": ".governance/baseline/legacy-policy-version.json",
+      "sha256": "ddba9b636e255b8c1566986a8885dc29116e4630c8350b865a5754c43ac078d4",
+      "source": "payload/.governance/baseline/legacy-policy-version.json"
+    },
+    {
+      "mode": 420,
+      "path": ".governance/baseline/legacy-required-files.json",
+      "sha256": "0b7df49182645ff99b110603cff40c122270d39835f0449bc4f6c4a7403265d1",
+      "source": "payload/.governance/baseline/legacy-required-files.json"
+    },
+    {
+      "mode": 420,
+      "path": ".governance/baseline/sanitation.gitignore",
+      "sha256": "b762f835e84dfb8548ebb81705a25d037973420e6c447e91c8e984bf8bf37246",
+      "source": "payload/.governance/baseline/sanitation.gitignore"
+    },
+    {
+      "mode": 493,
+      "path": ".governance/baseline/update_policy_template_hashes.sh",
+      "sha256": "08941c1b727a8ff3acc37a69690068990f11311488a4218725ba74899a64b245",
+      "source": "payload/.governance/baseline/update_policy_template_hashes.sh"
+    },
+    {
+      "mode": 493,
+      "path": ".governance/baseline/verify_template.sh",
+      "sha256": "c60d4ac60129a92d67504b3aac4dd4715b0dd1f53689e6741e63566b831bcf20",
+      "source": "payload/.governance/baseline/verify_template.sh"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/.ruff.toml",
+      "sha256": "4d718451bf60d94a8a997f51479858eb370c6233cd1b58a19d9a9a5d7a72ffe4",
+      "source": "payload/tools/workspace_governance/.ruff.toml"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/MANIFEST.json",
+      "sha256": "8502d0f62420360a063aa362d8c126b21c6530717c51b88346cdd7626b47bf24",
+      "source": "payload/tools/workspace_governance/MANIFEST.json"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/VERSION",
+      "sha256": "a0ad50640139a524f86591157145bf1d4674ea9c065bfea21558f0f7b04430c8",
+      "source": "payload/tools/workspace_governance/VERSION"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/__init__.py",
+      "sha256": "1fb1cf8fa4b59c720c34c4313607eb8394cce3a47ada1e8f0cd43884f1884e4b",
+      "source": "payload/tools/workspace_governance/__init__.py"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/cli/__init__.py",
+      "sha256": "678afe53eed8737dbf991dba82d1e2c626af9341a54e35e5da1d61c46d67240e",
+      "source": "payload/tools/workspace_governance/cli/__init__.py"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/cli/bootstrap.py",
+      "sha256": "b0d8ea747d80b77d3ba426ea75c863b820d90579e634c3521110ebd63504c6d9",
+      "source": "payload/tools/workspace_governance/cli/bootstrap.py"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/cli/gov.py",
+      "sha256": "8f1b10c2b34bc21b9cef1833c5684d5b104ed6fa4485985e2d1f956d402f68cf",
+      "source": "payload/tools/workspace_governance/cli/gov.py"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/dependency_compatibility.py",
+      "sha256": "6c6d85c500118b7ed3a2f03ec5bf222af49877343492e0b561e5898c59ffbc1f",
+      "source": "payload/tools/workspace_governance/dependency_compatibility.py"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/field-usage.json",
+      "sha256": "09c78c1ae53d6a3806a2e7c0e21ca82faad61074b64c451b0bc8eafc78b8f139",
+      "source": "payload/tools/workspace_governance/field-usage.json"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/fleet.py",
+      "sha256": "0c4ab70d68d1f94ccb76da8bbe2320d1f4461d7613f3ed08a0a526f61c66577d",
+      "source": "payload/tools/workspace_governance/fleet.py"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/fleet_execution.py",
+      "sha256": "7dfe3f95987bf2098ec2792d3ca14cc5f51476bc72617406a59a5d2af360f141",
+      "source": "payload/tools/workspace_governance/fleet_execution.py"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/fleet_support.py",
+      "sha256": "9975c9c29ded87149a04149c075a686c86aa933028f8dbeac6a37e74cf1ae2e1",
+      "source": "payload/tools/workspace_governance/fleet_support.py"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/policies/external_checkouts.md",
+      "sha256": "2d6f8d10328a52da9f5555447b1fa92800dc40be513b7ba3a63014fc694ebc2d",
+      "source": "payload/tools/workspace_governance/policies/external_checkouts.md"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/policies/ownership.md",
+      "sha256": "5bb27b467b6a17bb2752fc8f0228a19639ea7fa1e67fd7a84ab801b784a26866",
+      "source": "payload/tools/workspace_governance/policies/ownership.md"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/policies/workspace_baseline.md",
+      "sha256": "f0fc752195504f86b8b045a0581cb7f109a6304ccf49d25cc8fc60e51640616c",
+      "source": "payload/tools/workspace_governance/policies/workspace_baseline.md"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/release.py",
+      "sha256": "ef7e8fed51833c33dc9d569ea895353dc6880720a1f59dba7ff8e5a1a0609d4f",
+      "source": "payload/tools/workspace_governance/release.py"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/resolver/__init__.py",
+      "sha256": "440803a71e46a5cabc5cf01367b420ccb700a301e99552e6c46944425a6cf90d",
+      "source": "payload/tools/workspace_governance/resolver/__init__.py"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/resolver/core.py",
+      "sha256": "0b1d67d70382a0c8504497374f8f76096938001ce18fe85ab378641d578fe5a6",
+      "source": "payload/tools/workspace_governance/resolver/core.py"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/resolver/roles.py",
+      "sha256": "58a9dfc266671690cf5cd32ebfdb4a5ebeecb1c99db26dc1ee5d1be142e0d5d3",
+      "source": "payload/tools/workspace_governance/resolver/roles.py"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/sanitation.py",
+      "sha256": "7ba31019de42a2e450dc724d8bb9d855610d00363175fc8f8834224c1af1ea3e",
+      "source": "payload/tools/workspace_governance/sanitation.py"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/schemas/project.schema.json",
+      "sha256": "c515dd908f2b6ebfab8fd4d51ca57ab152d277b0a937d82ffaa81f694c19e698",
+      "source": "payload/tools/workspace_governance/schemas/project.schema.json"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/schemas/telemetry-event.v1.schema.json",
+      "sha256": "83a0b1cc49f96d9a68c2f12a45c0bdbd89d0fbfa28e1345d90ca55af633fcfe8",
+      "source": "payload/tools/workspace_governance/schemas/telemetry-event.v1.schema.json"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/schemas/workspace-local.schema.json",
+      "sha256": "f2b0ee8184742a47973002d15ba71f5273bba94379734d77d8a47087e458494f",
+      "source": "payload/tools/workspace_governance/schemas/workspace-local.schema.json"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/schemas/workspace.schema.json",
+      "sha256": "d0b35faeadf88ec9885c7fcca54748dfabb736804e0e4bb74ee8320a580fce51",
+      "source": "payload/tools/workspace_governance/schemas/workspace.schema.json"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/skills/governance-context/SKILL.md",
+      "sha256": "6e14127db6225fb72a32142f2102acedd1f05839183456093c223e5c67ebd1bf",
+      "source": "payload/tools/workspace_governance/skills/governance-context/SKILL.md"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/skills/governance-maintenance/SKILL.md",
+      "sha256": "2e5dfeb4248619a42fcc82c57e765f59683298f9b330583f00a82bba41f65bf1",
+      "source": "payload/tools/workspace_governance/skills/governance-maintenance/SKILL.md"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/synthetic-fixtures/contradictions.json",
+      "sha256": "6ae4d4aa8ed59412c34d053379078fd35f12acc2904c55f23757bee016243bbc",
+      "source": "payload/tools/workspace_governance/synthetic-fixtures/contradictions.json"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/telemetry.py",
+      "sha256": "0ca79477526f00ef0e576126a348d2214927fae641f78030673de261e43652e9",
+      "source": "payload/tools/workspace_governance/telemetry.py"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/validators/__init__.py",
+      "sha256": "db0c3b6034382e016c5f3a9926536304daa48b1775424a2cf37412be5f081af7",
+      "source": "payload/tools/workspace_governance/validators/__init__.py"
+    },
+    {
+      "mode": 420,
+      "path": "tools/workspace_governance/validators/core.py",
+      "sha256": "5b50e436cb1cc0bdd1ca66e529567ab38c4c74e5e8ff8eede8c2511e914b1b2c",
+      "source": "payload/tools/workspace_governance/validators/core.py"
+    }
+  ],
+  "name": "workspace/policy-kit",
+  "provenance": {
+    "legacy_policy_version": "1.1.3",
+    "payload_identity": "4f7f1171ac8e159dc0bc58e0b2feaa53ec1e933c87528132760f9d23fd30571b",
+    "publisher": "workspace-policy-owner",
+    "runtime_name": "workspace-governance",
+    "runtime_version": "0.5.0",
+    "source_base_commit": "99002869e72547bf36c09e92abb14b021709bdc7",
+    "source_identity": "workspace/policy-kit",
+    "source_state": "retained-export-bytes; base commit alone is not the exported tree"
+  },
+  "release_root": ".",
+  "revision": "v0.5-all-repository-adoption-1",
+  "schema_version": 1,
+  "version": "1.2.0"
+}
