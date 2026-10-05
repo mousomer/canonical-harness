@@ -206,7 +206,7 @@ def test_dependency_contract_uses_its_declared_python_requirement():
         )
 
 
-@pytest.mark.parametrize("executable", ["git", "bash"])
+@pytest.mark.parametrize("executable", ["git", "bash", "make"])
 def test_declared_missing_executable_rejects_before_test_dispatch(
     monkeypatch, executable
 ):
@@ -573,3 +573,19 @@ def test_migration_cannot_overwrite_a_prior_durable_journal(tmp_path):
     assert state.digest(configuration.read_bytes()) == expected
     assert not (tmp_path / "live").exists()
     assert not (tmp_path / "backup").exists()
+
+
+@pytest.mark.parametrize("banner,accepted", [
+    ("GNU Make 3.81\n", True), ("GNU Make 4.4.1\n", True),
+    ("GNU Make 3.80\n", False), ("BSD make\n", False),
+])
+def test_make_dependency_requires_supported_gnu_order_only_semantics(monkeypatch, banner, accepted):
+    from types import SimpleNamespace
+    monkeypatch.setattr(shutil, "which", lambda *_args, **_kwargs: "/usr/bin/make")
+    monkeypatch.setattr(verification.subprocess, "run", lambda *_args, **_kwargs: SimpleNamespace(returncode=0, stdout=banner))
+    dependency = {"schema_version": 1, "python_requires": ">=3.11", "requirements": [], "executables": ["make"]}
+    if accepted:
+        verification.dependency_check(dependency)
+    else:
+        with pytest.raises(ValueError, match="GNU Make >=3.81"):
+            verification.dependency_check(dependency)

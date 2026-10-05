@@ -8,7 +8,8 @@ starting the suite. Ordinary context commands do not launch these tests.
 The dependency and executable contract is `verification-dependencies.json`.
 Use the already governed interpreter; checks do not create an environment,
 install packages, access a product model, or require network access. The test
-runtime needs Python 3.11 or newer, pytest, packaging, Git, and Bash. Integration
+runtime needs Python 3.11 or newer, pytest, packaging, Git, Bash and GNU Make 3.81
+or newer. The gate rejects an unavailable or incompatible Make before dispatch. Integration
 fixtures execute synthetic shell/Python checks only.
 
 For an editable candidate, the declared invocation is:
@@ -47,6 +48,11 @@ kit-owned command and retain those consumer adapters. Generic contract copies in
 a consumer must not become a second policy-kit authority; retire their generic
 portions as that consumer's adapter migration is reviewed. Product acceptance
 remains a separate invocation of each consumer's declared verifier.
+
+Make ordering fixtures execute the generated runner under serial and parallel
+Make and check event order and absence, including combined goals and governance
+prerequisite failures. They exercise reviewed build boundaries and reject unsafe
+graphs; successful installation alone is not their acceptance criterion.
 
 Fixture output, coverage and test counts are verification of these component
 bytes. They do not establish acceptance for unrelated product repositories or

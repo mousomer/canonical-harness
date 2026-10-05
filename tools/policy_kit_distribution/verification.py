@@ -6,6 +6,7 @@ import argparse
 import importlib.metadata
 import json
 import re
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -41,11 +42,21 @@ def dependency_check(contract: dict) -> None:
             )
     approved_path = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
     for executable in contract["executables"]:
-        if (
-            executable not in {"git", "bash"}
-            or shutil.which(executable, path=approved_path) is None
-        ):
+        selected = shutil.which(executable, path=approved_path)
+        if executable not in {"git", "bash", "make"} or selected is None:
             raise ValueError("declared verification executable is unavailable")
+        if executable == "make":
+            try:
+                result = subprocess.run(
+                    [selected, "--version"], capture_output=True, text=True,
+                    check=False, timeout=5,
+                    env={"PATH": approved_path, "LANG": "C", "LC_ALL": "C"},
+                )
+            except (OSError, subprocess.TimeoutExpired) as exc:
+                raise ValueError("verification requires GNU Make >=3.81") from exc
+            version = re.search(r"^GNU Make ([0-9]+(?:\.[0-9]+)+)", result.stdout)
+            if result.returncode != 0 or version is None or Version(version.group(1)) < Version("3.81"):
+                raise ValueError("verification requires GNU Make >=3.81")
 
 
 PUBLIC_CONTROL_SCRIPTS = (

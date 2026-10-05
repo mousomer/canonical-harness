@@ -517,24 +517,228 @@ def shell_runner(text: str, name: str, governance_runner: str = "gov") -> str:
     return managed_block(text, VERIFY_BEGIN, VERIFY_END, hook, after_shebang=True)
 
 
+def _make_declaration_tokens(runner: dict[str, Any], name: str) -> set[str]:
+    """Public-safe tokens are reviewed boundaries, never evaluated by planning."""
+    values = runner.get(name, [])
+    if not isinstance(values, list) or any(not isinstance(value, str) for value in values):
+        raise FleetError(f"Make {name} requires a list of relative tokens")
+    if len(values) != len(set(values)):
+        raise FleetError(f"Make {name} has duplicate tokens")
+    for value in values:
+        symbolic = re.sub(r"\$\([A-Za-z_][A-Za-z0-9_]*\)", "variable", value)
+        if (
+            not symbolic
+            or not re.fullmatch(r"[A-Za-z0-9_.*?/-]+", symbolic)
+            or symbolic.startswith("/")
+            or ".." in PurePosixPath(symbolic).parts
+        ):
+            raise FleetError(f"Make {name} requires public-safe relative tokens: {value}")
+    return set(values)
+
+
+def _make_build_rules(runner: dict[str, Any]) -> set[str]:
+    values = runner.get("build_rules", [])
+    if not isinstance(values, list) or any(not isinstance(value, str) for value in values):
+        raise FleetError("Make build_rules requires a list of relative rule expressions")
+    if len(values) != len(set(values)):
+        raise FleetError("Make build_rules has duplicate expressions")
+    for value in values:
+        expression = value
+        filtered = re.fullmatch(
+            r"\$\(filter ([A-Za-z0-9_.%/-]+(?: [A-Za-z0-9_.%/-]+)*),\$\([A-Za-z_][A-Za-z0-9_]*\)\)", value
+        )
+        if filtered:
+            expression = filtered.group(1)
+        else:
+            expression = re.sub(r"\$\([A-Za-z_][A-Za-z0-9_]*\)", "variable", value)
+        if not expression or any(
+            not re.fullmatch(r"[A-Za-z0-9_.%/-]+", token)
+            or token.startswith("/") or ".." in PurePosixPath(token).parts
+            for token in expression.split()
+        ):
+            raise FleetError(f"Make build_rules requires public-safe simple build expressions: {value}")
+    return set(values)
+
+
+def _make_unmanaged_text(text: str) -> str:
+    if VERIFY_BEGIN not in text and VERIFY_END not in text:
+        return text
+    # Reuse marker validation, then discard only the old owned section for
+    # discovery. Project-owned additions to the gate remain visible.
+    validated = managed_block(text, VERIFY_BEGIN, VERIFY_END, "")
+    first = validated.index(VERIFY_BEGIN)
+    last = validated.index(VERIFY_END) + len(VERIFY_END)
+    if validated[last:last + 1] == "\n":
+        last += 1
+    return validated[:first] + validated[last:]
+
+
+def _make_graph(
+    text: str, build: set[str], includes: set[str], build_rules: set[str]
+) -> tuple[dict[str, dict[str, Any]], set[str]]:
+    graph: dict[str, dict[str, Any]] = {}
+    used_includes: set[str] = set()
+    used_rules: set[str] = set()
+    current: list[str] = []
+    lines = iter(text.splitlines())
+    for raw in lines:
+        while raw.endswith("\\"):
+            try:
+                raw = raw[:-1] + " " + next(lines).lstrip()
+            except StopIteration as exc:
+                raise FleetError("Make has an unterminated continued line") from exc
+        if raw.startswith("\t"):
+            for name in current:
+                graph[name]["recipe"] = True
+            continue
+        line = raw.split("#", 1)[0].strip()
+        if not line:
+            continue
+        current = []
+        if re.search(r"\$[({]\s*(?:eval|call|guile|shell|file)\b", line):
+            raise FleetError("Make effectful eval/call/guile/shell/file cannot establish a literal verification graph")
+        if line.startswith(".IGNORE"):
+            raise FleetError("Make .IGNORE can bypass governance rejection")
+        if line.startswith(".SECONDEXPANSION"):
+            raise FleetError("Make secondary expansion is unsupported for verification")
+        if re.match(r"(?:(?:override|export|private)\s+)*\.RECIPEPREFIX\b", line):
+            raise FleetError("Make recipe prefix changes are unsupported")
+        if re.match(r"(?:ifeq|ifneq|ifdef|ifndef|else|endif|define|endef)\b", line):
+            raise FleetError("Make conditional or defined rules are unsupported for verification")
+        included = re.match(r"(-include|sinclude|include)\s+(.+)$", line)
+        if included:
+            directive, expression = included.groups()
+            if directive == "include":
+                raise FleetError("Make include rules are unsupported; isolate build metadata")
+            if expression not in includes:
+                raise FleetError(f"Make optional include requires reviewed build_includes: {expression}")
+            used_includes.add(expression)
+            continue
+        if re.match(
+            r"(?:(?:override|export|private)\s+)*(?:MAKEFLAGS|MFLAGS|GNUMAKEFLAGS|MAKEFILES|MAKEOVERRIDES|SHELL)\s*(?:[?:+!]?=)", line
+        ):
+            raise FleetError("Make control variable assignments may bypass governance rejection")
+        if re.match(r"(?:(?:override|export|private)\s+)*\.[A-Za-z_][A-Za-z0-9_]*\s*(?:[?:+!]?=)", line):
+            raise FleetError("Make special variable assignments may change the verification graph")
+        # Ordinary assignments are opaque consumer build facts. Target-specific
+        # assignments are detected below and rejected if reached.
+        if re.match(r"(?:override\s+|export\s+|private\s+)?[A-Za-z0-9_.-]+\s*(?:[?:+!]?=)", line):
+            continue
+        if ":" not in line:
+            raise FleetError(f"Make unsupported top-level statement may change verification rules: {line}")
+        left, right = line.split(":", 1)
+        left = left.strip()
+        if "\\" in left:
+            raise FleetError("Make escaped target names are unsupported for verification")
+        if "$" in left or "%" in left:
+            if left not in build_rules:
+                raise FleetError(f"Make dynamic or pattern rule requires reviewed build_rules: {left}")
+            used_rules.add(left)
+        names = left.split() if "$" not in left else [left]
+        error = "grouped-target" if left.endswith("&") else None
+        if right.startswith(":"):
+            error = "double-colon"
+        elif ":" in right.split(";", 1)[0]:
+            error = "static-pattern or target-specific"
+        elif re.search(r"(?:^|\s)[A-Za-z0-9_]+\s*[?+!]?=", right):
+            error = "target-specific assignment"
+        prerequisite, separator, _recipe = right.partition(";")
+        if prerequisite.count("|") > 1:
+            error = "multiple order-only separators"
+        dependencies = prerequisite.replace("|", " ").split()
+        for name in names:
+            if not name or name == ".PHONY":
+                continue
+            node = graph.setdefault(name, {"dependencies": [], "recipe": False, "error": None})
+            node["dependencies"].extend(dependencies)
+            node["recipe"] = node["recipe"] or bool(separator)
+            node["error"] = node["error"] or error
+            current.append(name)
+    unused_rules = build_rules - used_rules
+    if unused_rules:
+        raise FleetError("Make build_rules contains unused expressions: " + ", ".join(sorted(unused_rules)))
+    unused = includes - used_includes
+    if unused:
+        raise FleetError("Make build_includes contains unused expressions: " + ", ".join(sorted(unused)))
+    return graph, used_includes
+
+
 def make_runner(text: str, runner: dict[str, Any]) -> str:
     targets = runner.get("targets", [])
-    if not targets or any(
-        not re.fullmatch(r"[A-Za-z0-9_.-]+", target) for target in targets
-    ):
-        raise FleetError("Make binding requires explicit safe targets")
+    if not isinstance(targets, list) or not targets or any(
+        not isinstance(target, str) or not re.fullmatch(r"[A-Za-z0-9_.-]+", target)
+        for target in targets
+    ) or len(targets) != len(set(targets)):
+        raise FleetError("Make binding requires explicit unique safe targets")
+    gate = "workspace-governance-check"
+    build = _make_declaration_tokens(runner, "build_prerequisites")
+    includes = _make_declaration_tokens(runner, "build_includes")
+    build_rules = _make_build_rules(runner)
+    if set(targets) & (build | {gate}):
+        raise FleetError("Make build boundary or governance gate cannot be a verification root")
+    unmanaged = _make_unmanaged_text(text)
+    graph, _ = _make_graph(unmanaged, build, includes, build_rules)
     for target in targets:
-        if not re.search(r"^" + re.escape(target) + r"\s*:", text, re.MULTILINE):
+        if target not in graph:
             raise FleetError(f"Declared Make target is absent: {target}")
-    if "workspace-governance-check:" in text and VERIFY_BEGIN not in text:
+    if gate in graph and VERIFY_BEGIN not in text:
         raise FleetError("Existing workspace-governance-check target is unmanaged")
+    if gate in graph and graph[gate]["recipe"]:
+        raise FleetError("Project-owned governance gate recipe would replace the managed recipe")
+    graph.setdefault(gate, {"dependencies": [], "recipe": False, "error": None})
+    used_build: set[str] = set()
+
+    def closure(roots: list[str], *, governance: bool = False) -> set[str]:
+        visited: set[str] = set()
+        active: set[str] = set()
+
+        def visit(name: str) -> None:
+            if name in active:
+                raise FleetError(f"Make verification dependency cycle at {name}")
+            if name in visited:
+                return
+            if name == gate and not governance:
+                return
+            if name in build:
+                if governance:
+                    raise FleetError(f"Make build exclusion overlaps gate ancestry: {name}")
+                used_build.add(name)
+                return
+            if not re.fullmatch(r"[A-Za-z0-9_./-]+", name):
+                raise FleetError(f"Make dynamic prerequisite requires reviewed build_prerequisites: {name}")
+            if name not in graph:
+                raise FleetError(f"Make verification prerequisite requires an explicit literal rule or build_prerequisites: {name}")
+            node = graph[name]
+            if node["error"]:
+                raise FleetError(f"Make {node['error']} rule is unsupported in verification: {name}")
+            active.add(name)
+            for dependency in node["dependencies"]:
+                visit(dependency)
+            active.remove(name)
+            visited.add(name)
+
+        for root in roots:
+            visit(root)
+        return visited
+
+    governance = closure([gate], governance=True)
+    if set(targets) & governance:
+        raise FleetError("Make governance gate ancestry contains a product verification root")
+    product = closure(targets)
+    overlap = {name for name in product & governance if graph[name]["recipe"]}
+    if overlap:
+        raise FleetError("Make product recipe overlaps governance gate ancestry: " + ", ".join(sorted(overlap)))
+    guarded = set(targets) | {name for name in product if graph[name]["recipe"]}
+    unused = build - used_build
+    if unused:
+        raise FleetError("Make build_prerequisites contains unused tokens: " + ", ".join(sorted(unused)))
     hook = (
         ".PHONY: workspace-governance-check\nworkspace-governance-check:\n\t@./"
         + relative(runner.get("governance_runner", "gov"))
         + (" check" if runner.get("governance_runner", "gov") == "gov" else "")
         + "\n\n"
-        + " ".join(targets)
-        + ": workspace-governance-check"
+        + " ".join(sorted(guarded))
+        + ": | workspace-governance-check"
     )
     return managed_block(text, VERIFY_BEGIN, VERIFY_END, hook)
 
