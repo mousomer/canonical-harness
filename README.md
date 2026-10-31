@@ -1,4 +1,4 @@
-# Workspace policy-kit 1.3.2
+# Workspace policy-kit 1.4.0
 
 This directory is the local owner of reusable workspace governance. The editable
 general mechanism, shared skills and general policy live in
@@ -7,19 +7,19 @@ data or environment constraints remain owned by each consumer. Editing the kit
 does not transfer those authorities or automatically activate deferred policy.
 
 `.governance/distribution.json` pins the reviewed active release under
-`.releases/1.3.2/`. That immutable release contains its complete manifest and every
+`.releases/1.4.0/`. That immutable release contains its complete manifest and every
 declared source byte. It reconstructs the general pack and its legacy baseline;
 changing editable sources requires another reviewed release and guarded adoption.
 To reconstruct a candidate release, use the general exporter's explicit destination:
 `python tools/workspace_governance/release.py --pack tools/workspace_governance
---policy-kit . --output /private/path/release --version 1.3.2
+--policy-kit . --output /private/path/release --version 1.4.0
 --verification-root /private/path/verification-component
 --distribution-root /private/path/distribution-component`. Stage the complete test
 and public control file sets into those component roots first. The exporter
 retains its legacy API default; provide the reviewed successor version explicitly. Review and pin its result before adoption;
 exporting alone does not activate it. The exporter reads the archived 1.1.3 baseline
 when present, preserving compatibility bytes across a distribution upgrade.
-The distribution version 1.3.2 and pack version are separate identities.
+The distribution version 1.4.0 and pack version are separate identities.
 
 `compatibility/1.1.3/` preserves all 19 captured original source files byte for
 byte, with modes and hashes recorded in `manifest.json`. Existing template paths
@@ -100,10 +100,16 @@ The full kit gate is distinct from the quick integrity selftest:
 
 The full gate defaults to active immutable code and separately pinned tests.
 Editable code needs explicit candidate selection. It checks the declared Python,
-pytest, packaging, Git and Bash dependencies without installing packages or
+pytest, packaging, pinned Ruff, Git and Bash dependencies without installing packages or
 creating an environment. Selected origins, schemas, fixtures, modes and hashes
 are validated. Ambient Python startup/import paths and pytest plugins cannot
 substitute developer checkout code. Ordinary context commands stay bounded.
+The gate runs the selected runtime's Ruff lint/C901 and format checks plus the
+selected test suite, retaining per-phase outcomes and bounded structural
+diagnostics. A passing test suite cannot mask a failed style phase. Dependency
+origins must belong to the selected interpreter's installed library directories.
+Top-level output hashes and test counts describe pytest; per-phase records retain
+each tool's full output measurements and the overall status covers every phase.
 
 Default audit reads current collector-reported evidence and bounded structural
 observations. It does not silently refresh a baseline or start products. Baseline
@@ -133,4 +139,6 @@ Machine tool paths remain in the private execution declaration. Public fleet
 metadata retains the portable verifier declaration and binds the complete
 private execution policy with its version, private-registry source and SHA-256.
 A policy change invalidates that binding while execution consumes the original
-private declaration. Releases 1.2.0, 1.3.0 and 1.3.1 remain retained and immutable.
+private declaration. Releases 1.2.0, 1.3.0, 1.3.1 and 1.3.2 remain retained and immutable.
+
+A declared retired temporary external store can carry a release-bound observed-absence lifecycle. Audit reports `governed_absent` only after a fresh absence observation and rejects unexpected reappearance. This records preservation and absence; it never certifies adoption, product behavior or missing scan coverage.

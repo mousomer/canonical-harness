@@ -956,3 +956,132 @@ def test_historical_post_tree_evidence_without_stability_proof_is_rejected(setup
     assert not fleet.audit(registry, release, run_checks=True, evidence_path=evidence)[
         "ok"
     ]
+
+
+def absence_fixture(setup, tmp_path):
+    _root, registry, release = setup
+    value = json.loads(registry.read_text())
+    row = value["checkouts"][0]
+    row.update(integration_mode="external", path=str(tmp_path / "retired-store"))
+    row["external_policy"] = {
+        "mode": "read-only",
+        "owner": "application-owner",
+        "reason": "retired temporary store",
+        "release_manifest_sha256": fleet.digest(
+            fleet.canonical(json.loads(release.read_text()))
+        ),
+        "observed_root_validity": "resolved",
+        "observed_git_head": "a" * 40,
+        "lifecycle": {
+            "state": "retired_absent",
+            "recorded_at": "2026-01-01T00:00:00Z",
+            "evidence_ref": "observations/store-retirement.json",
+        },
+    }
+    registry.write_bytes(fleet.canonical(value))
+    return value, row, registry, release
+
+
+def test_explicit_retired_store_is_freshly_absent_without_installation_or_product_proof(
+    setup, tmp_path
+):
+    _value, _row, registry, release = absence_fixture(setup, tmp_path)
+    planned = fleet.plan(registry, release)["checkouts"][0]
+    assert planned["status"] == "external" and planned["operations"] == []
+    result = fleet.audit(registry, release)
+    assert result["ok"]
+    record = result["checkouts"][0]
+    assert record["status"] == "governed_absent"
+    assert record["observation"]["location_exists"] is False
+    assert record["observation"]["observed_at"]
+    assert not record["installed"]
+    assert record["product_acceptance"] == "not_run"
+
+
+@pytest.mark.parametrize("kind", ["file", "directory", "broken-symlink"])
+def test_retired_store_reappearance_fails_closed(setup, tmp_path, kind):
+    _value, row, registry, release = absence_fixture(setup, tmp_path)
+    root = Path(row["path"])
+    if kind == "file":
+        root.write_text("new owner input")
+    elif kind == "directory":
+        root.mkdir()
+    else:
+        root.symlink_to(tmp_path / "missing-target")
+    result = fleet.audit(registry, release)
+    assert not result["ok"]
+    assert "reappeared" in result["checkouts"][0]["errors"][0]
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        "unknown-state",
+        "missing-time",
+        "naive-time",
+        "future-time",
+        "private-path",
+        "traversal",
+        "unknown-field",
+        "unresolved",
+        "missing-head",
+        "no-lifecycle",
+    ],
+)
+def test_missing_or_malformed_absence_authority_never_passes(setup, tmp_path, change):
+    value, row, registry, release = absence_fixture(setup, tmp_path)
+    policy = row["external_policy"]
+    lifecycle = policy["lifecycle"]
+    if change == "unknown-state":
+        lifecycle["state"] = "accepted"
+    elif change == "missing-time":
+        lifecycle.pop("recorded_at")
+    elif change == "naive-time":
+        lifecycle["recorded_at"] = "2026-01-01T00:00:00"
+    elif change == "future-time":
+        lifecycle["recorded_at"] = "9999-01-01T00:00:00Z"
+    elif change == "private-path":
+        lifecycle["evidence_ref"] = "/private/owner-record.json"
+    elif change == "traversal":
+        lifecycle["evidence_ref"] = "../owner-record.json"
+    elif change == "unknown-field":
+        lifecycle["accepted"] = True
+    elif change == "unresolved":
+        policy["observed_root_validity"] = "unresolved_git_marker"
+    elif change == "missing-head":
+        policy["observed_git_head"] = None
+    else:
+        policy.pop("lifecycle")
+    registry.write_bytes(fleet.canonical(value))
+    assert not fleet.audit(registry, release)["ok"]
+
+
+def test_absence_observation_preserves_scan_failure_and_permission_failure(
+    setup, tmp_path, monkeypatch
+):
+    value, row, registry, release = absence_fixture(setup, tmp_path)
+    value["scope"]["scan_errors"] = ["unreadable root"]
+    registry.write_bytes(fleet.canonical(value))
+    result = fleet.audit(registry, release)
+    assert not result["ok"] and "unresolved_scan_evidence" in result["failures"]
+    original = Path.lstat
+
+    def refused(path):
+        if str(path) == row["path"]:
+            raise PermissionError("synthetic unreadable store")
+        return original(path)
+
+    monkeypatch.setattr(Path, "lstat", refused)
+    assert fleet.audit(registry, release)["checkouts"][0]["status"] == "incomplete"
+
+
+def test_absence_audit_reaches_the_public_distribution_summary(setup, tmp_path, capsys):
+    from tools.policy_kit_distribution import cli
+
+    _value, _row, registry, release = absence_fixture(setup, tmp_path)
+    observed = fleet.audit(registry, release)
+    cli._summary(observed, command="audit")
+    summary = json.loads(capsys.readouterr().out)
+    assert summary["statuses"] == {"governed_absent": 1}
+    assert summary["failures"] == 0
+    assert summary["product_execution"] == "not_requested"

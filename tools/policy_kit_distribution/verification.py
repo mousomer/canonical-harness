@@ -48,14 +48,21 @@ def dependency_check(contract: dict) -> None:
         if executable == "make":
             try:
                 result = subprocess.run(
-                    [selected, "--version"], capture_output=True, text=True,
-                    check=False, timeout=5,
+                    [selected, "--version"],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                    timeout=5,
                     env={"PATH": approved_path, "LANG": "C", "LC_ALL": "C"},
                 )
             except (OSError, subprocess.TimeoutExpired) as exc:
                 raise ValueError("verification requires GNU Make >=3.81") from exc
             version = re.search(r"^GNU Make ([0-9]+(?:\.[0-9]+)+)", result.stdout)
-            if result.returncode != 0 or version is None or Version(version.group(1)) < Version("3.81"):
+            if (
+                result.returncode != 0
+                or version is None
+                or Version(version.group(1)) < Version("3.81")
+            ):
                 raise ValueError("verification requires GNU Make >=3.81")
 
 
@@ -66,6 +73,136 @@ PUBLIC_CONTROL_SCRIPTS = (
     "scripts/sync_workspace_policy.sh",
     "scripts/audit_workspace_policy.sh",
 )
+
+VERIFICATION_PROGRAM = """import importlib.util,pathlib,runpy,sys,sysconfig,types
+roots={pathlib.Path(sysconfig.get_path(name)).resolve() for name in ('purelib','platlib')}
+for name in ('pytest','packaging','ruff'):
+    spec=importlib.util.find_spec(name)
+    if spec is None or spec.origin is None or not any(pathlib.Path(spec.origin).resolve().is_relative_to(root) for root in roots):
+        raise SystemExit('VERIFICATION_DEPENDENCY_ORIGIN_INVALID:'+name)
+module,runtime,control,tests,temp,*arguments=sys.argv[1:]
+if module=='ruff':
+    sys.argv=['ruff',*arguments]
+    runpy.run_module('ruff',run_name='__main__')
+    raise SystemExit(0)
+if module!='pytest':
+    raise SystemExit('VERIFICATION_MODULE_INVALID')
+import pytest
+namespace=types.ModuleType('tools');namespace.__package__='tools'
+namespace.__path__=[str(pathlib.Path(runtime).parents[1]/'tools'),str(pathlib.Path(control).parents[1]/'tools')]
+sys.modules['tools']=namespace
+sys.path[:0]=[str(pathlib.Path(runtime).parents[1]),str(pathlib.Path(control).parents[1])]
+raise SystemExit(pytest.main([tests,'-q','-p','no:cacheprovider','--basetemp',temp]))
+"""
+
+
+def _style_diagnostics(output: bytes, runtime: Path) -> list[dict]:
+    diagnostics = []
+    for line in output.splitlines():
+        try:
+            row = json.loads(line)
+            code = row["code"]
+            if not isinstance(code, str) or not re.fullmatch(
+                r"[A-Z][0-9]{3,4}|invalid-syntax|unformatted", code
+            ):
+                continue
+            name = Path(row["filename"]).resolve().relative_to(runtime).as_posix()
+            location = row["location"]
+            if type(location["row"]) is not int or type(location["column"]) is not int:
+                continue
+            diagnostics.append(
+                {
+                    "code": code,
+                    "path": name,
+                    "line": location["row"],
+                    "column": location["column"],
+                }
+            )
+        except (ValueError, KeyError, TypeError):
+            continue
+        if len(diagnostics) == 20:
+            break
+    return diagnostics
+
+
+def _phase_result(name: str, result: dict, runtime: Path) -> dict:
+    output = result.pop("stdout_preview")
+    errors = result.pop("stderr_preview")
+    diagnostics = [] if name == "pytest" else _style_diagnostics(output, runtime)
+    origin = re.search(
+        rb"VERIFICATION_DEPENDENCY_ORIGIN_INVALID:(pytest|packaging|ruff)\b", errors
+    )
+    if origin:
+        diagnostics.append(
+            {"code": "dependency-origin-invalid", "dependency": origin[1].decode()}
+        )
+    status = 124 if result["timed_out"] else result["exit_code"]
+    if status != 0 and not diagnostics:
+        diagnostics.append(
+            {"code": "timeout" if result["timed_out"] else "phase-failed"}
+        )
+    phase = {
+        "name": name,
+        **result,
+        "exit_code": status,
+        "diagnostics": diagnostics,
+        "diagnostics_truncated": len(diagnostics) >= 20
+        or result["stdout_bytes"] > len(output)
+        or result["stderr_bytes"] > len(errors),
+    }
+    if name == "pytest":
+        phase["test_counts"] = {
+            outcome.decode(): int(count)
+            for count, outcome in re.findall(
+                rb"(\d+) (passed|failed|error|errors|skipped)\b",
+                output + b"\n" + errors,
+            )
+        }
+    return phase
+
+
+def _run_phases(
+    runtime: Path, control: Path, tests: Path, environment: dict
+) -> list[dict]:
+    from tools.workspace_governance.fleet_execution import run_digest
+
+    phases = []
+    with tempfile.TemporaryDirectory(prefix="policy-kit-gate-") as temporary:
+        style = [
+            "--config",
+            str(runtime / ".ruff.toml"),
+            "--no-cache",
+            "--output-format",
+            "json-lines",
+            str(runtime),
+        ]
+        commands = (
+            ("lint", "ruff", ["check", "--no-fix", *style], 120),
+            ("format", "ruff", ["format", "--check", *style], 120),
+            ("pytest", "pytest", [], 1800),
+        )
+        for name, module, arguments, timeout in commands:
+            result = run_digest(
+                [
+                    sys.executable,
+                    "-I",
+                    "-B",
+                    "-c",
+                    VERIFICATION_PROGRAM,
+                    module,
+                    str(runtime),
+                    str(control),
+                    str(tests),
+                    temporary + "/pytest",
+                    *arguments,
+                ],
+                Path(temporary),
+                environment,
+                timeout,
+                diagnostic_limit=128 * 1024,
+            )
+            phases.append(_phase_result(name, result, runtime))
+    return phases
 
 
 def candidate_component_identity(root: Path, name: str) -> str:
@@ -141,7 +278,7 @@ def selected_components(
 def run_gate(kit: Path, candidate: Path | None = None) -> dict:
     runtime, control, tests, identity = selected_components(kit, candidate)
     anchor_components(runtime, control)
-    from tools.workspace_governance.fleet_execution import run_digest, safe_environment
+    from tools.workspace_governance.fleet_execution import safe_environment
 
     dependency_check(
         json.loads((tests / "verification-dependencies.json").read_bytes())
@@ -153,49 +290,33 @@ def run_gate(kit: Path, candidate: Path | None = None) -> dict:
         PYTHONDONTWRITEBYTECODE="1",
         PYTEST_DISABLE_PLUGIN_AUTOLOAD="1",
     )
-    # -I ignores ambient import/startup paths. The child anchors only selected packages.
-    program = """import sys,types,pathlib
-runtime,control,tests,temp=sys.argv[1:]
-namespace=types.ModuleType('tools');namespace.__package__='tools'
-namespace.__path__=[str(pathlib.Path(runtime).parents[1]/'tools'),str(pathlib.Path(control).parents[1]/'tools')]
-sys.modules['tools']=namespace
-sys.path[:0]=[str(pathlib.Path(runtime).parents[1]),str(pathlib.Path(control).parents[1])]
-import pytest
-raise SystemExit(pytest.main([tests,'-q','-p','no:cacheprovider','--basetemp',temp]))
-"""
-    with tempfile.TemporaryDirectory(prefix="policy-kit-gate-") as temporary:
-        result = run_digest(
-            [
-                sys.executable,
-                "-I",
-                "-B",
-                "-c",
-                program,
-                str(runtime),
-                str(control),
-                str(tests),
-                temporary + "/pytest",
-            ],
-            Path(temporary),
-            environment,
-            1800,
-            diagnostic_limit=128 * 1024,
-        )
+    phases = _run_phases(runtime, control, tests, environment)
     _, _, _, observed_identity = selected_components(kit, candidate)
     if observed_identity != identity:
         raise ValueError("selected components changed during verification")
-    preview = result.pop("stdout_preview") + b"\n" + result.pop("stderr_preview")
-    counts = {}
-    for count, outcome in re.findall(
-        rb"(\d+) (passed|failed|error|errors|skipped)\b", preview
-    ):
-        counts[outcome.decode()] = int(count)
-    status = 124 if result["timed_out"] else result["exit_code"]
+    tests_result = phases[-1]
+    status = next(
+        (phase["exit_code"] for phase in phases if phase["exit_code"] != 0), 0
+    )
     return {
         "kind": "policy-kit-verification",
         **identity,
-        **result,
-        "test_counts": counts,
+        **{
+            key: tests_result[key]
+            for key in (
+                "stdout_bytes",
+                "stderr_bytes",
+                "stdout_sha256",
+                "stderr_sha256",
+            )
+        },
+        "output_scope": "pytest",
+        "test_counts": tests_result["test_counts"],
+        "phases": phases,
+        "timed_out": any(phase["timed_out"] for phase in phases),
+        "duration_seconds": round(
+            sum(phase["duration_seconds"] for phase in phases), 6
+        ),
         "exit_code": status,
         "ok": status == 0,
         "product_execution": "not_requested",

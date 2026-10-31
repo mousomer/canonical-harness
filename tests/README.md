@@ -8,9 +8,14 @@ starting the suite. Ordinary context commands do not launch these tests.
 The dependency and executable contract is `verification-dependencies.json`.
 Use the already governed interpreter; checks do not create an environment,
 install packages, access a product model, or require network access. The test
-runtime needs Python 3.11 or newer, pytest, packaging, Git, Bash and GNU Make 3.81
+runtime needs Python 3.11 or newer, pytest, packaging, Ruff 0.16.0, Git, Bash and GNU Make 3.81
 or newer. The gate rejects an unavailable or incompatible Make before dispatch. Integration
 fixtures execute synthetic shell/Python checks only.
+The complete kit gate runs read-only runtime lint/C901 and formatting phases
+before pytest, without installing dependencies. Each isolated child checks that
+verifier packages originate in the selected interpreter's installed libraries.
+Failure reports retain tool outcomes, full output byte counts and hashes, and
+bounded diagnostic codes/relative locations without source or fix contents.
 
 For an editable candidate, the declared invocation is:
 

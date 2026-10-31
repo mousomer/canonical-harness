@@ -111,6 +111,7 @@ def _summary(result: dict[str, Any], *, command: str) -> None:
         "accepted",
         "incomplete",
         "governed_read_only",
+        "governed_absent",
         "installed_only",
         "passed",
         "baseline_passed",

@@ -3,7 +3,8 @@
   "python_requires": ">=3.11",
   "requirements": [
     "pytest>=7,<10",
-    "packaging>=23,<27"
+    "packaging>=23,<27",
+    "ruff==0.16.0"
   ],
   "executables": [
     "git",
@@ -13,5 +14,5 @@
   "environment_creation": "forbidden",
   "network": "forbidden",
   "product_packages": "none",
-  "invocation": "selected-interpreter -m pytest tests/workspace_governance"
+  "invocation": "selected-interpreter isolated runtime ruff check, ruff format --check, selected pytest component"
 }

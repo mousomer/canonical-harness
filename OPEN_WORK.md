@@ -1,29 +1,46 @@
 # Policy-kit open work
 
-## Published Make verification ordering repair
+## Harness repair state
 
-- Distribution 1.3.2/runtime 0.6.2 implements the bounded Make graph contract in
-  `MAKE_VERIFICATION_DESIGN.md`. Full candidate and selected immutable gates
-  passed 641 tests; immutable reconstruction returned unchanged content.
-- Guarded adoption installed 32 proven direct consumers without installer
-  failures. The following plan reports all 32 unchanged. Protected/read-only
-  locations, excluded checkouts, execution holds and historical evidence remain
-  preserved.
-- All 32 fresh governance baselines passed with stable inputs. Three of five
-  approved product verifiers passed, including Xyntific after its temporary edge
-  was retired and all 18 ordering/routing probes and its full verifier passed.
+Distribution 1.4.0 / runtime 0.7.0 is published and active. The bounded Make
+parser retains its graph, rejecting forms and diagnostics through helper-based
+parsing and traversal. The required kit gate now independently enforces declared
+Ruff lint/C901, formatting and pytest under isolated dependency origins, with
+bounded diagnostics. Candidate and immutable gates each passed 662 tests.
+Unchanged-content reconstruction and actual source/skill integrity were checked.
+Published releases and historical evidence remain immutable.
 
-## Follow-up: consumer source-style compatibility
+Guarded adoption covered 34 direct consumers. Exact preimages and durable undo
+receipts retain source and private-state changes, including reviewed native
+bindings. Official plans, fresh baselines, approved verifier records and the
+current audit remain authoritative for current execution and drift; this source
+note is not a substitute for registry-bound evidence.
 
-Fresh product collection found new Make-parser complexity and formatting failures
-in harness-observatory. Refactor the parser into bounded helpers and format the
-changed source under the consuming verifier contract; preserve diagnostics,
-ordering semantics and rejection boundaries. Do not alter published 1.3.2 bytes
-or suppress the consumer checks. Publish and verify a successor, adopt it with
-guarded preimages, and recollect fresh product proof.
+## Existing offline consumer repairs
 
-Gifted-masking also failed its declared product verifier with stable inputs.
-That failure remains recorded and requires separate diagnosis. Governance-only
-consumers, execution holds, blocked locations and scan gaps remain explicit
-nonzero audit findings. Shared source gates and installation do not establish
-whole-fleet product acceptance.
+The owner selected harness repairs and existing offline checks. Gifted-masking
+tests now isolate disposable Git/source and output fixtures; scientific
+certificate freshness and execution approvals remain separate. rembg-reporter
+uses existing synthetic report checks and disposable caches. RMBG sampler
+fixtures use invocation-owned temporary inputs and default pytest discovery
+stays within the existing owned tests. Parity inherits the approved runtime
+selector while retaining pinned tiled-source checks. Raizor-thin's truncated
+module is restored exactly from its own retained commit; portrait defaults and
+test fixtures match existing contracts. Governed environment resolution failures
+stop both newly connected runners, with inert rejecting regressions.
+
+These offline lanes do not qualify production dependency pins, GPU/model/corpus
+behavior, deployment or visual acceptance. New scientific, cloud and platform
+product contracts remain outside this follow-up. No environments, dependencies
+or model assets were installed or downloaded.
+
+## Remaining boundaries
+
+Two relocated worktree markers have exact retained administrative identities;
+seven missing records have no retained HEAD/index and remain blocked. Explicit
+parent/child ownership prevents recursive installer writes. Two retired external
+stores have release-bound fresh-absence observations; absence is never adoption
+or product proof. Private execution holds, governance-only product contracts,
+unreadable/unscanned roots and incomplete discovery remain nonzero audit findings.
+The IQA model-download hold and deferred telemetry continuation remain in force.
+Whole-computer and whole-fleet product acceptance are not established.
