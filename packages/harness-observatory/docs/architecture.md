@@ -51,6 +51,16 @@ Offline mode performs the complete evidence inventory without transmitting repos
 
 The separately invoked routing_analysis.py is an offline, opt-in private analytical projection, not a canonical schema change. It freezes source byte extents, preserves content-addressed snapshots, and writes SQLite plus CSV only under an initialized external DataRoot. Literal single-site wrappers are mapped to their existing invocation ID; dynamic and multi-site wrappers remain UNKNOWN with source-site evidence. Recorded invocation does not prove execution. No production repository writes or routing experiments are permitted.
 
+### Routing analysis inputs
+
+The offline routing report derives measurements from the current private input
+selection. Supply every selected working directory explicitly with repeatable
+`--cwd` arguments; no named project or home-worktree fallback is included.
+Software contains no fixed historical comparison totals. Reports and optional
+external comparisons remain private runtime material. Source review and
+synthetic regressions supplement publication pattern checks; retained Git
+history is not certified data-free by a current-source cleanup.
+
 ### Routing measurement repair v2
 
 The repair consumes only an immutable, hash-verified inventory derived from an existing checkpoint. It never discovers live inputs. A separate action graph distinguishes source containers, candidate nested invocations, measured results and continuation observations; only evidenced ownership can allocate output to a leaf action. JavaScript and shell syntax are parsed without executing historical code. Candidate Git states, injected instruction observations and uncertain transitions remain distinct. Acceptance requires a stratified raw audit, disclosed coverage/error intervals, at least 99% leaf-output byte attribution and at least 95% precision/recall for relevant operation classes; passing software tests alone is insufficient. The run stops after acceptance or rejection, with no route design or production mutation.

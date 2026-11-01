@@ -14,6 +14,12 @@ Existing immutable releases retain their bytes and logical publisher identity.
 Observatory is not installed into governance consumers or included in release
 1.4.0. Changed shipped components require their own reviewed release.
 
+The routing-analysis cleanup removes fixed historical comparison totals and
+implicit project selection. Synthetic regressions verify explicit working
+directory selection, input-derived report totals and the absence of literal
+corpus comparison tables. Published history remains intact; source-content
+review supplements the pattern and inventory gate.
+
 ## Remaining boundaries
 
 Consumer updates require an explicit owner-approved private allowlist and their

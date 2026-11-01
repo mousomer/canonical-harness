@@ -29,6 +29,11 @@ are checked. `./scripts/verify_publication.sh --full-history` separately reports
 pre-existing published historical findings and is never represented as clean
 when those findings remain.
 
+The source-only contract also covers observed measurements embedded in code.
+Synthetic regressions check report provenance and known comparison-table
+literals. Pattern and inventory checks supplement source review; a passing
+current-source check does not certify retained historical content as data-free.
+
 See the [ownership and migration contract](docs/architecture/software_consolidation.md).
 
 ## Workspace policy-kit 1.4.0

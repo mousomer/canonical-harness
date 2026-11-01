@@ -10,19 +10,19 @@
     },
     {
       "path": "OPEN_WORK.md",
-      "sha256": "086c915c7e8df7dec389ee4b7061440a6fce1e5ec57924e1c78132909aebc338",
+      "sha256": "189d0f3dd04825291b3b8174cc3d1db5dccd52e9dc8f8331ef33d22a27d44cb2",
       "mode": "100644",
       "kind": "docs"
     },
     {
       "path": "README.md",
-      "sha256": "e19a06766077c02eb81597c7ed63aadbdc4ee7079df2f53138eaa7ba1cd38cea",
+      "sha256": "589e786e5703ea41e68540574f0475be6ec846619b2d112a8cb21b6f2a239e07",
       "mode": "100644",
       "kind": "docs"
     },
     {
       "path": "docs/architecture/software_consolidation.md",
-      "sha256": "9c3ca7e02abb7e6aa32bc070234b8ded94353dc6b788919e3c3e26985537e28e",
+      "sha256": "c5b7da1086a40fc30d0bfb5f91c03c16a57b4c133f63ebbc8ad9191087432ee9",
       "mode": "100644",
       "kind": "docs"
     },
@@ -40,19 +40,19 @@
     },
     {
       "path": "packages/harness-observatory/README.md",
-      "sha256": "a80f4fb318115fa582e5662d69c600049b7427801c7027969526e56c5dd7e4e5",
+      "sha256": "3fee162ab88f8f9857c3b98cb126feb2e23e2014a83ab04bb57635270f3b2d43",
       "mode": "100644",
       "kind": "docs"
     },
     {
       "path": "packages/harness-observatory/docs/BACKLOG.md",
-      "sha256": "9edf2bd1d7fbfe80cf622fce0040766613cc958af3e35f0770b2c17b4a675264",
+      "sha256": "fe40a5f4d1843856225c1038ef2c38b759d16d28fe82c878d5fdb39bbc78d2b3",
       "mode": "100644",
       "kind": "docs"
     },
     {
       "path": "packages/harness-observatory/docs/architecture.md",
-      "sha256": "bb583828efd84d09f470450ade5801ec7b5f414a0f3ad3ca7b3597a01dd22eed",
+      "sha256": "d5555684c99f41102311b81ea5b998cff07d3787a4e1163e588c71dea34d743c",
       "mode": "100644",
       "kind": "docs"
     },
@@ -148,7 +148,7 @@
     },
     {
       "path": "packages/harness-observatory/scripts/routing_analysis.py",
-      "sha256": "16615fe1018bc0e215702bf219515697340c7537a633b0e0a07e652cf70ad394",
+      "sha256": "6ab931d298c5ab7b8b0f65cca9f4ccba29f76552f04d81aca3357c869fcecaa0",
       "mode": "100644",
       "kind": "src"
     },
@@ -352,7 +352,7 @@
     },
     {
       "path": "packages/harness-observatory/tests/test_routing_analysis.py",
-      "sha256": "f2d83d2b28723341df995494a9f6a4104a1d8bf8d7749118121b601ba000b0f1",
+      "sha256": "088f24e68051381c158d593f3b370eeee8e235a4e0c34bfefbde0ef8bb961eb7",
       "mode": "100644",
       "kind": "test"
     },
@@ -365,6 +365,12 @@
     {
       "path": "repository_tests/test_manifest_bindings.py",
       "sha256": "78785186a93be1f231c3b247a2ab6ee7c9d4f3d4b4f0d6fce6a8b5e5e27eee62",
+      "mode": "100644",
+      "kind": "test"
+    },
+    {
+      "path": "repository_tests/test_observed_measurements.py",
+      "sha256": "66cbe3d0ec4c2d8889f8d4f8ce3fbc5603a5f3814cf836be78b5231d5aef3cdb",
       "mode": "100644",
       "kind": "test"
     },

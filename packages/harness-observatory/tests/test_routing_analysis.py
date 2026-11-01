@@ -1,8 +1,16 @@
 """Synthetic routing-analysis regression fixtures; no private evidence."""
 
 import importlib.util
+import io
+import json
+import sys
+import tempfile
 import unittest
+from contextlib import redirect_stdout
 from pathlib import Path
+from unittest.mock import patch
+
+from harness_observatory.data_root import init_data_root
 
 SPEC = importlib.util.spec_from_file_location(
     "routing_analysis", Path(__file__).parents[1] / "scripts" / "routing_analysis.py"
@@ -16,6 +24,74 @@ SPEC.loader.exec_module(module)
 
 
 class RoutingAnalysisTests(unittest.TestCase):
+    def test_report_uses_only_explicit_synthetic_inputs(self):
+        with tempfile.TemporaryDirectory() as directory:
+            temporary = Path(directory)
+            data_root = init_data_root(temporary / "data")
+            sources = temporary / "sources"
+            sources.mkdir()
+            selected = [str(temporary / "project-one"), str(temporary / "project-two")]
+            home = temporary / "synthetic-home"
+            # This invented path exercises the former named-project fallback.
+            unselected = str(home / ".codex" / "worktrees" / "synthetic" / "tet4d")
+            accepted_bytes = 0
+            for index, cwd in enumerate([*selected, unselected]):
+                record = dict(
+                    type="session_meta",
+                    payload={
+                        "id": f"synthetic-session-{index}",
+                        "cwd": cwd,
+                        "timestamp": "2000-01-01T00:00:00Z",
+                    },
+                )
+                raw = (json.dumps(record) + "\n").encode()
+                (sources / f"rollout-synthetic-{index}.jsonl").write_bytes(raw)
+                if cwd in selected:
+                    accepted_bytes += len(raw)
+            arguments = [
+                "routing_analysis.py",
+                "--data-root",
+                str(data_root.path),
+                "--repo",
+                str(temporary),
+                "--source-root",
+                str(sources),
+                "--output",
+                "analysis/synthetic-report",
+            ]
+            for cwd in selected:
+                arguments.extend(["--cwd", cwd])
+            with (
+                patch.object(sys, "argv", arguments),
+                patch.object(module.Path, "home", return_value=home),
+                redirect_stdout(io.StringIO()),
+            ):
+                module.main()
+            report = json.loads(
+                (data_root.path / "analysis/synthetic-report/corpus_inventory.json").read_text()
+            )
+            self.assertEqual(report["session_count"], len(selected))
+            self.assertEqual(report["bytes"], accepted_bytes)
+            self.assertEqual({row["metadata"]["cwd"] for row in report["sources"]}, set(selected))
+            self.assertEqual(
+                set(report),
+                {
+                    "parser_version",
+                    "session_count",
+                    "bytes",
+                    "gib",
+                    "counts",
+                    "logical_calls",
+                    "formats",
+                    "sources",
+                    "current_rds_files_inventory_only",
+                    "era_states",
+                    "source_kinds",
+                    "date_range",
+                    "status",
+                },
+            )
+
     def test_operation_golden_cases(self):
         for command, expected in [
             ("cat docs/POLICY.md", "WHOLE_READ"),

@@ -92,3 +92,8 @@ python scripts/smoke_local.py --codex-root "$CODEX_SOURCE_ROOT" --claude-root "$
 It selects at most ten files per provider. Raw copies, normalized/enriched records, warehouse and the report remain exclusively in the data root. It performs no bulk backfill and prints no corpus statistics. Check `git status`, `git ls-files` and `the repository publication gate` afterward; no derived values should enter the software repository.
 
 See [architecture](docs/architecture.md), [data model](docs/data-model.md), [qualitative capabilities](docs/source-capability-matrix.md), [prior art](docs/prior-art.md) and [backlog](docs/BACKLOG.md). Analysis code belongs in Git; real results, output-bearing notebooks, identity mappings and local configuration do not. Semantic labeling, bulk backfill, statistics, live telemetry, OpenTelemetry, governance optimization and public export are later milestones.
+
+The offline routing-analysis script requires an explicit `--cwd` argument for
+each selected working directory; repeat it for additional directories. Report
+version `routing-analysis-1.1` derives totals from those private inputs and omits
+fixed historical comparisons. Keep runtime reports outside Git.

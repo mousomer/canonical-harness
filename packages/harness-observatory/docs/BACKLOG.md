@@ -7,6 +7,8 @@
 - [x] Keep generated provider inputs in invocation-owned temporary directories;
       retain no JSONL fixture files or real run material in the source tree.
 - [x] Run bounded publication checks over index, worktree and newly reachable history.
+- [x] Remove fixed corpus comparison totals and implicit project selection;
+      verify input-derived reports and source literals with synthetic regressions.
 
 Existing software includes versioned normalization, historical governance joins,
 restartable census processing, private warehouse writers and offline routing

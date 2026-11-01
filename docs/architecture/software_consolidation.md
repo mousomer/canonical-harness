@@ -21,6 +21,16 @@ including commit/tag messages. All source metadata remains subject to content
 checks; a filename extension or an ignored directory is not a safety exception.
 Limits and input errors reject rather than silently skip coverage.
 
+Source review includes embedded numeric measurements as well as serialized
+artifacts. Routing reports derive counts and byte totals only from explicitly
+selected runtime inputs; tracked software carries no fixed historical corpus
+comparison. Each selected working directory must be supplied through `--cwd`;
+project names and machine-directory conventions add no implicit selections.
+Synthetic output and source-literal regressions enforce this known boundary.
+Pattern and inventory checks alone do not prove the absence of observed data.
+Current-source cleanup preserves published history and does not certify that
+earlier commits contain no data.
+
 ## Component and authority boundaries
 
 `tools/workspace_governance/` remains the sole portable governance mechanism.

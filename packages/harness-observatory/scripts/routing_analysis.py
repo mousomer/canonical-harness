@@ -14,7 +14,7 @@ from pathlib import Path
 
 from harness_observatory.data_root import DataRoot
 
-VERSION = "routing-analysis-1.0"
+VERSION = "routing-analysis-1.1"
 CLASSES = "WHOLE_READ BOUNDED_READ SEARCH GIT_INSPECT EDIT GENERATED_REFRESH VERIFY RUNTIME_OR_BUILD GOV_QUERY METADATA OTHER UNKNOWN".split()
 
 
@@ -340,9 +340,7 @@ def main():
         with source.open("rb") as f:
             meta = json.loads(f.readline())["payload"]
         cwd = meta.get("cwd", "")
-        if cwd not in args.cwd and not (
-            cwd.startswith(str(Path.home() / ".codex/worktrees") + "/") and cwd.endswith("/tet4d")
-        ):
+        if cwd not in args.cwd:
             continue
         inventory.append(
             {"path": str(source), "frozen_extent": source.stat().st_size, "metadata": meta}
@@ -721,7 +719,6 @@ def main():
             min(i["metadata"].get("timestamp", "") for i in inventory),
             max(i["metadata"].get("timestamp", "") for i in inventory),
         ],
-        "original_comparison": {"sessions": 286, "raw_calls": 81972, "bytes": 1996306544},
         "status": "machine_pass_manual_validation_pending",
     }
     (dest / "corpus_inventory.json").write_text(json.dumps(report, indent=2) + "\n")
