@@ -1,4 +1,42 @@
-# Workspace policy-kit 1.4.0
+# Canonical Harness
+
+This source repository owns the reusable governance kit and the optional
+[Harness Observatory](packages/harness-observatory/README.md) software package.
+The existing governance publisher identity remains `workspace/policy-kit`;
+Observatory is not installed into consumers or included in immutable release
+1.4.0. Its dependencies and source verification remain separate.
+
+Only reviewed software belongs in Git: code, schemas, packaging, software
+documentation and test code. Provider inputs are generated synthetically in
+temporary directories. Real logs, transcripts, corpora, normalized/enriched
+records, warehouses, analysis results, identity mappings, corpus identifiers,
+machine configuration and private receipts remain external. The source import
+does not merge old repository histories or start collection or analysis.
+
+Run the complete source verifier with an approved existing interpreter:
+
+```sh
+./scripts/verify_all.sh
+```
+
+`HARNESS_PYTHON` selects an existing interpreter. Verification creates no
+environment and installs no dependencies. The aggregate gate runs the kit's
+declared lint/format/test phases, publication regressions, and Observatory's
+complete synthetic verifier. Publication is bound to exact reviewed source
+hashes and modes in `config/publication/source_allowlist.json`; changed or
+unlisted bytes fail closed. Current/index content and newly reachable history
+are checked. `./scripts/verify_publication.sh --full-history` separately reports
+pre-existing published historical findings and is never represented as clean
+when those findings remain.
+
+The source-only contract also covers observed measurements embedded in code.
+Synthetic regressions check report provenance and known comparison-table
+literals. Pattern and inventory checks supplement source review; a passing
+current-source check does not certify retained historical content as data-free.
+
+See the [ownership and migration contract](docs/architecture/software_consolidation.md).
+
+## Workspace policy-kit 1.4.0
 
 This directory is the local owner of reusable workspace governance. The editable
 general mechanism, shared skills and general policy live in
@@ -61,8 +99,8 @@ Audit reads the configured verification evidence and checks registry identities,
 release bytes, hooks and consumer governance without starting product runners.
 Use explicit `verify --checkout <registry-id>` to collect approved product evidence.
 Private `blocked_execution` entries refuse a selected or all-repository verify
-before any runner starts. IQA-sort currently requires a separate owner-reviewed
-execution decision because its canonical runner may download model weights.
+before any runner starts. A product runner that may download model weights requires a separate
+owner-reviewed execution decision.
 A missing
 product verifier, governance-only coverage, stale evidence, blocked/orphan
 location or unresolved scan gap produces a nonzero audit. A successful installer

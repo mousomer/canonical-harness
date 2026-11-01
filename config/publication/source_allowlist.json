@@ -1,0 +1,414 @@
+{
+  "schema_version": 1,
+  "published_base": "df332ad5eed18926b7a17d0795380b65c7fd4f98",
+  "artifacts": [
+    {
+      "path": ".gitignore",
+      "sha256": "b632704eaceeb160ad4d9f6b6cd8837dcafb1fcbe402a6c89f74a948a7b2abf3",
+      "mode": "100644",
+      "kind": "governance"
+    },
+    {
+      "path": "OPEN_WORK.md",
+      "sha256": "189d0f3dd04825291b3b8174cc3d1db5dccd52e9dc8f8331ef33d22a27d44cb2",
+      "mode": "100644",
+      "kind": "docs"
+    },
+    {
+      "path": "README.md",
+      "sha256": "589e786e5703ea41e68540574f0475be6ec846619b2d112a8cb21b6f2a239e07",
+      "mode": "100644",
+      "kind": "docs"
+    },
+    {
+      "path": "docs/architecture/software_consolidation.md",
+      "sha256": "c5b7da1086a40fc30d0bfb5f91c03c16a57b4c133f63ebbc8ad9191087432ee9",
+      "mode": "100644",
+      "kind": "docs"
+    },
+    {
+      "path": "packages/harness-observatory/.gitignore",
+      "sha256": "ae4779c83772adcc3320fb9b3831cea0bbb71a82f48b3349b35a017525cf3516",
+      "mode": "100644",
+      "kind": "governance"
+    },
+    {
+      "path": "packages/harness-observatory/AGENTS.md",
+      "sha256": "229e979f0e987405ee1fb9247a69c5418eee64d2bbc91016640b415c9876329d",
+      "mode": "100644",
+      "kind": "docs"
+    },
+    {
+      "path": "packages/harness-observatory/README.md",
+      "sha256": "3fee162ab88f8f9857c3b98cb126feb2e23e2014a83ab04bb57635270f3b2d43",
+      "mode": "100644",
+      "kind": "docs"
+    },
+    {
+      "path": "packages/harness-observatory/docs/BACKLOG.md",
+      "sha256": "fe40a5f4d1843856225c1038ef2c38b759d16d28fe82c878d5fdb39bbc78d2b3",
+      "mode": "100644",
+      "kind": "docs"
+    },
+    {
+      "path": "packages/harness-observatory/docs/architecture.md",
+      "sha256": "d5555684c99f41102311b81ea5b998cff07d3787a4e1163e588c71dea34d743c",
+      "mode": "100644",
+      "kind": "docs"
+    },
+    {
+      "path": "packages/harness-observatory/docs/data-model.md",
+      "sha256": "d1b785882bd920155018d07ff62a6f3ac9d3d5c68cddf6c3b8de2875e4ff6d15",
+      "mode": "100644",
+      "kind": "docs"
+    },
+    {
+      "path": "packages/harness-observatory/docs/prior-art.md",
+      "sha256": "f1d6f32c95651525265d4f24e175181df1236cf97d975af9943de84720caf13f",
+      "mode": "100644",
+      "kind": "docs"
+    },
+    {
+      "path": "packages/harness-observatory/docs/routing_analysis_v3_design.md",
+      "sha256": "7b32342f63be2b09598571063ffc31d30c4cd8df351a8eca8b7ef38f20e80354",
+      "mode": "100644",
+      "kind": "docs"
+    },
+    {
+      "path": "packages/harness-observatory/docs/source-capability-matrix.md",
+      "sha256": "0cf884cc25c781e845a18bf016ceb79a39fe3ca6ce2e500a92910a55ea25e95c",
+      "mode": "100644",
+      "kind": "docs"
+    },
+    {
+      "path": "packages/harness-observatory/docs/verification.md",
+      "sha256": "85e0f97103fb894d6f43212495db2d34fd9287e21da0f4ca6e059960210f46f4",
+      "mode": "100644",
+      "kind": "docs"
+    },
+    {
+      "path": "packages/harness-observatory/docs/workspace_governance_adoption.md",
+      "sha256": "989ce41eb75abe40daeb993d81178a31a3c9ea550665db1a9a286716a56458c1",
+      "mode": "100644",
+      "kind": "docs"
+    },
+    {
+      "path": "packages/harness-observatory/pyproject.toml",
+      "sha256": "b1db6f570a29f39554e4bac3cb5acea326a5545c2a67ef8fe5d1239ddfc4fed0",
+      "mode": "100644",
+      "kind": "package"
+    },
+    {
+      "path": "packages/harness-observatory/scripts/audit_reconstruction.py",
+      "sha256": "ccd6cd57f078f041fa3d4f6ae04dc59fd9a8e1b7dfb8fd9bd34d1a49d56183d4",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/scripts/build_readiness_report.py",
+      "sha256": "ac7eb6c7fd33883c5a443c27ba5f0643f77401df97b8e704b67084a268102ca2",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/scripts/census_ci.py",
+      "sha256": "1e952fd570372df386aa7923f37ecdca8c5aeb84702daedd5acd7162dac94165",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/scripts/check_staged.py",
+      "sha256": "5f90f984d8bc08f9a711a105bec799f6aefeab7c52579a9bc029d67007d7bbd6",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/scripts/compare_censuses.py",
+      "sha256": "86064c18acfac12c330d9dd6b83ca7fa5245f236ef8a3c8af330157c87ed2416",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/scripts/demo.py",
+      "sha256": "5e76836500bf87686144ac02a8e534b43833e1a57d77418cea4a6c5b9036183a",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/scripts/migrate_schema_0_2.py",
+      "sha256": "b53fb9945018c83ef89e35c768b41fcbf7a6dfeb35d20ff92b7d2a4c2b407576",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/scripts/public_safe.py",
+      "sha256": "235ced40d417206936a03886fd941f4216056a2d491645a02e4fd1827ccfd724",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/scripts/routing_analysis.py",
+      "sha256": "6ab931d298c5ab7b8b0f65cca9f4ccba29f76552f04d81aca3357c869fcecaa0",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/scripts/routing_v2.py",
+      "sha256": "013638c446c60016b5be0e1e1c322dff5c4b181bd616869d5d750cf1254b82cc",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/scripts/routing_v2_audit.py",
+      "sha256": "d08f9829aa1d5f2d56a70c736fb419bfcaf2e190f5603c6f03b581d1df09f332",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/scripts/routing_v2_core.py",
+      "sha256": "f542a6a4c374a02762191922f8e1576be415b2c0b8d2c2da69bc4a5e76f9c459",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/scripts/routing_v2_reconcile.py",
+      "sha256": "ed35d6acd1a5d3c8b73ac86dc6200f8c853fc8ac6b871eb8c90a1513952a4b4f",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/scripts/routing_v2_report.py",
+      "sha256": "dc78654aa796ca6f6558978873dfb50b1c1490c9ceb9c5e384b227e9979c7147",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/scripts/run_census.py",
+      "sha256": "4fdfbfc134c8f50a8c49bb8e4300ee57fc9d4f300e7361468c7e85e312022ee0",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/scripts/smoke_local.py",
+      "sha256": "bf1cfde5f1f8911bb5fc7f469604fceb6e9469b7ed90ea92e916d80359a0fb9f",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/scripts/synthetic_inputs.py",
+      "sha256": "bf00c0b07cd3b038b982456b5c8afe0c79510983b16daf556527508a3fd65f0e",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/scripts/verify.sh",
+      "sha256": "1323baeb7acd3a58e1f63078ae4100b12d5380948360b7b1b4fe799f5308bb98",
+      "mode": "100755",
+      "kind": "governance"
+    },
+    {
+      "path": "packages/harness-observatory/scripts/verify_public_safe.sh",
+      "sha256": "dac990a2665d4cd851136940d89cc4d2f9927178bfd66db171c798214847156d",
+      "mode": "100755",
+      "kind": "governance"
+    },
+    {
+      "path": "packages/harness-observatory/src/harness_observatory/__init__.py",
+      "sha256": "7fe6453e8b801084778d2477eb144137c32ada2bc226e4849a7c6e8f098559d4",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/src/harness_observatory/census.py",
+      "sha256": "ea7627ba83e31c3e6cf759a11b20d6dd805c2f5e1d3a3d6eb6db9cb7c33ce76c",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/src/harness_observatory/cli.py",
+      "sha256": "3514a8cc43e3f582d766ee30344bea013437841e75006b4734ab30334ab0467e",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/src/harness_observatory/data_root.py",
+      "sha256": "f817995ae7626eece6e224fceaf67a3ae0b58535270b8cdb6ed4bee0c30e2776",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/src/harness_observatory/enrichers.py",
+      "sha256": "0c546adc066eb571ebaba5f0fc41c8878414164dfbbc1128aeb4807f07013dc5",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/src/harness_observatory/extractors.py",
+      "sha256": "fc6380bcc5af9a1972f8a6463145c2f0c337aecb37deca09944ef0d29d0053e0",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/src/harness_observatory/model.py",
+      "sha256": "bcabc8d5adb1e3137ee089576827de556339e887e85e5f184363972af3c66130",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/src/harness_observatory/redaction.py",
+      "sha256": "9219f9e34f1886ca2537ed5a3d2c8fedb46455dc24910ed9c980b6dbfba52c3e",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/src/harness_observatory/schemas/event.json",
+      "sha256": "e139122a2c78ac7b9e297fed49c4a5165aada438844e474365be0b6128a2e0d5",
+      "mode": "100644",
+      "kind": "schema"
+    },
+    {
+      "path": "packages/harness-observatory/src/harness_observatory/schemas/governance_snapshot.json",
+      "sha256": "117c6c9133dba35214645b3fdfc4be35ba1a8665288009b5057e0a80d5f55ac5",
+      "mode": "100644",
+      "kind": "schema"
+    },
+    {
+      "path": "packages/harness-observatory/src/harness_observatory/schemas/provenance.json",
+      "sha256": "0be9ba6e4caa25cc1d6d130b4eb30e98d1ea9d44de671a019e572082fd798f6d",
+      "mode": "100644",
+      "kind": "schema"
+    },
+    {
+      "path": "packages/harness-observatory/src/harness_observatory/schemas/run.json",
+      "sha256": "7a3cd9a8f1cf70acf0a7ef5fc0cb529ddcf91939a0206c66e5bb49a38c48e95e",
+      "mode": "100644",
+      "kind": "schema"
+    },
+    {
+      "path": "packages/harness-observatory/src/harness_observatory/schemas/v0.1/event.json",
+      "sha256": "d7aad0c053b0225fe3682ba57f2f7c8e2cc8ea40a4eef116fb828b7cf141b608",
+      "mode": "100644",
+      "kind": "schema"
+    },
+    {
+      "path": "packages/harness-observatory/src/harness_observatory/schemas/v0.1/governance_snapshot.json",
+      "sha256": "e53b3753ff8062be115f0b643e43172f5db2766657847a94842688af11e22680",
+      "mode": "100644",
+      "kind": "schema"
+    },
+    {
+      "path": "packages/harness-observatory/src/harness_observatory/schemas/v0.1/provenance.json",
+      "sha256": "9135a8da3182a9f925cf820503214a276b00013b9c7ca4f9513b484c2b52f3ed",
+      "mode": "100644",
+      "kind": "schema"
+    },
+    {
+      "path": "packages/harness-observatory/src/harness_observatory/schemas/v0.1/run.json",
+      "sha256": "16bac4f8e90d059464f50f7896902a72d68e91ef9fc6c6822061da8702ef4957",
+      "mode": "100644",
+      "kind": "schema"
+    },
+    {
+      "path": "packages/harness-observatory/src/harness_observatory/warehouse.py",
+      "sha256": "221c7bf534791a02dadb64dc2fbf07ccdea8a22b87875c402db70a324806a899",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "packages/harness-observatory/tests/conftest.py",
+      "sha256": "63563f5764880c76c5a7bb90f1aa7797662f12e6ee9f05366ab36683b1749cf8",
+      "mode": "100644",
+      "kind": "test"
+    },
+    {
+      "path": "packages/harness-observatory/tests/test_census.py",
+      "sha256": "bf83bc2bee06249246b6193739fdc58bde2a7bec8d3685e91b22b59f031fd109",
+      "mode": "100644",
+      "kind": "test"
+    },
+    {
+      "path": "packages/harness-observatory/tests/test_data_root.py",
+      "sha256": "c2030826d425cc19a744fbfcb0ca8df69729fda4200f2006cd9aaa5d69732dd5",
+      "mode": "100644",
+      "kind": "test"
+    },
+    {
+      "path": "packages/harness-observatory/tests/test_pipeline.py",
+      "sha256": "68076bb36bed369d67bb8e44e2356b1d77520773706f3c361415e5b6620dafed",
+      "mode": "100644",
+      "kind": "test"
+    },
+    {
+      "path": "packages/harness-observatory/tests/test_publication_safety.py",
+      "sha256": "7adaee58ebe6a902560ea1079342894af4682e11af5e936d36ff90641fe7de5c",
+      "mode": "100644",
+      "kind": "test"
+    },
+    {
+      "path": "packages/harness-observatory/tests/test_review_scripts.py",
+      "sha256": "1ef56140583f9cfc67bd3039cdc9718d75dd2a771271cd2bd605e4315856cfe7",
+      "mode": "100644",
+      "kind": "test"
+    },
+    {
+      "path": "packages/harness-observatory/tests/test_routing_analysis.py",
+      "sha256": "088f24e68051381c158d593f3b370eeee8e235a4e0c34bfefbde0ef8bb961eb7",
+      "mode": "100644",
+      "kind": "test"
+    },
+    {
+      "path": "packages/harness-observatory/tests/test_routing_v2.py",
+      "sha256": "a6167e002ef6213237e3e2a72398805cff39af1911beef09f39ba63456e086a8",
+      "mode": "100644",
+      "kind": "test"
+    },
+    {
+      "path": "repository_tests/test_manifest_bindings.py",
+      "sha256": "78785186a93be1f231c3b247a2ab6ee7c9d4f3d4b4f0d6fce6a8b5e5e27eee62",
+      "mode": "100644",
+      "kind": "test"
+    },
+    {
+      "path": "repository_tests/test_observed_measurements.py",
+      "sha256": "66cbe3d0ec4c2d8889f8d4f8ce3fbc5603a5f3814cf836be78b5231d5aef3cdb",
+      "mode": "100644",
+      "kind": "test"
+    },
+    {
+      "path": "repository_tests/test_publication.py",
+      "sha256": "1e7aa8b0ff5165359f6d41cee8cd5e6d9eda269c439a654d0660297cc104a0b2",
+      "mode": "100644",
+      "kind": "test"
+    },
+    {
+      "path": "repository_tests/test_publication_adversarial.py",
+      "sha256": "5c53c0efda5ec7aed3ba07835def79614f0fabcd66cbada079a42fcb781dbb5b",
+      "mode": "100644",
+      "kind": "test"
+    },
+    {
+      "path": "scripts/verify_all.sh",
+      "sha256": "bbf61100424cd22c14d60b6407cfe41106f8dc506d8c92f20869aa31e5f242aa",
+      "mode": "100755",
+      "kind": "governance"
+    },
+    {
+      "path": "scripts/verify_publication.sh",
+      "sha256": "983ea2b5a7e505e137bae2c721585f7eeb30487e084a62fd1d459165f206aa9a",
+      "mode": "100755",
+      "kind": "governance"
+    },
+    {
+      "path": "tools/publication/__init__.py",
+      "sha256": "4ac3f9587f7aa3ba0e11a5d294251883063d1e19d438731e4907ab7a31bd3ad0",
+      "mode": "100644",
+      "kind": "src"
+    },
+    {
+      "path": "tools/publication/verify.py",
+      "sha256": "b48c9d45729a335744dcfac3dea5dc4708f4e6604d1c5b9f4a39cf2134886c9b",
+      "mode": "100644",
+      "kind": "src"
+    }
+  ]
+}

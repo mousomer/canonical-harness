@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "0.2"
+    },
+    "governance_snapshot_id": {
+      "type": "string"
+    },
+    "repo_sha": {
+      "type": "string"
+    },
+    "governance_discovery_version": {
+      "type": "string"
+    },
+    "scope_path": {
+      "type": "string"
+    },
+    "state": {
+      "enum": [
+        "none_existed",
+        "reconstructed",
+        "not_applicable",
+        "reconstruction_failed"
+      ]
+    },
+    "documents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "agents",
+              "claude",
+              "declared"
+            ]
+          },
+          "applicable": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "path",
+          "sha256",
+          "kind",
+          "applicable"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "missing_optional": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "coverage": {
+      "const": "historical_scoped_candidates"
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    }
+  },
+  "required": [
+    "schema_version",
+    "governance_snapshot_id",
+    "repo_sha",
+    "governance_discovery_version",
+    "scope_path",
+    "state",
+    "documents",
+    "missing_optional",
+    "coverage",
+    "provenance"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "0.2"
+        },
+        "source": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "extractor": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "source",
+        "method",
+        "confidence",
+        "evidence_refs",
+        "extractor"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

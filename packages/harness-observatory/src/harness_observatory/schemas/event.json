@@ -1,0 +1,319 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "0.2"
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "seq": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "timestamp": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "event_type": {
+      "enum": [
+        "run.started",
+        "run.finished",
+        "run.compacted",
+        "user.message",
+        "agent.message",
+        "tool.started",
+        "tool.finished",
+        "command.started",
+        "command.finished",
+        "file.read",
+        "file.write",
+        "test.started",
+        "test.finished",
+        "ci.run_started",
+        "ci.status_query",
+        "ci.blocking_watch",
+        "ci.run_list_query",
+        "ci.pr_check_query",
+        "ci.artifact_query",
+        "ci.run_finished",
+        "git.commit",
+        "git.diff",
+        "governance.discovered",
+        "user.intervention",
+        "agent.stop",
+        "agent.handoff"
+      ]
+    },
+    "source": {
+      "enum": [
+        "codex",
+        "claude",
+        "git",
+        "github_actions",
+        "governance"
+      ]
+    },
+    "data": {
+      "type": "object",
+      "properties": {
+        "call_id": {
+          "type": "string"
+        },
+        "tool_name": {
+          "type": "string"
+        },
+        "ci_run_id": {
+          "type": "string"
+        },
+        "path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": "string"
+        },
+        "compaction_index": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "observation_kind": {
+          "type": "string"
+        },
+        "observed_sha": {
+          "$ref": "#/$defs/fact"
+        },
+        "ci_status": {
+          "$ref": "#/$defs/fact"
+        },
+        "ci_conclusion": {
+          "$ref": "#/$defs/fact"
+        },
+        "ci_created_at": {
+          "$ref": "#/$defs/fact"
+        },
+        "ci_started_at": {
+          "$ref": "#/$defs/fact"
+        },
+        "ci_completed_at": {
+          "$ref": "#/$defs/fact"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    }
+  },
+  "required": [
+    "schema_version",
+    "run_id",
+    "seq",
+    "timestamp",
+    "event_type",
+    "source",
+    "data",
+    "provenance"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "0.2"
+        },
+        "source": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "extractor": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "source",
+        "method",
+        "confidence",
+        "evidence_refs",
+        "extractor"
+      ],
+      "additionalProperties": false
+    },
+    "fact": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": [
+            "string",
+            "number",
+            "boolean",
+            "null"
+          ]
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        }
+      },
+      "required": [
+        "value",
+        "provenance"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "enum": [
+              "tool.started"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "required": [
+              "call_id",
+              "tool_name"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "enum": [
+              "tool.finished",
+              "command.started",
+              "command.finished"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "required": [
+              "call_id"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "enum": [
+              "file.read",
+              "file.write"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "required": [
+              "call_id",
+              "path",
+              "status"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "enum": [
+              "ci.status_query",
+              "ci.blocking_watch",
+              "ci.artifact_query"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "required": [
+              "call_id",
+              "ci_run_id",
+              "observation_kind"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "enum": [
+              "ci.run_list_query",
+              "ci.pr_check_query"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "required": [
+              "call_id",
+              "observation_kind"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "run.compacted"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "required": [
+              "compaction_index"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
