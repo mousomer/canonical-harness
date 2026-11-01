@@ -318,6 +318,21 @@ def main():
     args = parser.parse_args()
     root = DataRoot(args.data_root)
     dest = root.destination(args.output)
+
+    inventory = []
+    # Freeze byte extents before parsing, including active append-only transcripts.
+    for source in sorted(p for r in args.source_root for p in Path(r).rglob("rollout-*.jsonl")):
+        with source.open("rb") as f:
+            meta = json.loads(f.readline())["payload"]
+        cwd = meta.get("cwd", "")
+        if cwd not in args.cwd:
+            continue
+        inventory.append(
+            {"path": str(source), "frozen_extent": source.stat().st_size, "metadata": meta}
+        )
+    if not inventory:
+        parser.exit(2, "routing-analysis: no_matching_inputs\n")
+
     dest.mkdir(mode=0o700, parents=True, exist_ok=False)
     db = sqlite3.connect(dest / "routing.sqlite")
     for table in [
@@ -334,17 +349,6 @@ def main():
     def put(table, key, row):
         db.execute(f"INSERT INTO {table} VALUES (?,?)", (key, json.dumps(row, ensure_ascii=False)))
 
-    inventory = []
-    # Freeze byte extents before parsing, including active append-only transcripts.
-    for source in sorted(p for r in args.source_root for p in Path(r).rglob("rollout-*.jsonl")):
-        with source.open("rb") as f:
-            meta = json.loads(f.readline())["payload"]
-        cwd = meta.get("cwd", "")
-        if cwd not in args.cwd:
-            continue
-        inventory.append(
-            {"path": str(source), "frozen_extent": source.stat().st_size, "metadata": meta}
-        )
     counts = collections.Counter()
     formats = collections.Counter()
     seen = {}

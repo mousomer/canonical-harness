@@ -36,6 +36,12 @@ current-source check does not certify retained historical content as data-free.
 
 See the [ownership and migration contract](docs/architecture/software_consolidation.md).
 
+GitHub Actions runs this same verifier on pull requests and source integration
+branch pushes using Python 3.14.8 on Ubuntu 24.04. The hosted dependency pins
+are in `config/ci/requirements.txt`; local work continues to use the approved
+existing interpreter. CI uses synthetic inputs, requires no private overlays
+or data, and uploads no analysis artifacts.
+
 ## Workspace policy-kit 1.4.0
 
 This directory is the local owner of reusable workspace governance. The editable

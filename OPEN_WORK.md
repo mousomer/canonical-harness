@@ -20,6 +20,12 @@ directory selection, input-derived report totals and the absence of literal
 corpus comparison tables. Published history remains intact; source-content
 review supplements the pattern and inventory gate.
 
+Hosted pull-request and branch CI runs the complete source verifier with pinned
+software dependencies and synthetic inputs. Empty routing selections now fail
+with a bounded diagnostic before analysis output is created. Review/merge and
+hosted-run results remain separate from local software verification; private
+collection and measurement remain deferred.
+
 ## Remaining boundaries
 
 Consumer updates require an explicit owner-approved private allowlist and their

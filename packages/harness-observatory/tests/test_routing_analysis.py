@@ -6,7 +6,7 @@ import json
 import sys
 import tempfile
 import unittest
-from contextlib import redirect_stdout
+from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 from unittest.mock import patch
 
@@ -24,6 +24,67 @@ SPEC.loader.exec_module(module)
 
 
 class RoutingAnalysisTests(unittest.TestCase):
+    def test_empty_selections_reject_before_creating_private_outputs(self):
+        for has_unselected_source in (False, True):
+            with self.subTest(has_unselected_source=has_unselected_source):
+                with tempfile.TemporaryDirectory() as directory:
+                    temporary = Path(directory)
+                    data_root = init_data_root(temporary / "data")
+                    sources = temporary / "sources"
+                    sources.mkdir()
+                    if has_unselected_source:
+                        record = dict(
+                            type="session_meta",
+                            payload={
+                                "id": "synthetic-unselected-session",
+                                "cwd": str(temporary / "unselected-project"),
+                            },
+                        )
+                        (sources / "rollout-synthetic.jsonl").write_text(json.dumps(record) + "\n")
+                    source_bytes = {path.name: path.read_bytes() for path in sources.iterdir()}
+                    root_paths = {
+                        str(path.relative_to(data_root.path)) for path in data_root.path.rglob("*")
+                    }
+                    arguments = [
+                        "routing_analysis.py",
+                        "--data-root",
+                        str(data_root.path),
+                        "--repo",
+                        str(temporary),
+                        "--source-root",
+                        str(sources),
+                        "--cwd",
+                        str(temporary / "selected-project"),
+                        "--output",
+                        "analysis/new-parent/synthetic-report",
+                    ]
+                    stdout, stderr = io.StringIO(), io.StringIO()
+                    with (
+                        patch.object(sys, "argv", arguments),
+                        patch.object(module.sqlite3, "connect") as connect,
+                        patch.object(module.DataRoot, "preserve_raw") as preserve_raw,
+                        redirect_stdout(stdout),
+                        redirect_stderr(stderr),
+                        self.assertRaises(SystemExit) as error,
+                    ):
+                        module.main()
+                    self.assertEqual(error.exception.code, 2)
+                    self.assertEqual(stderr.getvalue(), "routing-analysis: no_matching_inputs\n")
+                    self.assertEqual(stdout.getvalue(), "")
+                    connect.assert_not_called()
+                    preserve_raw.assert_not_called()
+                    self.assertFalse((data_root.path / "analysis/new-parent").exists())
+                    self.assertEqual(
+                        {
+                            str(path.relative_to(data_root.path))
+                            for path in data_root.path.rglob("*")
+                        },
+                        root_paths,
+                    )
+                    self.assertEqual(
+                        {path.name: path.read_bytes() for path in sources.iterdir()}, source_bytes
+                    )
+
     def test_report_uses_only_explicit_synthetic_inputs(self):
         with tempfile.TemporaryDirectory() as directory:
             temporary = Path(directory)
