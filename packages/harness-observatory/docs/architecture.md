@@ -56,6 +56,12 @@ The separately invoked routing_analysis.py is an offline, opt-in private analyti
 The offline routing report derives measurements from the current private input
 selection. Supply every selected working directory explicitly with repeatable
 `--cwd` arguments; no named project or home-worktree fallback is included.
+After validating the initialized data root and output boundary, source headers
+are inventoried read-only before analysis output is created. An empty source
+directory or a selection with no matching working directory exits with code 2
+and the fixed diagnostic `routing-analysis: no_matching_inputs`. It creates no
+analysis directory, database, report or raw copy. Successful report format and
+parser version remain unchanged at `routing-analysis-1.1`.
 Software contains no fixed historical comparison totals. Reports and optional
 external comparisons remain private runtime material. Source review and
 synthetic regressions supplement publication pattern checks; retained Git

@@ -1,0 +1,15 @@
+# Tested Python 3.14 verifier/runtime dependency closure; hosted CI only.
+attrs==26.1.0
+bashlex==0.18
+duckdb==1.5.6
+esprima==4.0.1
+iniconfig==2.3.0
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
+packaging==26.2
+pluggy==1.6.0
+pygments==2.20.0
+pytest==9.0.3
+referencing==0.37.0
+rpds-py==2026.6.3
+ruff==0.16.0

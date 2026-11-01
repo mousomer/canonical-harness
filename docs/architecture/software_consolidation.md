@@ -31,6 +31,22 @@ Pattern and inventory checks alone do not prove the absence of observed data.
 Current-source cleanup preserves published history and does not certify that
 earlier commits contain no data.
 
+## Continuous integration
+
+Hosted CI runs the same `scripts/verify_all.sh` entrypoint on Ubuntu 24.04 with
+Python 3.14.8. Its dedicated dependency list pins the tested verifier and
+Observatory dependencies; it does not install the package over the checked-out
+source. Full checkout history is required by the publication scan. Checkout
+and Python setup actions use immutable commit pins, read-only repository
+permissions and no persisted Git credentials.
+
+Pull requests and pushes to the source/default integration branches run the
+gate. Concurrency cancels superseded runs; a job timeout bounds execution.
+Dependency installation is confined to the disposable hosted runner. Tests
+use invocation-owned synthetic inputs and no private machine configuration,
+corpus, model assets, external data source or uploaded artifact. Hosted checks
+are software evidence; they activate no private collection or measurement.
+
 ## Component and authority boundaries
 
 `tools/workspace_governance/` remains the sole portable governance mechanism.

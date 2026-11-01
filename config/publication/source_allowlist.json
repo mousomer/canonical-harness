@@ -3,6 +3,12 @@
   "published_base": "df332ad5eed18926b7a17d0795380b65c7fd4f98",
   "artifacts": [
     {
+      "path": ".github/workflows/verify.yml",
+      "sha256": "0e9388c2ebf3cd47028c7977277ecb961b67f8d4f881328c0651225e976f01ae",
+      "mode": "100644",
+      "kind": "governance"
+    },
+    {
       "path": ".gitignore",
       "sha256": "b632704eaceeb160ad4d9f6b6cd8837dcafb1fcbe402a6c89f74a948a7b2abf3",
       "mode": "100644",
@@ -10,19 +16,25 @@
     },
     {
       "path": "OPEN_WORK.md",
-      "sha256": "189d0f3dd04825291b3b8174cc3d1db5dccd52e9dc8f8331ef33d22a27d44cb2",
+      "sha256": "fc4005e3d103868b34623490b5be14a4d46d31f33a93b98caf2987da7cab1835",
       "mode": "100644",
       "kind": "docs"
     },
     {
       "path": "README.md",
-      "sha256": "589e786e5703ea41e68540574f0475be6ec846619b2d112a8cb21b6f2a239e07",
+      "sha256": "10e2938dba5c19b721b2a4d7747d9d0c983e9c54658b6210d4200bc5cb6ec732",
       "mode": "100644",
       "kind": "docs"
     },
     {
+      "path": "config/ci/requirements.txt",
+      "sha256": "8573fc2062456ed2cc0c483be0242e525fdc0b7bc232ad849e63def10811113a",
+      "mode": "100644",
+      "kind": "package"
+    },
+    {
       "path": "docs/architecture/software_consolidation.md",
-      "sha256": "c5b7da1086a40fc30d0bfb5f91c03c16a57b4c133f63ebbc8ad9191087432ee9",
+      "sha256": "01e262159d9e3165e746dbecae4f8f3e8d3c9c4597d23573ecc910766fc6a5a7",
       "mode": "100644",
       "kind": "docs"
     },
@@ -46,13 +58,13 @@
     },
     {
       "path": "packages/harness-observatory/docs/BACKLOG.md",
-      "sha256": "fe40a5f4d1843856225c1038ef2c38b759d16d28fe82c878d5fdb39bbc78d2b3",
+      "sha256": "d3ee2c2fddfb419761c1c9b7b20a75032d1d4f06652c33cb8857489468e35497",
       "mode": "100644",
       "kind": "docs"
     },
     {
       "path": "packages/harness-observatory/docs/architecture.md",
-      "sha256": "d5555684c99f41102311b81ea5b998cff07d3787a4e1163e588c71dea34d743c",
+      "sha256": "145744f407f5045de40d297c20407fbfad96698485d139ef3a888589d18c5079",
       "mode": "100644",
       "kind": "docs"
     },
@@ -148,7 +160,7 @@
     },
     {
       "path": "packages/harness-observatory/scripts/routing_analysis.py",
-      "sha256": "6ab931d298c5ab7b8b0f65cca9f4ccba29f76552f04d81aca3357c869fcecaa0",
+      "sha256": "33bba225946577d6a7bcbf4fc854608e5ea04e41b7584d07429e49ff9688bac7",
       "mode": "100644",
       "kind": "src"
     },
@@ -352,7 +364,7 @@
     },
     {
       "path": "packages/harness-observatory/tests/test_routing_analysis.py",
-      "sha256": "088f24e68051381c158d593f3b370eeee8e235a4e0c34bfefbde0ef8bb961eb7",
+      "sha256": "137534ef74fde51639e96db38ab5efa812973f14ff71b530459a7aeba621e60b",
       "mode": "100644",
       "kind": "test"
     },

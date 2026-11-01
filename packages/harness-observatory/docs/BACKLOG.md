@@ -9,6 +9,9 @@
 - [x] Run bounded publication checks over index, worktree and newly reachable history.
 - [x] Remove fixed corpus comparison totals and implicit project selection;
       verify input-derived reports and source literals with synthetic regressions.
+- [x] Reject empty routing selections with a bounded diagnostic before creating
+      analysis output; verify empty sources and nonmatching working directories
+      with synthetic inputs and unchanged private-root contents.
 
 Existing software includes versioned normalization, historical governance joins,
 restartable census processing, private warehouse writers and offline routing
