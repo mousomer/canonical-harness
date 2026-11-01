@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "source": {
+      "type": "string"
+    },
+    "method": {
+      "type": "string"
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "extractor": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "source",
+    "method",
+    "confidence",
+    "evidence_refs",
+    "extractor"
+  ],
+  "additionalProperties": false
+}

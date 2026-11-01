@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "seq": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "timestamp": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "event_type": {
+      "enum": [
+        "run.started",
+        "run.finished",
+        "user.message",
+        "agent.message",
+        "tool.started",
+        "tool.finished",
+        "command.started",
+        "command.finished",
+        "file.read",
+        "file.write",
+        "test.started",
+        "test.finished",
+        "ci.run_started",
+        "ci.poll",
+        "ci.run_finished",
+        "git.commit",
+        "git.diff",
+        "governance.discovered",
+        "user.intervention",
+        "agent.stop",
+        "agent.handoff"
+      ]
+    },
+    "source": {
+      "enum": [
+        "codex",
+        "claude",
+        "git",
+        "github_actions",
+        "governance"
+      ]
+    },
+    "data": {
+      "type": "object",
+      "properties": {
+        "call_id": {
+          "type": "string"
+        },
+        "tool_name": {
+          "type": "string"
+        },
+        "ci_run_id": {
+          "type": "string"
+        },
+        "path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    }
+  },
+  "required": [
+    "schema_version",
+    "run_id",
+    "seq",
+    "timestamp",
+    "event_type",
+    "source",
+    "data",
+    "provenance"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "0.1"
+        },
+        "source": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "extractor": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "source",
+        "method",
+        "confidence",
+        "evidence_refs",
+        "extractor"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

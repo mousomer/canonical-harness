@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "agent": {
+      "enum": [
+        "codex",
+        "claude"
+      ]
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "governance_snapshot_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "facts": {
+      "type": "object",
+      "properties": {
+        "session_id": {
+          "$ref": "#/$defs/fact"
+        },
+        "cwd": {
+          "$ref": "#/$defs/fact"
+        },
+        "repository": {
+          "$ref": "#/$defs/fact"
+        },
+        "branch": {
+          "$ref": "#/$defs/fact"
+        },
+        "start_sha": {
+          "$ref": "#/$defs/fact"
+        },
+        "end_sha": {
+          "$ref": "#/$defs/fact"
+        },
+        "model": {
+          "$ref": "#/$defs/fact"
+        },
+        "tokens": {
+          "$ref": "#/$defs/fact"
+        },
+        "cost": {
+          "$ref": "#/$defs/fact"
+        },
+        "duration_seconds": {
+          "$ref": "#/$defs/fact"
+        },
+        "observed_span_seconds": {
+          "$ref": "#/$defs/fact"
+        },
+        "command_count": {
+          "$ref": "#/$defs/fact"
+        },
+        "tool_call_count": {
+          "$ref": "#/$defs/fact"
+        },
+        "user_turn_count": {
+          "$ref": "#/$defs/fact"
+        },
+        "ci_poll_count": {
+          "$ref": "#/$defs/fact"
+        }
+      },
+      "required": [
+        "session_id",
+        "cwd",
+        "repository",
+        "branch",
+        "start_sha",
+        "end_sha",
+        "model",
+        "tokens",
+        "cost",
+        "duration_seconds",
+        "command_count",
+        "tool_call_count",
+        "user_turn_count",
+        "ci_poll_count"
+      ],
+      "additionalProperties": false
+    },
+    "labels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "namespace": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "provenance": {
+            "$ref": "#/$defs/provenance"
+          }
+        },
+        "required": [
+          "namespace",
+          "label",
+          "provenance"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "run_id",
+    "agent",
+    "source_id",
+    "governance_snapshot_id",
+    "facts",
+    "labels"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "0.1"
+        },
+        "source": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "extractor": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "source",
+        "method",
+        "confidence",
+        "evidence_refs",
+        "extractor"
+      ],
+      "additionalProperties": false
+    },
+    "fact": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": [
+            "string",
+            "number",
+            "boolean",
+            "null"
+          ]
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        }
+      },
+      "required": [
+        "value",
+        "provenance"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "harness-observatory"
+version = "0.1.0"
+description = "Local-first evidence for coding-agent harness behaviour"
+requires-python = ">=3.11"
+dependencies = ["jsonschema>=4.23,<5", "duckdb>=1.4,<2"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "ruff>=0.12,<1", "build>=1,<2", "esprima==4.0.1", "bashlex==0.18"]
+
+[project.scripts]
+harness-observatory = "harness_observatory.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+harness_observatory = ["schemas/*.json", "schemas/v0.1/*.json"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]

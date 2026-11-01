@@ -5,3 +5,26 @@
 **/__pycache__/
 **/*.pyc
 .DS_Store
+
+# Software repository: evidence, outputs and machine-local inputs stay external.
+*.jsonl
+*.ndjson
+*.csv
+*.tsv
+*.duckdb*
+*.sqlite*
+*.db
+*.parquet
+*.ipynb
+*.log
+*.pem
+*.key
+.env*
+raw/
+normalized/
+enriched/
+warehouse/
+warehouses/
+analysis-output/
+local_runs/
+outputs/
