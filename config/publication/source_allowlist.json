@@ -1,426 +1,1044 @@
 {
-  "schema_version": 1,
-  "published_base": "df332ad5eed18926b7a17d0795380b65c7fd4f98",
   "artifacts": [
     {
+      "kind": "governance",
+      "mode": "100644",
       "path": ".github/workflows/verify.yml",
-      "sha256": "0e9388c2ebf3cd47028c7977277ecb961b67f8d4f881328c0651225e976f01ae",
-      "mode": "100644",
-      "kind": "governance"
+      "sha256": "0e9388c2ebf3cd47028c7977277ecb961b67f8d4f881328c0651225e976f01ae"
     },
     {
+      "kind": "governance",
+      "mode": "100644",
       "path": ".gitignore",
-      "sha256": "b632704eaceeb160ad4d9f6b6cd8837dcafb1fcbe402a6c89f74a948a7b2abf3",
-      "mode": "100644",
-      "kind": "governance"
+      "sha256": "b632704eaceeb160ad4d9f6b6cd8837dcafb1fcbe402a6c89f74a948a7b2abf3"
     },
     {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".governance/distribution.json",
+      "sha256": "91517a6b212c61c5be91d48063f2d4c51d23424f0561b4a75b870bfc9428b966"
+    },
+    {
+      "kind": "src",
+      "mode": "100755",
+      "path": ".releases/1.5.0/distribution/scripts/audit_workspace_policy.sh",
+      "sha256": "ea5099683c5f0fded8deb437157f33539fd92c35e2d80aa803d3fa9266e76a4e"
+    },
+    {
+      "kind": "src",
+      "mode": "100755",
+      "path": ".releases/1.5.0/distribution/scripts/check_policy_kit_selftest.sh",
+      "sha256": "f4d93dffa085f18e94d9fff8bb5eab361c3d87d7c86a07a9edac267ae7ef10de"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/distribution/scripts/distribution_bootstrap.py",
+      "sha256": "650df8bf525e470825e3175dba15393ded8f24449ae4187aa09fe9643c57a302"
+    },
+    {
+      "kind": "src",
+      "mode": "100755",
+      "path": ".releases/1.5.0/distribution/scripts/sync_workspace_policy.sh",
+      "sha256": "7f8caae6207ef0f5acb9a5aae90a5a9ed5e108a0e769ab0fea1693667ea225dd"
+    },
+    {
+      "kind": "src",
+      "mode": "100755",
+      "path": ".releases/1.5.0/distribution/scripts/verify_policy_kit.sh",
+      "sha256": "c1fae4cf34ccb1b3b69f23dd81fed32675e8b2ded352dff64b4993d835dc8ea8"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/distribution/tools/policy_kit_distribution/__init__.py",
+      "sha256": "23b394a26448731581e105eb4fc44202a7a732f6dbc64e980427ba94d5e6f8e8"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/distribution/tools/policy_kit_distribution/activation.py",
+      "sha256": "112dabf630cb8f6f68ad12d8fb183bc60462fbf9d604cfe9d7f69105bca68b89"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/distribution/tools/policy_kit_distribution/cli.py",
+      "sha256": "c63233d362d035a8846b8026c681b507128eb6702ae2786c281d6a7ccfd776df"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/distribution/tools/policy_kit_distribution/contract.py",
+      "sha256": "2cd4e08a48c3d5182f7292048e900eb0fd00faa06dc7d2e205896b935bc5733d"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/distribution/tools/policy_kit_distribution/state.py",
+      "sha256": "40636c6eca6b1741337305a2a9a93351f59c3fa1138379ee2887151f4e2aa61f"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/distribution/tools/policy_kit_distribution/verification.py",
+      "sha256": "517b364501f38fa8db26610d8df106f8cef452656f87dbbe924aa20f7db587d2"
+    },
+    {
+      "kind": "src",
+      "mode": "100755",
+      "path": ".releases/1.5.0/payload/.governance/baseline/check_git_sanitation.sh",
+      "sha256": "8ca954fda1c9fa04565e9eece747d83f0d0257d8cdda90b18bd14471a04bd7af"
+    },
+    {
+      "kind": "src",
+      "mode": "100755",
+      "path": ".releases/1.5.0/payload/.governance/baseline/check_policy_compliance.sh",
+      "sha256": "9ca9725f88a31253d556c2e2a557264f66ddb45870e4cd5dcc87efd3ea9b7484"
+    },
+    {
+      "kind": "src",
+      "mode": "100755",
+      "path": ".releases/1.5.0/payload/.governance/baseline/check_policy_template_drift.sh",
+      "sha256": "2cf3d14d7ffdfa710aff8b68c7e515f5a94f1c446095a1183d3a138018710a4f"
+    },
+    {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/.governance/baseline/legacy-policy-version.json",
+      "sha256": "ddba9b636e255b8c1566986a8885dc29116e4630c8350b865a5754c43ac078d4"
+    },
+    {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/.governance/baseline/legacy-required-files.json",
+      "sha256": "0b7df49182645ff99b110603cff40c122270d39835f0449bc4f6c4a7403265d1"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/.governance/baseline/sanitation.gitignore",
+      "sha256": "b762f835e84dfb8548ebb81705a25d037973420e6c447e91c8e984bf8bf37246"
+    },
+    {
+      "kind": "src",
+      "mode": "100755",
+      "path": ".releases/1.5.0/payload/.governance/baseline/update_policy_template_hashes.sh",
+      "sha256": "08941c1b727a8ff3acc37a69690068990f11311488a4218725ba74899a64b245"
+    },
+    {
+      "kind": "src",
+      "mode": "100755",
+      "path": ".releases/1.5.0/payload/.governance/baseline/verify_template.sh",
+      "sha256": "c60d4ac60129a92d67504b3aac4dd4715b0dd1f53689e6741e63566b831bcf20"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/.ruff.toml",
+      "sha256": "4d718451bf60d94a8a997f51479858eb370c6233cd1b58a19d9a9a5d7a72ffe4"
+    },
+    {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/MANIFEST.json",
+      "sha256": "80c34bca59755f4376c7c729d07f0dd22e048dba6b3bd25f66f5c1a069f13a30"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/VERSION",
+      "sha256": "a66780da23103beaf12432b418508966b31a2a3a787f9468a5b6cdaa8667c1ef"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/__init__.py",
+      "sha256": "1fb1cf8fa4b59c720c34c4313607eb8394cce3a47ada1e8f0cd43884f1884e4b"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/baseline.py",
+      "sha256": "9462749855193726250cf09945b41dc09d6bb8369242d6b48719790d2b897f32"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/cli/__init__.py",
+      "sha256": "678afe53eed8737dbf991dba82d1e2c626af9341a54e35e5da1d61c46d67240e"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/cli/bootstrap.py",
+      "sha256": "d59acae60fad6ed7abb100b6158ff860866efe825fa0abd0f1451cfbe820d360"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/cli/gov.py",
+      "sha256": "d8b5275b14073047bf1bf31242baaf03b74e5697a59d455b721b597d2779c145"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/dependency_compatibility.py",
+      "sha256": "6c6d85c500118b7ed3a2f03ec5bf222af49877343492e0b561e5898c59ffbc1f"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/diagnostics.py",
+      "sha256": "59a0f63d34b1b1c7009e531b98702131a3644400f665844968aafb7c929ca91b"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/execution_policy.py",
+      "sha256": "d763582015c321b90a08b5e6b05d95c0b614be3466088f197b5a7b3772aec1fe"
+    },
+    {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/field-usage.json",
+      "sha256": "f17bacff1c86f7d616500414e6f0d96c78c3ecacf1a7e877d8b6bae896ce6f22"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/fleet.py",
+      "sha256": "d360df4f5056af631126a42477ef686294bad1431b3f27e96602d6dd2c323ab7"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/fleet_execution.py",
+      "sha256": "39e36f923f78901198338febe39838c81d78f9a5d69facc902704bcedb166e80"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/fleet_support.py",
+      "sha256": "830af54909529bf20202b8bca12bebb4e4a5af4bfc93e0aab6e18f0d13075884"
+    },
+    {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/policies/execution.json",
+      "sha256": "bbcbee2fd65ef933f29d97e7edcf643d9c47367374c04fc26a2801175f64da6e"
+    },
+    {
+      "kind": "docs",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/policies/execution.md",
+      "sha256": "b3f31a021f278fc5cb05ef563ba32337e0217dfc15a0422bdbcddc337e01d971"
+    },
+    {
+      "kind": "docs",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/policies/external_checkouts.md",
+      "sha256": "1a8eec92069aa6706203dd636a3542a2bcdfbc350bee1554322b334de87a6ef9"
+    },
+    {
+      "kind": "docs",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/policies/ownership.md",
+      "sha256": "5bb27b467b6a17bb2752fc8f0228a19639ea7fa1e67fd7a84ab801b784a26866"
+    },
+    {
+      "kind": "docs",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/policies/workspace_baseline.md",
+      "sha256": "8f8e3b4d179e966c2b996967f1c7b9ff4c7677f21350822acd53b46d5739cf6c"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/release.py",
+      "sha256": "a8704b52b86e304b15d5cc8be7e28a7db8ce27919504635d897aadf8f78d17a6"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/resolver/__init__.py",
+      "sha256": "440803a71e46a5cabc5cf01367b420ccb700a301e99552e6c46944425a6cf90d"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/resolver/core.py",
+      "sha256": "f5ad9fcf283f8354d5305cf8651187efb4e9c1697b2e188b9850431f106007ab"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/resolver/roles.py",
+      "sha256": "58a9dfc266671690cf5cd32ebfdb4a5ebeecb1c99db26dc1ee5d1be142e0d5d3"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/runtime_floor.py",
+      "sha256": "7338eed1adaf8c9500f343af16f3f20715140b849ceb748762c9c430da9b5237"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/sanitation.py",
+      "sha256": "7ba31019de42a2e450dc724d8bb9d855610d00363175fc8f8834224c1af1ea3e"
+    },
+    {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/schemas/project.schema.json",
+      "sha256": "73507ea567aee573b3b144f9529b6e8aabdf90d8bc11ce7a833140a1b37a7b0f"
+    },
+    {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/schemas/telemetry-event.v1.schema.json",
+      "sha256": "27e6521457dd8631ee4ce07009f2fac02808e7a06df8d0eb4f6bc7d2c71217f4"
+    },
+    {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/schemas/workspace-local.schema.json",
+      "sha256": "f2b0ee8184742a47973002d15ba71f5273bba94379734d77d8a47087e458494f"
+    },
+    {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/schemas/workspace.schema.json",
+      "sha256": "d0b35faeadf88ec9885c7fcca54748dfabb736804e0e4bb74ee8320a580fce51"
+    },
+    {
+      "kind": "docs",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/skills/governance-context/SKILL.md",
+      "sha256": "57c87c3968f057be8dc4d1b3fa11c0478fc9c1cbe10cdb931e80a846726174f7"
+    },
+    {
+      "kind": "docs",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/skills/governance-maintenance/SKILL.md",
+      "sha256": "967efb9cf22ad8a2c75d1515b432a68de98c3b3c1189ce7acf3dded18de88a75"
+    },
+    {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/synthetic-fixtures/contradictions.json",
+      "sha256": "6ae4d4aa8ed59412c34d053379078fd35f12acc2904c55f23757bee016243bbc"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/telemetry.py",
+      "sha256": "a0edf4cee4985a986f407b3c2c76a9eedc9ddc4c507168fe15cadc8cb165bfa6"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/validators/__init__.py",
+      "sha256": "db0c3b6034382e016c5f3a9926536304daa48b1775424a2cf37412be5f081af7"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.5.0/payload/tools/workspace_governance/validators/core.py",
+      "sha256": "f18ad316b0b928497c064ce167072a06d580102082b902219fe3e5e9bf59a289"
+    },
+    {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".releases/1.5.0/release.json",
+      "sha256": "6c33dab0886b5698de5919c01d4a1ff2881b86de944e87e31e1185af781c1ef5"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/.ruff.toml",
+      "sha256": "71ce55466668ebb8e2c2c707052a2e0061b2ccabaffe5e9146929da581893cf7"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/README.md",
+      "sha256": "ff08fd95015771254c258e7382cda72467e24bdc7bbba0932f164bfac52d867e"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/distribution/test_activation.py",
+      "sha256": "3562e91344d0a70899c80d077e0eafb7203a10eb5f443fa7607d0d746508f4e8"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/distribution/test_bootstrap_selection.py",
+      "sha256": "6ab42edc5e761d2cf21a3ba7175cb357eff5b403f6f967bea80377647ba2de23"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/distribution/test_runtime_style_gate.py",
+      "sha256": "844fb6c32bbb2c26fafc566a3c8371b02435e1d25a1dea551ff4bf13668ae07b"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/distribution/test_state.py",
+      "sha256": "fc0784022f8ae9f3a03005a1f877161c4924bbfee0ba66eedf74ef27dc1de9aa"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/distribution/test_verification_contract.py",
+      "sha256": "3f94bec430e591a664b94e47b0233a67d1c7dd8e3cc9296076767148934a368b"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/verification-dependencies.json",
+      "sha256": "633aae38688db537a23aeb6a2d4ee2f03081602bbfb08a399676e2f9a3084387"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/conftest.py",
+      "sha256": "53781dfb8d7f1a9b5dd0c3aea24efb8ef54b807d592adbb5d631ed3410d8e302"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/support.py",
+      "sha256": "125298ba7f9a5f400c3cb31b66ed67c23b31ac2f16a901ae12508ca8a20eaa03"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/test_component_origins.py",
+      "sha256": "fd1f43a08cf09bad98c1b544ed4cc3cb24a0363f8470026cd4622341faa8e496"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/test_consumed_fields.py",
+      "sha256": "3015c83055bc3f3a037099ae27994d8c5ec69bded774d375dc3ee0656d4341c1"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/test_diagnostics.py",
+      "sha256": "6e6f9abb803f6ec39ca663cf32339f46d5f8f8ed2f39e7541d17b35befe152b4"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/test_distribution_cli.py",
+      "sha256": "f51d5eee50cec4e79f9afd05bb8844cd72df15b984e1185b0e9ac262a4f032ce"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/test_execution_completion.py",
+      "sha256": "9bd4d3ffa696dae2161f1896e0f9901777e622a22c1426c163d695bdf0bf2c76"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/test_fleet.py",
+      "sha256": "bd9ee3384676aa2b982f28c16ea1c4f1ad05aeca29902ab78c50e4ba1ed522db"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/test_fleet_hardening.py",
+      "sha256": "c76b96329827ff1163b501e39ae0642457ef77173524a140252b006373582530"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/test_fleet_metadata_projection.py",
+      "sha256": "73be05a178dd505966057f488f8a05828e4fc2a6356dd0b7ba6dbca45cac9f2a"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/test_inherited_overlay.py",
+      "sha256": "c6596817f61027f022e462644927ea9f40bded838fc446ec2c091e5d758b77e4"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/test_integrity.py",
+      "sha256": "f052ff1bd4485becbf3766f11de9e90f7ef8f222bc5e159d68e17b1862844ad1"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/test_make_gate_ordering.py",
+      "sha256": "3fa277f4a8eb0f4b2e5a36a88cca2d354a478e165401a3312ebb0ee3ae50fcd4"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/test_manifest_contracts.py",
+      "sha256": "7c28a258231bc45c317f21b03b2b2e2f6b2d0c2e58ad3ae539890908c481c128"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/test_multi_worktree.py",
+      "sha256": "d55c320e35a2f1bed419c6145dff3a504e56279d30f201866a76a7c626cb5874"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/test_portable_consumers.py",
+      "sha256": "0019f59617f42526ccd80d61f7289c653064a664d2f065c562b18aedb495936d"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/test_portable_sanitation.py",
+      "sha256": "189b530cd32d1fcd5a00593dea667058f183f276bebc836fd444f9294d5c3371"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/test_project_independence.py",
+      "sha256": "ea17d305ed2e957e7cb5e5bc632163f305b2f40795ef82db298c9ac10ee8818b"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/test_release_export.py",
+      "sha256": "eb31f2233fc587b57f35f5667d8db6dc890a27830880ac1b0d3a3593085da55f"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/test_renderer_grouping.py",
+      "sha256": "f13084345eb5b794fa4409872749981b46f7bb953357d3410b9158f5f21b7bd5"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/test_runtime_floor.py",
+      "sha256": "fe0829f032308e476c1722d78f746c7155818b6b8719bc02c850a57bd850f98d"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/test_skill_adapters.py",
+      "sha256": "c7f353a2674b31173ffa4eeeb775b7549ef7680add5102fe865e4840f128a8a0"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/test_source_binding.py",
+      "sha256": "17ae7efa957f69e08785b5f4b6e521864196a0ba84388e9aff7e2b727b644299"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/test_telemetry.py",
+      "sha256": "f088ebcf150793395ef3742315f80b8e482b8dc04a70926e31bce57087ec32fc"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.5.0/verification/tests/workspace_governance/test_telemetry_readiness.py",
+      "sha256": "f353e88bd679ef7a267dc6d0a4a622841d6132ca9a3bc491d7d92e850fc969ae"
+    },
+    {
+      "kind": "docs",
+      "mode": "100644",
       "path": "OPEN_WORK.md",
-      "sha256": "fc4005e3d103868b34623490b5be14a4d46d31f33a93b98caf2987da7cab1835",
-      "mode": "100644",
-      "kind": "docs"
+      "sha256": "cb2a63dc2533dc9a72808ca4f29a7b48cee30a39539cde9567db5dcef9b9adac"
     },
     {
+      "kind": "governance",
+      "mode": "100644",
+      "path": "POLICY_VERSION.json",
+      "sha256": "d93ff6d8797dd284a999147c51344720bd27e560f9ec3fcd5a165ea624cc25e7"
+    },
+    {
+      "kind": "docs",
+      "mode": "100644",
       "path": "README.md",
-      "sha256": "10e2938dba5c19b721b2a4d7747d9d0c983e9c54658b6210d4200bc5cb6ec732",
-      "mode": "100644",
-      "kind": "docs"
+      "sha256": "8fd9447dc01aadb3ae7db1ba31cda426236ad89fa0fcb2bacbd7a9361c216eb6"
     },
     {
+      "kind": "package",
+      "mode": "100644",
       "path": "config/ci/requirements.txt",
-      "sha256": "8573fc2062456ed2cc0c483be0242e525fdc0b7bc232ad849e63def10811113a",
-      "mode": "100644",
-      "kind": "package"
+      "sha256": "8573fc2062456ed2cc0c483be0242e525fdc0b7bc232ad849e63def10811113a"
     },
     {
+      "kind": "docs",
+      "mode": "100644",
+      "path": "docs/architecture/execution_completion.md",
+      "sha256": "51d49c8504a78a780d56600a91498afd923b2626ae8c6eecd39a4e5f3d94d7ff"
+    },
+    {
+      "kind": "docs",
+      "mode": "100644",
       "path": "docs/architecture/software_consolidation.md",
-      "sha256": "01e262159d9e3165e746dbecae4f8f3e8d3c9c4597d23573ecc910766fc6a5a7",
-      "mode": "100644",
-      "kind": "docs"
+      "sha256": "0dcf002b6ec9cf47ea225ad34db0c1d15f89cbc6501e7c7bde9ce855ae78197c"
     },
     {
+      "kind": "governance",
+      "mode": "100644",
       "path": "packages/harness-observatory/.gitignore",
-      "sha256": "ae4779c83772adcc3320fb9b3831cea0bbb71a82f48b3349b35a017525cf3516",
-      "mode": "100644",
-      "kind": "governance"
+      "sha256": "ae4779c83772adcc3320fb9b3831cea0bbb71a82f48b3349b35a017525cf3516"
     },
     {
+      "kind": "docs",
+      "mode": "100644",
       "path": "packages/harness-observatory/AGENTS.md",
-      "sha256": "229e979f0e987405ee1fb9247a69c5418eee64d2bbc91016640b415c9876329d",
-      "mode": "100644",
-      "kind": "docs"
+      "sha256": "229e979f0e987405ee1fb9247a69c5418eee64d2bbc91016640b415c9876329d"
     },
     {
+      "kind": "docs",
+      "mode": "100644",
       "path": "packages/harness-observatory/README.md",
-      "sha256": "3fee162ab88f8f9857c3b98cb126feb2e23e2014a83ab04bb57635270f3b2d43",
-      "mode": "100644",
-      "kind": "docs"
+      "sha256": "3fee162ab88f8f9857c3b98cb126feb2e23e2014a83ab04bb57635270f3b2d43"
     },
     {
+      "kind": "docs",
+      "mode": "100644",
       "path": "packages/harness-observatory/docs/BACKLOG.md",
-      "sha256": "d3ee2c2fddfb419761c1c9b7b20a75032d1d4f06652c33cb8857489468e35497",
-      "mode": "100644",
-      "kind": "docs"
+      "sha256": "d3ee2c2fddfb419761c1c9b7b20a75032d1d4f06652c33cb8857489468e35497"
     },
     {
+      "kind": "docs",
+      "mode": "100644",
       "path": "packages/harness-observatory/docs/architecture.md",
-      "sha256": "145744f407f5045de40d297c20407fbfad96698485d139ef3a888589d18c5079",
-      "mode": "100644",
-      "kind": "docs"
+      "sha256": "7a86a2bb11964f3b2963dc55572a5d362fb69e17f4ba612e688c1ba8803b1432"
     },
     {
+      "kind": "docs",
+      "mode": "100644",
       "path": "packages/harness-observatory/docs/data-model.md",
-      "sha256": "d1b785882bd920155018d07ff62a6f3ac9d3d5c68cddf6c3b8de2875e4ff6d15",
-      "mode": "100644",
-      "kind": "docs"
+      "sha256": "d1b785882bd920155018d07ff62a6f3ac9d3d5c68cddf6c3b8de2875e4ff6d15"
     },
     {
+      "kind": "docs",
+      "mode": "100644",
       "path": "packages/harness-observatory/docs/prior-art.md",
-      "sha256": "f1d6f32c95651525265d4f24e175181df1236cf97d975af9943de84720caf13f",
-      "mode": "100644",
-      "kind": "docs"
+      "sha256": "f1d6f32c95651525265d4f24e175181df1236cf97d975af9943de84720caf13f"
     },
     {
+      "kind": "docs",
+      "mode": "100644",
       "path": "packages/harness-observatory/docs/routing_analysis_v3_design.md",
-      "sha256": "7b32342f63be2b09598571063ffc31d30c4cd8df351a8eca8b7ef38f20e80354",
-      "mode": "100644",
-      "kind": "docs"
+      "sha256": "7b32342f63be2b09598571063ffc31d30c4cd8df351a8eca8b7ef38f20e80354"
     },
     {
+      "kind": "docs",
+      "mode": "100644",
       "path": "packages/harness-observatory/docs/source-capability-matrix.md",
-      "sha256": "0cf884cc25c781e845a18bf016ceb79a39fe3ca6ce2e500a92910a55ea25e95c",
-      "mode": "100644",
-      "kind": "docs"
+      "sha256": "0cf884cc25c781e845a18bf016ceb79a39fe3ca6ce2e500a92910a55ea25e95c"
     },
     {
+      "kind": "docs",
+      "mode": "100644",
       "path": "packages/harness-observatory/docs/verification.md",
-      "sha256": "85e0f97103fb894d6f43212495db2d34fd9287e21da0f4ca6e059960210f46f4",
-      "mode": "100644",
-      "kind": "docs"
+      "sha256": "85e0f97103fb894d6f43212495db2d34fd9287e21da0f4ca6e059960210f46f4"
     },
     {
+      "kind": "docs",
+      "mode": "100644",
       "path": "packages/harness-observatory/docs/workspace_governance_adoption.md",
-      "sha256": "989ce41eb75abe40daeb993d81178a31a3c9ea550665db1a9a286716a56458c1",
-      "mode": "100644",
-      "kind": "docs"
+      "sha256": "989ce41eb75abe40daeb993d81178a31a3c9ea550665db1a9a286716a56458c1"
     },
     {
+      "kind": "package",
+      "mode": "100644",
       "path": "packages/harness-observatory/pyproject.toml",
-      "sha256": "b1db6f570a29f39554e4bac3cb5acea326a5545c2a67ef8fe5d1239ddfc4fed0",
-      "mode": "100644",
-      "kind": "package"
+      "sha256": "b1db6f570a29f39554e4bac3cb5acea326a5545c2a67ef8fe5d1239ddfc4fed0"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/scripts/audit_reconstruction.py",
-      "sha256": "ccd6cd57f078f041fa3d4f6ae04dc59fd9a8e1b7dfb8fd9bd34d1a49d56183d4",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "ccd6cd57f078f041fa3d4f6ae04dc59fd9a8e1b7dfb8fd9bd34d1a49d56183d4"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/scripts/build_readiness_report.py",
-      "sha256": "ac7eb6c7fd33883c5a443c27ba5f0643f77401df97b8e704b67084a268102ca2",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "ac7eb6c7fd33883c5a443c27ba5f0643f77401df97b8e704b67084a268102ca2"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/scripts/census_ci.py",
-      "sha256": "1e952fd570372df386aa7923f37ecdca8c5aeb84702daedd5acd7162dac94165",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "1e952fd570372df386aa7923f37ecdca8c5aeb84702daedd5acd7162dac94165"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/scripts/check_staged.py",
-      "sha256": "5f90f984d8bc08f9a711a105bec799f6aefeab7c52579a9bc029d67007d7bbd6",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "5f90f984d8bc08f9a711a105bec799f6aefeab7c52579a9bc029d67007d7bbd6"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/scripts/compare_censuses.py",
-      "sha256": "86064c18acfac12c330d9dd6b83ca7fa5245f236ef8a3c8af330157c87ed2416",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "86064c18acfac12c330d9dd6b83ca7fa5245f236ef8a3c8af330157c87ed2416"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/scripts/demo.py",
-      "sha256": "5e76836500bf87686144ac02a8e534b43833e1a57d77418cea4a6c5b9036183a",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "5e76836500bf87686144ac02a8e534b43833e1a57d77418cea4a6c5b9036183a"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/scripts/migrate_schema_0_2.py",
-      "sha256": "b53fb9945018c83ef89e35c768b41fcbf7a6dfeb35d20ff92b7d2a4c2b407576",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "b53fb9945018c83ef89e35c768b41fcbf7a6dfeb35d20ff92b7d2a4c2b407576"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/scripts/public_safe.py",
-      "sha256": "235ced40d417206936a03886fd941f4216056a2d491645a02e4fd1827ccfd724",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "235ced40d417206936a03886fd941f4216056a2d491645a02e4fd1827ccfd724"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/scripts/routing_analysis.py",
-      "sha256": "33bba225946577d6a7bcbf4fc854608e5ea04e41b7584d07429e49ff9688bac7",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "33bba225946577d6a7bcbf4fc854608e5ea04e41b7584d07429e49ff9688bac7"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/scripts/routing_v2.py",
-      "sha256": "013638c446c60016b5be0e1e1c322dff5c4b181bd616869d5d750cf1254b82cc",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "013638c446c60016b5be0e1e1c322dff5c4b181bd616869d5d750cf1254b82cc"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/scripts/routing_v2_audit.py",
-      "sha256": "d08f9829aa1d5f2d56a70c736fb419bfcaf2e190f5603c6f03b581d1df09f332",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "d08f9829aa1d5f2d56a70c736fb419bfcaf2e190f5603c6f03b581d1df09f332"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/scripts/routing_v2_core.py",
-      "sha256": "f542a6a4c374a02762191922f8e1576be415b2c0b8d2c2da69bc4a5e76f9c459",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "f542a6a4c374a02762191922f8e1576be415b2c0b8d2c2da69bc4a5e76f9c459"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/scripts/routing_v2_reconcile.py",
-      "sha256": "ed35d6acd1a5d3c8b73ac86dc6200f8c853fc8ac6b871eb8c90a1513952a4b4f",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "ed35d6acd1a5d3c8b73ac86dc6200f8c853fc8ac6b871eb8c90a1513952a4b4f"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/scripts/routing_v2_report.py",
-      "sha256": "dc78654aa796ca6f6558978873dfb50b1c1490c9ceb9c5e384b227e9979c7147",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "dc78654aa796ca6f6558978873dfb50b1c1490c9ceb9c5e384b227e9979c7147"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/scripts/run_census.py",
-      "sha256": "4fdfbfc134c8f50a8c49bb8e4300ee57fc9d4f300e7361468c7e85e312022ee0",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "4fdfbfc134c8f50a8c49bb8e4300ee57fc9d4f300e7361468c7e85e312022ee0"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/scripts/smoke_local.py",
-      "sha256": "bf1cfde5f1f8911bb5fc7f469604fceb6e9469b7ed90ea92e916d80359a0fb9f",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "bf1cfde5f1f8911bb5fc7f469604fceb6e9469b7ed90ea92e916d80359a0fb9f"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/scripts/synthetic_inputs.py",
-      "sha256": "bf00c0b07cd3b038b982456b5c8afe0c79510983b16daf556527508a3fd65f0e",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "bf00c0b07cd3b038b982456b5c8afe0c79510983b16daf556527508a3fd65f0e"
     },
     {
+      "kind": "governance",
+      "mode": "100755",
       "path": "packages/harness-observatory/scripts/verify.sh",
-      "sha256": "1323baeb7acd3a58e1f63078ae4100b12d5380948360b7b1b4fe799f5308bb98",
-      "mode": "100755",
-      "kind": "governance"
+      "sha256": "1323baeb7acd3a58e1f63078ae4100b12d5380948360b7b1b4fe799f5308bb98"
     },
     {
+      "kind": "governance",
+      "mode": "100755",
       "path": "packages/harness-observatory/scripts/verify_public_safe.sh",
-      "sha256": "dac990a2665d4cd851136940d89cc4d2f9927178bfd66db171c798214847156d",
-      "mode": "100755",
-      "kind": "governance"
+      "sha256": "dac990a2665d4cd851136940d89cc4d2f9927178bfd66db171c798214847156d"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/src/harness_observatory/__init__.py",
-      "sha256": "7fe6453e8b801084778d2477eb144137c32ada2bc226e4849a7c6e8f098559d4",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "7fe6453e8b801084778d2477eb144137c32ada2bc226e4849a7c6e8f098559d4"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/src/harness_observatory/census.py",
-      "sha256": "ea7627ba83e31c3e6cf759a11b20d6dd805c2f5e1d3a3d6eb6db9cb7c33ce76c",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "ea7627ba83e31c3e6cf759a11b20d6dd805c2f5e1d3a3d6eb6db9cb7c33ce76c"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/src/harness_observatory/cli.py",
-      "sha256": "3514a8cc43e3f582d766ee30344bea013437841e75006b4734ab30334ab0467e",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "3514a8cc43e3f582d766ee30344bea013437841e75006b4734ab30334ab0467e"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/src/harness_observatory/data_root.py",
-      "sha256": "f817995ae7626eece6e224fceaf67a3ae0b58535270b8cdb6ed4bee0c30e2776",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "f817995ae7626eece6e224fceaf67a3ae0b58535270b8cdb6ed4bee0c30e2776"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/src/harness_observatory/enrichers.py",
-      "sha256": "0c546adc066eb571ebaba5f0fc41c8878414164dfbbc1128aeb4807f07013dc5",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "0c546adc066eb571ebaba5f0fc41c8878414164dfbbc1128aeb4807f07013dc5"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/src/harness_observatory/extractors.py",
-      "sha256": "fc6380bcc5af9a1972f8a6463145c2f0c337aecb37deca09944ef0d29d0053e0",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "fc6380bcc5af9a1972f8a6463145c2f0c337aecb37deca09944ef0d29d0053e0"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/src/harness_observatory/model.py",
-      "sha256": "bcabc8d5adb1e3137ee089576827de556339e887e85e5f184363972af3c66130",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "bcabc8d5adb1e3137ee089576827de556339e887e85e5f184363972af3c66130"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/src/harness_observatory/redaction.py",
-      "sha256": "9219f9e34f1886ca2537ed5a3d2c8fedb46455dc24910ed9c980b6dbfba52c3e",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "9219f9e34f1886ca2537ed5a3d2c8fedb46455dc24910ed9c980b6dbfba52c3e"
     },
     {
+      "kind": "schema",
+      "mode": "100644",
       "path": "packages/harness-observatory/src/harness_observatory/schemas/event.json",
-      "sha256": "e139122a2c78ac7b9e297fed49c4a5165aada438844e474365be0b6128a2e0d5",
-      "mode": "100644",
-      "kind": "schema"
+      "sha256": "e139122a2c78ac7b9e297fed49c4a5165aada438844e474365be0b6128a2e0d5"
     },
     {
+      "kind": "schema",
+      "mode": "100644",
       "path": "packages/harness-observatory/src/harness_observatory/schemas/governance_snapshot.json",
-      "sha256": "117c6c9133dba35214645b3fdfc4be35ba1a8665288009b5057e0a80d5f55ac5",
-      "mode": "100644",
-      "kind": "schema"
+      "sha256": "117c6c9133dba35214645b3fdfc4be35ba1a8665288009b5057e0a80d5f55ac5"
     },
     {
+      "kind": "schema",
+      "mode": "100644",
       "path": "packages/harness-observatory/src/harness_observatory/schemas/provenance.json",
-      "sha256": "0be9ba6e4caa25cc1d6d130b4eb30e98d1ea9d44de671a019e572082fd798f6d",
-      "mode": "100644",
-      "kind": "schema"
+      "sha256": "0be9ba6e4caa25cc1d6d130b4eb30e98d1ea9d44de671a019e572082fd798f6d"
     },
     {
+      "kind": "schema",
+      "mode": "100644",
       "path": "packages/harness-observatory/src/harness_observatory/schemas/run.json",
-      "sha256": "7a3cd9a8f1cf70acf0a7ef5fc0cb529ddcf91939a0206c66e5bb49a38c48e95e",
-      "mode": "100644",
-      "kind": "schema"
+      "sha256": "7a3cd9a8f1cf70acf0a7ef5fc0cb529ddcf91939a0206c66e5bb49a38c48e95e"
     },
     {
+      "kind": "schema",
+      "mode": "100644",
       "path": "packages/harness-observatory/src/harness_observatory/schemas/v0.1/event.json",
-      "sha256": "d7aad0c053b0225fe3682ba57f2f7c8e2cc8ea40a4eef116fb828b7cf141b608",
-      "mode": "100644",
-      "kind": "schema"
+      "sha256": "d7aad0c053b0225fe3682ba57f2f7c8e2cc8ea40a4eef116fb828b7cf141b608"
     },
     {
+      "kind": "schema",
+      "mode": "100644",
       "path": "packages/harness-observatory/src/harness_observatory/schemas/v0.1/governance_snapshot.json",
-      "sha256": "e53b3753ff8062be115f0b643e43172f5db2766657847a94842688af11e22680",
-      "mode": "100644",
-      "kind": "schema"
+      "sha256": "e53b3753ff8062be115f0b643e43172f5db2766657847a94842688af11e22680"
     },
     {
+      "kind": "schema",
+      "mode": "100644",
       "path": "packages/harness-observatory/src/harness_observatory/schemas/v0.1/provenance.json",
-      "sha256": "9135a8da3182a9f925cf820503214a276b00013b9c7ca4f9513b484c2b52f3ed",
-      "mode": "100644",
-      "kind": "schema"
+      "sha256": "9135a8da3182a9f925cf820503214a276b00013b9c7ca4f9513b484c2b52f3ed"
     },
     {
+      "kind": "schema",
+      "mode": "100644",
       "path": "packages/harness-observatory/src/harness_observatory/schemas/v0.1/run.json",
-      "sha256": "16bac4f8e90d059464f50f7896902a72d68e91ef9fc6c6822061da8702ef4957",
-      "mode": "100644",
-      "kind": "schema"
+      "sha256": "16bac4f8e90d059464f50f7896902a72d68e91ef9fc6c6822061da8702ef4957"
     },
     {
+      "kind": "src",
+      "mode": "100644",
       "path": "packages/harness-observatory/src/harness_observatory/warehouse.py",
-      "sha256": "221c7bf534791a02dadb64dc2fbf07ccdea8a22b87875c402db70a324806a899",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "221c7bf534791a02dadb64dc2fbf07ccdea8a22b87875c402db70a324806a899"
     },
     {
+      "kind": "test",
+      "mode": "100644",
       "path": "packages/harness-observatory/tests/conftest.py",
-      "sha256": "63563f5764880c76c5a7bb90f1aa7797662f12e6ee9f05366ab36683b1749cf8",
-      "mode": "100644",
-      "kind": "test"
+      "sha256": "63563f5764880c76c5a7bb90f1aa7797662f12e6ee9f05366ab36683b1749cf8"
     },
     {
+      "kind": "test",
+      "mode": "100644",
       "path": "packages/harness-observatory/tests/test_census.py",
-      "sha256": "bf83bc2bee06249246b6193739fdc58bde2a7bec8d3685e91b22b59f031fd109",
-      "mode": "100644",
-      "kind": "test"
+      "sha256": "bf83bc2bee06249246b6193739fdc58bde2a7bec8d3685e91b22b59f031fd109"
     },
     {
+      "kind": "test",
+      "mode": "100644",
       "path": "packages/harness-observatory/tests/test_data_root.py",
-      "sha256": "c2030826d425cc19a744fbfcb0ca8df69729fda4200f2006cd9aaa5d69732dd5",
-      "mode": "100644",
-      "kind": "test"
+      "sha256": "c2030826d425cc19a744fbfcb0ca8df69729fda4200f2006cd9aaa5d69732dd5"
     },
     {
+      "kind": "test",
+      "mode": "100644",
       "path": "packages/harness-observatory/tests/test_pipeline.py",
-      "sha256": "68076bb36bed369d67bb8e44e2356b1d77520773706f3c361415e5b6620dafed",
-      "mode": "100644",
-      "kind": "test"
+      "sha256": "68076bb36bed369d67bb8e44e2356b1d77520773706f3c361415e5b6620dafed"
     },
     {
+      "kind": "test",
+      "mode": "100644",
       "path": "packages/harness-observatory/tests/test_publication_safety.py",
-      "sha256": "7adaee58ebe6a902560ea1079342894af4682e11af5e936d36ff90641fe7de5c",
-      "mode": "100644",
-      "kind": "test"
+      "sha256": "7adaee58ebe6a902560ea1079342894af4682e11af5e936d36ff90641fe7de5c"
     },
     {
+      "kind": "test",
+      "mode": "100644",
       "path": "packages/harness-observatory/tests/test_review_scripts.py",
-      "sha256": "1ef56140583f9cfc67bd3039cdc9718d75dd2a771271cd2bd605e4315856cfe7",
-      "mode": "100644",
-      "kind": "test"
+      "sha256": "1ef56140583f9cfc67bd3039cdc9718d75dd2a771271cd2bd605e4315856cfe7"
     },
     {
+      "kind": "test",
+      "mode": "100644",
       "path": "packages/harness-observatory/tests/test_routing_analysis.py",
-      "sha256": "137534ef74fde51639e96db38ab5efa812973f14ff71b530459a7aeba621e60b",
-      "mode": "100644",
-      "kind": "test"
+      "sha256": "137534ef74fde51639e96db38ab5efa812973f14ff71b530459a7aeba621e60b"
     },
     {
+      "kind": "test",
+      "mode": "100644",
       "path": "packages/harness-observatory/tests/test_routing_v2.py",
-      "sha256": "a6167e002ef6213237e3e2a72398805cff39af1911beef09f39ba63456e086a8",
-      "mode": "100644",
-      "kind": "test"
+      "sha256": "a6167e002ef6213237e3e2a72398805cff39af1911beef09f39ba63456e086a8"
     },
     {
+      "kind": "test",
+      "mode": "100644",
       "path": "repository_tests/test_manifest_bindings.py",
-      "sha256": "78785186a93be1f231c3b247a2ab6ee7c9d4f3d4b4f0d6fce6a8b5e5e27eee62",
-      "mode": "100644",
-      "kind": "test"
+      "sha256": "78785186a93be1f231c3b247a2ab6ee7c9d4f3d4b4f0d6fce6a8b5e5e27eee62"
     },
     {
+      "kind": "test",
+      "mode": "100644",
       "path": "repository_tests/test_observed_measurements.py",
-      "sha256": "66cbe3d0ec4c2d8889f8d4f8ce3fbc5603a5f3814cf836be78b5231d5aef3cdb",
-      "mode": "100644",
-      "kind": "test"
+      "sha256": "66cbe3d0ec4c2d8889f8d4f8ce3fbc5603a5f3814cf836be78b5231d5aef3cdb"
     },
     {
+      "kind": "test",
+      "mode": "100644",
       "path": "repository_tests/test_publication.py",
-      "sha256": "1e7aa8b0ff5165359f6d41cee8cd5e6d9eda269c439a654d0660297cc104a0b2",
-      "mode": "100644",
-      "kind": "test"
+      "sha256": "42cd94d1df37638e7457ee0253d53ce80e56f1170de0ba6694630eed6a0b87ca"
     },
     {
+      "kind": "test",
+      "mode": "100644",
       "path": "repository_tests/test_publication_adversarial.py",
-      "sha256": "5c53c0efda5ec7aed3ba07835def79614f0fabcd66cbada079a42fcb781dbb5b",
-      "mode": "100644",
-      "kind": "test"
+      "sha256": "5c53c0efda5ec7aed3ba07835def79614f0fabcd66cbada079a42fcb781dbb5b"
     },
     {
+      "kind": "governance",
+      "mode": "100755",
       "path": "scripts/verify_all.sh",
-      "sha256": "bbf61100424cd22c14d60b6407cfe41106f8dc506d8c92f20869aa31e5f242aa",
-      "mode": "100755",
-      "kind": "governance"
+      "sha256": "bbf61100424cd22c14d60b6407cfe41106f8dc506d8c92f20869aa31e5f242aa"
     },
     {
+      "kind": "governance",
+      "mode": "100755",
       "path": "scripts/verify_publication.sh",
-      "sha256": "983ea2b5a7e505e137bae2c721585f7eeb30487e084a62fd1d459165f206aa9a",
-      "mode": "100755",
-      "kind": "governance"
+      "sha256": "983ea2b5a7e505e137bae2c721585f7eeb30487e084a62fd1d459165f206aa9a"
     },
     {
+      "kind": "test",
+      "mode": "100644",
+      "path": "tests/workspace_governance/test_execution_completion.py",
+      "sha256": "9bd4d3ffa696dae2161f1896e0f9901777e622a22c1426c163d695bdf0bf2c76"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
       "path": "tools/publication/__init__.py",
-      "sha256": "4ac3f9587f7aa3ba0e11a5d294251883063d1e19d438731e4907ab7a31bd3ad0",
-      "mode": "100644",
-      "kind": "src"
+      "sha256": "4ac3f9587f7aa3ba0e11a5d294251883063d1e19d438731e4907ab7a31bd3ad0"
     },
     {
-      "path": "tools/publication/verify.py",
-      "sha256": "b48c9d45729a335744dcfac3dea5dc4708f4e6604d1c5b9f4a39cf2134886c9b",
+      "kind": "src",
       "mode": "100644",
-      "kind": "src"
+      "path": "tools/publication/verify.py",
+      "sha256": "a21953fb2c00b113832a72b5105bbca3f3838eb7da6bfa5d94fc9ac8f6c2e7c8"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": "tools/workspace_governance/MANIFEST.json",
+      "sha256": "80c34bca59755f4376c7c729d07f0dd22e048dba6b3bd25f66f5c1a069f13a30"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": "tools/workspace_governance/VERSION",
+      "sha256": "a66780da23103beaf12432b418508966b31a2a3a787f9468a5b6cdaa8667c1ef"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": "tools/workspace_governance/execution_policy.py",
+      "sha256": "d763582015c321b90a08b5e6b05d95c0b614be3466088f197b5a7b3772aec1fe"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": "tools/workspace_governance/policies/execution.json",
+      "sha256": "bbcbee2fd65ef933f29d97e7edcf643d9c47367374c04fc26a2801175f64da6e"
+    },
+    {
+      "kind": "docs",
+      "mode": "100644",
+      "path": "tools/workspace_governance/policies/execution.md",
+      "sha256": "b3f31a021f278fc5cb05ef563ba32337e0217dfc15a0422bdbcddc337e01d971"
+    },
+    {
+      "kind": "docs",
+      "mode": "100644",
+      "path": "tools/workspace_governance/policies/workspace_baseline.md",
+      "sha256": "8f8e3b4d179e966c2b996967f1c7b9ff4c7677f21350822acd53b46d5739cf6c"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": "tools/workspace_governance/resolver/core.py",
+      "sha256": "f5ad9fcf283f8354d5305cf8651187efb4e9c1697b2e188b9850431f106007ab"
+    },
+    {
+      "kind": "docs",
+      "mode": "100644",
+      "path": "tools/workspace_governance/skills/governance-context/SKILL.md",
+      "sha256": "57c87c3968f057be8dc4d1b3fa11c0478fc9c1cbe10cdb931e80a846726174f7"
+    },
+    {
+      "kind": "docs",
+      "mode": "100644",
+      "path": "tools/workspace_governance/skills/governance-maintenance/SKILL.md",
+      "sha256": "967efb9cf22ad8a2c75d1515b432a68de98c3b3c1189ce7acf3dded18de88a75"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": "tools/workspace_governance/validators/core.py",
+      "sha256": "f18ad316b0b928497c064ce167072a06d580102082b902219fe3e5e9bf59a289"
     }
-  ]
+  ],
+  "published_base": "df332ad5eed18926b7a17d0795380b65c7fd4f98",
+  "schema_version": 1
 }

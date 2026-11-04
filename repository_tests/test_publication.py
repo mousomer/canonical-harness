@@ -239,14 +239,17 @@ def test_input_limits_refuse_instead_of_skipping(repository, limits):
     assert not result["ok"] and result["input_refusal"]
 
 
+@pytest.mark.parametrize("release", [None, "1.5.0"])
 def test_existing_synthetic_source_exception_binds_rule_path_and_exact_bytes(
     repository,
+    release,
 ):
     root, base = repository
-    name = "tests/workspace_governance/test_fleet_metadata_projection.py"
+    source = "tests/workspace_governance/test_fleet_metadata_projection.py"
+    name = source if release is None else f".releases/{release}/verification/{source}"
     target = root / name
     target.parent.mkdir(parents=True)
-    target.write_bytes((ROOT / name).read_bytes())
+    target.write_bytes((ROOT / source).read_bytes())
     manifest(root, base, [name])
     result = PUBLICATION.scan(root, base)
     assert result["ok"] and result["reviewed_synthetic_source_finding_count"] == 1

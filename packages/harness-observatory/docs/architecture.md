@@ -70,3 +70,7 @@ history is not certified data-free by a current-source cleanup.
 ### Routing measurement repair v2
 
 The repair consumes only an immutable, hash-verified inventory derived from an existing checkpoint. It never discovers live inputs. A separate action graph distinguishes source containers, candidate nested invocations, measured results and continuation observations; only evidenced ownership can allocate output to a leaf action. JavaScript and shell syntax are parsed without executing historical code. Candidate Git states, injected instruction observations and uncertain transitions remain distinct. Acceptance requires a stratified raw audit, disclosed coverage/error intervals, at least 99% leaf-output byte attribution and at least 95% precision/recall for relevant operation classes; passing software tests alone is insufficient. The run stops after acceptance or rejection, with no route design or production mutation.
+
+## Shared completion policy
+
+The general requirement is owned by `tools/workspace_governance/policies/execution.md` in the canonical harness. The census prohibition specializes that shared requirement. Observatory remains optional; consumers receive the shared policy without installing Observatory. Blocking watches and bounded same-handle continuations are not agent-driven polls. Existing metric versions and historical observations remain unchanged.
