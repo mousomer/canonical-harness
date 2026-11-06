@@ -1,7 +1,7 @@
 {
-  "last_updated": "2026-11-04",
-  "notes": "Shared synchronous completion contract; runtime 0.8.0. Immutable compatibility baseline preserved.",
-  "pack_version": "1.5.0",
-  "policy_version": "1.5.0",
-  "release_manifest_sha256": "6c33dab0886b5698de5919c01d4a1ff2881b86de944e87e31e1185af781c1ef5"
+  "last_updated": "2026-11-07",
+  "notes": "No-autonomous-polling completion contract (synchronous-completion-v2) with pack-managed PreToolUse enforcement; runtime 0.9.0. Immutable compatibility baseline preserved.",
+  "pack_version": "1.6.0",
+  "policy_version": "1.6.0",
+  "release_manifest_sha256": "671f477b4742ee0e12360c8702e8a03f94d9c8d14dee9ea97574e214239acbdb"
 }

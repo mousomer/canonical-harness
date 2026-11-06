@@ -19,7 +19,9 @@ def test_resolves_shared_policy_with_provenance(tmp_path):
     entry = result["entries"]["execution.completion"]
     assert entry["owner"] == "shared_pack"
     assert entry["source"].endswith("policies/execution.json")
-    assert entry["value"]["requirements"]["agent_status_polling"] == "forbidden"
+    assert entry["value"]["requirements"]["autonomous_polling"] == "forbidden"
+    assert entry["value"]["requirements"]["tool_watch_modes"] == "forbidden"
+    assert entry["value"]["id"] == "synchronous-completion-v2"
     assert len(entry["value"]["sha256"]) == 64
 
 
@@ -41,7 +43,7 @@ def test_policy_defects_fail_even_before_lock_repair(tmp_path, defect):
         policy.unlink()
     elif defect == "weakened":
         data = json.loads(policy.read_text())
-        data["requirements"]["agent_status_polling"] = "allowed"
+        data["requirements"]["autonomous_polling"] = "allowed"
         policy.write_text(json.dumps(data))
     else:
         outside = tmp_path / "foreign.json"
@@ -72,7 +74,7 @@ def test_both_skills_route_the_exported_authority():
 def remote():
     return [
         {"event": "start", "id": "run-1", "mode": "remote", "sha": SHA},
-        {"event": "watch", "id": "run-1"},
+        {"event": "notification", "id": "run-1"},
     ]
 
 
@@ -94,9 +96,7 @@ def test_yields_and_reconnect_keep_one_remote_execution():
     assert review_execution(events)["status"] == "success"
 
 
-@pytest.mark.parametrize(
-    "event", ["status_query", "log_tail", "watch", "redispatch", "unexpected"]
-)
+@pytest.mark.parametrize("event", ["log_tail", "watch", "redispatch", "unexpected"])
 def test_redundant_polling_and_duplicate_watchers_rejected(event):
     assert (
         review_execution(remote() + [{"event": event, "id": "run-1"}])["status"]
@@ -149,7 +149,14 @@ def test_duplicate_start_and_missing_exit_status_are_rejected():
     )
 
 
-def test_remote_completion_requires_watch_or_notification():
+def test_blocking_watch_is_no_longer_a_completion_mechanism():
+    start = remote()[:1]
+    result = review_execution(start + [{"event": "watch", "id": "run-1"}])
+    assert result["status"] == "violation"
+    assert result["violations"] == ["agent_polling_or_redispatch"]
+
+
+def test_remote_completion_requires_observation_or_notification():
     start = remote()[:1]
     finish = [{"event": "finish", "id": "run-1", "sha": SHA, "exit_code": 0}]
     assert review_execution(start + finish)["status"] == "violation"
