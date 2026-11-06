@@ -48,9 +48,21 @@ check sets are UNKNOWN, and a failed request is ERROR, never a CI failure.
 
 ## Coverage limits (explicit)
 
-- Claude Code before 2.1.295 has no `onFailure: "block"`; a hook *timeout*
-  (30 s) still lets the call proceed. The launcher converts every other failure
-  into a block.
+- Timeouts: the managed Claude PreToolUse handler sets `onFailure: "block"`
+  (honoured from Claude Code 2.1.295; observed blocking a hung hook in 2.1.317).
+  Independently, the launcher kills the classifier at a 20 s deadline and the
+  classifier arms an 18 s alarm, both well inside the 30 s hook timeout, and
+  both turn a hang into a block (observed live with `onFailure: "continue"`).
+  Remaining fail-open: a Claude runtime older than 2.1.295 or Codex whose hook
+  process is killed or stalled outside the launcher (for example the shell
+  itself never starts) before either deadline fires; a handler without
+  `onFailure` was observed to let a timed-out call proceed.
+- Observation identity: the epoch is Codex `turn_id`, else Claude `prompt_id`
+  (observed in 2.1.317), else the UserPromptSubmit token. Subagents share the
+  parent's `session_id` and `prompt_id` (observed), so a read delegated to a
+  subagent in the same turn is a repeat. The agent's own `git push` or `gh`
+  pr/run/workflow/release mutation authorizes one new read, at most twice per
+  turn; a no-op push still counts, which is a recorded residual.
 - Codex project hooks run only in a trusted project and after the hook hash is
   trusted (`/hooks` or the app's Settings > Hooks); untrusted or changed hooks
   are skipped silently (observed: `codex exec` ran `gh pr checks 176 --watch`

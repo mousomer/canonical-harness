@@ -775,3 +775,85 @@ def test_command_traces_distinguish_blocked_executed_and_repeated():
     resumed = review_execution([one, {"event": "notification"}, one])
     assert resumed["violations"] == []
     assert resumed["classifier"] == command_policy.VERSION
+
+
+# ------------------------------------------------------------ acceptance repairs
+
+
+def test_hung_guard_blocks_before_the_runtime_timeout(consumer, tmp_path):
+    import time
+
+    hang = tmp_path / "hang-python"
+    hang.write_text("#!/bin/sh\nexec sleep 60\n")
+    hang.chmod(0o755)
+    env = {"GOVERNANCE_PYTHON": str(hang), "NO_POLLING_GUARD_DEADLINE": "2"}
+    started = time.monotonic()
+    result = run_hook(consumer, claude_payload("git status"), "claude", env=env)
+    elapsed = time.monotonic() - started
+    assert result.returncode == 2 and "deadline" in result.stderr
+    assert elapsed < 10
+    prompt = {"session_id": "s", "hook_event_name": "UserPromptSubmit"}
+    assert run_hook(consumer, prompt, "claude", "prompt", env=env).returncode == 0
+
+
+def test_claude_tool_hook_requests_block_on_failure_but_prompts_never_block():
+    entries = hook_adapters.claude_entries()
+    tool = entries["PreToolUse"]["hooks"][0]
+    prompt = entries["UserPromptSubmit"]["hooks"][0]
+    assert tool["onFailure"] == "block" and tool["timeout"] == 30
+    assert "onFailure" not in prompt
+    for entry in hook_adapters.codex_entries().values():
+        assert "onFailure" not in entry["hooks"][0]
+
+
+def test_own_state_change_authorizes_one_new_observation(consumer):
+    def call(command):
+        return run_hook(consumer, claude_payload(command, session="sc"), "claude")
+
+    assert call("gh pr checks 1 --json bucket").returncode == 0
+    assert call("gh pr checks 1 --json bucket").returncode == 2
+    assert call("git push origin HEAD").returncode == 0
+    assert call("gh pr checks 1 --json bucket").returncode == 0
+    assert call("gh pr checks 1 --json bucket").returncode == 2
+    assert call("gh pr merge 1 --merge").returncode == 0
+    assert call("./gov ci-status 1").returncode == 0
+    # Re-authorization is capped per epoch: no-op pushes cannot re-arm polling.
+    assert call("git push origin HEAD").returncode == 0
+    assert call("gh pr checks 1 --json bucket").returncode == 2
+
+
+def test_state_change_is_classified_by_the_shared_policy():
+    for command in ("git push", "gh pr merge 1", "gh run rerun 9", "gh workflow run x"):
+        decision = command_policy.evaluate({"tool": "Bash", "command": command})
+        assert decision.state_change, command
+    for command in (
+        "git status",
+        "gh pr view 1",
+        "gh pr checks 1",
+        "gh issue comment 1",
+    ):
+        decision = command_policy.evaluate({"tool": "Bash", "command": command})
+        assert not decision.state_change, command
+    review = review_execution(
+        [
+            {"event": "command", "command": "gh pr checks 1"},
+            {"event": "command", "command": "git push"},
+            {"event": "command", "command": "gh pr checks 1"},
+        ]
+    )
+    assert review["violations"] == []
+
+
+def test_claude_prompt_id_scopes_observations_and_subagents_share_it(consumer):
+    def call(command, prompt, agent=None):
+        payload = {**claude_payload(command, session="pid"), "prompt_id": prompt}
+        if agent:
+            payload.update(agent_id=agent, agent_type="general-purpose")
+        return run_hook(consumer, payload, "claude")
+
+    assert call("gh pr checks 3", "p1").returncode == 0
+    # A subagent in the same turn is the same observer: delegation is no escape.
+    assert call("gh pr checks 3", "p1", agent="sub-1").returncode == 2
+    # A new turn (user message or host notification) authorizes a new read.
+    assert call("gh pr checks 3", "p2", agent="sub-1").returncode == 0
+    assert call("gh pr checks 3", "p2").returncode == 2

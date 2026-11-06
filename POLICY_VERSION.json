@@ -1,7 +1,7 @@
 {
   "last_updated": "2026-11-07",
-  "notes": "No-autonomous-polling completion contract (synchronous-completion-v2) with pack-managed PreToolUse enforcement; runtime 0.9.0. Immutable compatibility baseline preserved.",
-  "pack_version": "1.6.0",
-  "policy_version": "1.6.0",
-  "release_manifest_sha256": "671f477b4742ee0e12360c8702e8a03f94d9c8d14dee9ea97574e214239acbdb"
+  "notes": "No-autonomous-polling completion contract (synchronous-completion-v2); 1.6.1 adds fail-closed hook deadlines, onFailure block, turn/subagent/state-change observation identity; runtime 0.9.1. Immutable compatibility baseline preserved.",
+  "pack_version": "1.6.1",
+  "policy_version": "1.6.1",
+  "release_manifest_sha256": "08d4fd3e9e952dac587d0c42e8b5328e7e2e1bbea83332e7db23fd0c9f1de393"
 }

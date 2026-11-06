@@ -88,7 +88,7 @@ SYNTHETIC_SOURCE_PATHS = {
     "tests/workspace_governance/test_fleet_metadata_projection.py",
     *{
         f".releases/{version}/verification/tests/workspace_governance/test_fleet_metadata_projection.py"
-        for version in ("1.3.1", "1.3.2", "1.4.0", "1.5.0", "1.6.0")
+        for version in ("1.3.1", "1.3.2", "1.4.0", "1.5.0", "1.6.0", "1.6.1")
     },
 }
 # Real interpreter paths existed in these public legacy launchers. They are not
