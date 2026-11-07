@@ -186,3 +186,7 @@ A policy change invalidates that binding while execution consumes the original
 private declaration. Releases 1.2.0, 1.3.0, 1.3.1 and 1.3.2 remain retained and immutable.
 
 A declared retired temporary external store can carry a release-bound observed-absence lifecycle. Audit reports `governed_absent` only after a fresh absence observation and rejects unexpected reappearance. This records preservation and absence; it never certifies adoption, product behavior or missing scan coverage.
+
+## Completion-policy successor
+
+Distribution 1.5.0 / runtime 0.8.0 supplies the mandatory shared completion policy for tests, scripts and remote CI. See [the execution design](docs/architecture/execution_completion.md). The active immutable release is pinned separately from source. Consumer coverage is established by guarded adoption and verification receipts; source edits alone do not establish it.
