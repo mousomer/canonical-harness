@@ -1,15 +1,15 @@
 {
-  "distribution_version": "1.6.1",
+  "distribution_version": "1.6.2",
   "legacy_compatibility": "compatibility/1.1.3/manifest.json",
   "legacy_manifest_sha256": "f62c1b4e2d2ab30d572daaabd027cd6f9f3b491894fc6b3dc6a827969f1105c2",
   "pack": {
     "name": "workspace/policy-kit",
-    "revision": "v0.9-no-autonomous-polling-2",
-    "version": "1.6.1"
+    "revision": "v0.9-no-autonomous-polling-3",
+    "version": "1.6.2"
   },
   "project_semantics": "remain owned by each consumer",
-  "release_manifest": ".releases/1.6.1/release.json",
-  "release_manifest_sha256": "08d4fd3e9e952dac587d0c42e8b5328e7e2e1bbea83332e7db23fd0c9f1de393",
+  "release_manifest": ".releases/1.6.2/release.json",
+  "release_manifest_sha256": "1899de856edd23996220ae2153634e2862c2cfe8c16b740f502f5b50e78543fb",
   "schema_version": 1,
   "source_owner": "workspace/policy-kit",
   "source_role": "general-pack-owner"

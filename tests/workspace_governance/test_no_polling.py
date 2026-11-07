@@ -857,3 +857,50 @@ def test_claude_prompt_id_scopes_observations_and_subagents_share_it(consumer):
     # A new turn (user message or host notification) authorizes a new read.
     assert call("gh pr checks 3", "p2", agent="sub-1").returncode == 0
     assert call("gh pr checks 3", "p2").returncode == 2
+
+
+def test_importing_the_hook_module_arms_no_alarm():
+    import signal
+
+    from tools.workspace_governance.hooks import no_polling
+
+    assert no_polling.ALARM_SECONDS > 0
+    assert signal.alarm(0) == 0
+
+
+def test_codex_hook_in_linked_worktree_falls_back_to_main_checkout_guard(tmp_path):
+    main = build_checkout(tmp_path / "main")
+    git = ["git", "-c", "user.name=t", "-c", "user.email=t@t"]
+    subprocess.run([*git, "-C", str(main), "init", "-q"], check=True)
+    subprocess.run(
+        [*git, "-C", str(main), "commit", "-q", "--allow-empty", "-m", "i"], check=True
+    )
+    linked = tmp_path / "linked"
+    subprocess.run(
+        [*git, "-C", str(main), "worktree", "add", "-q", "--detach", str(linked)],
+        check=True,
+    )
+    assert not (linked / hook_adapters.GUARD).exists()
+    command = hook_adapters.codex_entries()["PreToolUse"]["hooks"][0]["command"]
+
+    def run(cmd):
+        payload = {"session_id": "lw", "turn_id": "t", "cwd": str(linked)}
+        payload.update(tool_name="Bash", tool_input={"command": cmd})
+        return subprocess.run(
+            ["sh", "-c", command],
+            input=json.dumps(payload),
+            capture_output=True,
+            text=True,
+            cwd=linked,
+            env={
+                **os.environ,
+                "GOVERNANCE_PYTHON": sys.executable,
+                "TMPDIR": str(tmp_path),
+            },
+            timeout=60,
+            check=False,
+        )
+
+    denied = run("gh pr checks 176 --watch")
+    assert denied.returncode == 2 and "TOOL_WATCH_MODE" in denied.stderr
+    assert run("git status").returncode == 0

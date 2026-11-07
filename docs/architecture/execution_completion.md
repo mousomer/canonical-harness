@@ -68,6 +68,11 @@ check sets are UNKNOWN, and a failed request is ERROR, never a CI failure.
   are skipped silently (observed: `codex exec` ran `gh pr checks 176 --watch`
   with the untrusted hook present). `write_stdin` and hosted tools bypass
   PreToolUse. Malformed hook output fails open in Codex.
+- Codex 0.153.2 reads a linked git worktree's project `.codex/` from the main
+  checkout, ignoring the worktree's own `.codex/hooks.json` (observed with the
+  app-server `hooks/list`). Codex enforcement in any worktree therefore needs
+  the adopted bindings in the main checkout; the Codex command falls back to the
+  main checkout's guard when the worktree's own commit predates the pack.
 - Defense in depth for Codex: `hooks/codex_no_polling.rules`, installed
   separately as `~/.codex/rules/workspace-governance-no-polling.rules`, forbids
   `gh run watch`, `watch` and `gh pr checks` with a leading watch/interval flag
