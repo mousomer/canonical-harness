@@ -81,3 +81,9 @@ read-only preservation in the private registry.
 ## Completion release publication
 
 Release 1.5.0 retains the existing private-policy non-disclosure synthetic fixture byte for byte. Its publication exception is confined to the named fixture path and existing exact content hash, including the new immutable release path. Changed bytes and other paths remain rejected; secret detection remains unconditional. No immutable release bytes are rewritten to resolve publication findings.
+
+Registry preparation for a release transition binds each direct project's
+skill declarations, generated fleet metadata, and declared pack lock to the
+same reviewed release. Read paths from the consumer workspace declaration.
+Preserve unrelated project fields and refuse divergent adapter declarations.
+The guarded planner and installer own preimage validation and undo.

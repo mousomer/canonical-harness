@@ -1,7 +1,7 @@
 {
-  "last_updated": "2026-11-04",
-  "notes": "Shared synchronous completion contract; runtime 0.8.0. Immutable compatibility baseline preserved.",
-  "pack_version": "1.5.0",
-  "policy_version": "1.5.0",
-  "release_manifest_sha256": "6c33dab0886b5698de5919c01d4a1ff2881b86de944e87e31e1185af781c1ef5"
+  "last_updated": "2026-11-16",
+  "notes": "Bounded scanner coverage and safe output, baseline evidence validation, guarded publication reads and verification regressions.",
+  "pack_version": "1.7.0",
+  "policy_version": "1.7.0",
+  "release_manifest_sha256": "44644c8bc74338782c5d3a67cfda6630f40db70732464402bee737e9ee44e920"
 }

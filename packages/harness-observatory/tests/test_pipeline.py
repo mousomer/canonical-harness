@@ -163,7 +163,7 @@ def test_schema_0_2_tokens_compaction_lifecycle_and_ci_taxonomy():
         )
     bundle = extract(("\n".join(json.dumps(row) for row in rows) + "\n").encode(), "codex")
     run = bundle["run"]
-    assert run["schema_version"] == "0.2" and run["extractor_version"] == "0.3.0"
+    assert run["schema_version"] == "0.2" and run["extractor_version"] == "0.4.0"
     assert run["facts"]["input_tokens"]["value"] == 10
     assert run["facts"]["output_tokens"]["value"] == 4
     assert run["facts"]["cache_read_tokens"]["value"] == 3
@@ -178,6 +178,9 @@ def test_schema_0_2_tokens_compaction_lifecycle_and_ci_taxonomy():
         "ci.pr_check_query",
         "ci.artifact_query",
     }
+    (violation,) = [e for e in bundle["events"] if e["event_type"] == "execution.polling_violation"]
+    assert violation["data"]["violation"] == "TOOL_WATCH_MODE"
+    assert violation["data"]["status"] == "outcome_unobserved"
 
 
 def test_legacy_0_1_schema_remains_loadable():
@@ -261,7 +264,7 @@ def test_bounded_structured_tool_results_and_poll_v2():
         sanitize_output=False,
     )
     assert surrounding not in dumps(bundle["events"])
-    assert bundle["run"]["extractor_version"] == "0.3.0"
+    assert bundle["run"]["extractor_version"] == "0.4.0"
     assert bundle["run"]["poll_definition_version"] == "2"
     assert bundle["run"]["facts"]["start_sha"]["value"] == sha
     assert bundle["run"]["facts"]["end_sha"]["value"] == sha
@@ -520,3 +523,121 @@ def test_same_governance_across_unrelated_commits(history):
     after = governance_snapshot(repo, newer)
     assert before["repo_sha"] != after["repo_sha"]
     assert before["governance_snapshot_id"] == after["governance_snapshot_id"]
+
+
+def codex_rows(*steps):
+    rows = [
+        {
+            "type": "session_" + "meta",
+            "timestamp": "2026-01-01T00:00:00Z",
+            "payload": {"id": "synthetic"},
+        }
+    ]
+    for index, (kind, value) in enumerate(steps):
+        ts = f"2026-01-01T00:00:{index + 1:02d}Z"
+        if kind == "call":
+            payload = {
+                "type": "function_call",
+                "name": "exec_command",
+                "call_id": f"c{index}",
+                "arguments": json.dumps({"cmd": value}),
+            }
+        elif kind == "result":
+            payload = {"type": "function_call_output", "call_id": f"c{index - 1}", "output": value}
+        else:
+            payload = {
+                "type": "message",
+                "role": "user",
+                "content": [{"type": "input_text", "text": value}],
+            }
+        rows.append({"type": "response_" + "item", "timestamp": ts, "payload": payload})
+    raw = "\n".join(json.dumps(row) for row in rows) + "\n"
+    return extract(raw.encode(), "codex")
+
+
+def kinds(bundle, prefix):
+    return [e for e in bundle["events"] if e["event_type"].startswith(prefix)]
+
+
+def test_incident_watch_is_a_polling_violation_not_a_compliant_query():
+    bundle = codex_rows(("call", "gh pr checks 176 --watch"), ("result", "All checks passed"))
+    (violation,) = kinds(bundle, "execution.polling_violation")
+    assert violation["data"]["violation"] == "TOOL_WATCH_MODE"
+    assert violation["data"]["status"] == "executed"
+    assert violation["data"]["classifier"] == "command-policy-v1"
+    assert len(kinds(bundle, "ci.pr_check_query")) == 1  # legacy taxonomy kept
+    assert not kinds(bundle, "ci.single_status_query")
+
+
+def test_blocked_attempt_one_shot_repeat_and_notification_are_distinguished():
+    blocked = codex_rows(
+        ("call", "gh run watch 12345"),
+        ("result", "NO_AUTONOMOUS_POLLING (TOOL_WATCH_MODE): blocked"),
+    )
+    assert kinds(blocked, "execution.blocked_attempt")
+    assert not kinds(blocked, "execution.polling_violation")
+    once = codex_rows(("call", "./gov ci-status 176"), ("result", "pending"))
+    assert len(kinds(once, "ci.single_status_query")) == 1
+    assert not kinds(once, "execution.")
+    twice = codex_rows(
+        ("call", "gh pr checks 176"),
+        ("result", "pending"),
+        ("call", "gh pr checks 176"),
+        ("result", "pending"),
+    )
+    (repeat,) = kinds(twice, "execution.polling_violation")
+    assert repeat["data"]["violation"] == "REPEATED_STATUS_QUERY"
+    resumed = codex_rows(
+        ("call", "gh pr checks 176"),
+        ("result", "pending"),
+        ("user", "<ci-monitor-event>checks finished</ci-monitor-event>"),
+        ("call", "gh pr checks 176"),
+        ("result", "pass"),
+    )
+    assert kinds(resumed, "execution.external_notification")
+    assert not kinds(resumed, "execution.polling_violation")
+    assert len(kinds(resumed, "ci.pr_check_query")) == 2
+
+
+def test_monitor_polling_is_classified_without_changing_command_count():
+    rows = [
+        {
+            "type": "user",
+            "timestamp": "2026-01-01T00:00:00Z",
+            "sessionId": "s",
+            "message": {"role": "user", "content": "go"},
+        },
+        {
+            "type": "assistant",
+            "timestamp": "2026-01-01T00:00:01Z",
+            "sessionId": "s",
+            "message": {
+                "role": "assistant",
+                "content": [
+                    {
+                        "type": "tool_use",
+                        "id": "m1",
+                        "name": "Monitor",
+                        "input": {"command": "while true; do gh pr checks 1; sleep 30; done"},
+                    }
+                ],
+            },
+        },
+    ]
+    bundle = extract(("\n".join(json.dumps(r) for r in rows) + "\n").encode(), "claude")
+    (violation,) = kinds(bundle, "execution.polling_violation")
+    assert violation["data"]["violation"] == "POLLING_LOOP"
+    assert bundle["run"]["facts"]["command_count"]["value"] == 0
+
+
+def test_missing_classifier_is_a_visible_coverage_gap(monkeypatch, tmp_path):
+    from harness_observatory import polling
+
+    monkeypatch.setenv("HARNESS_COMMAND_POLICY", str(tmp_path / "absent.py"))
+    polling.policy.cache_clear()
+    try:
+        bundle = codex_rows(("call", "gh pr checks 176 --watch"))
+    finally:
+        polling.policy.cache_clear()
+    assert "polling_classifier_unavailable" in {w["code"] for w in bundle["warnings"]}
+    assert not kinds(bundle, "ci.single_status_query")
