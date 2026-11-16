@@ -16,7 +16,7 @@
       "kind": "governance",
       "mode": "100644",
       "path": ".governance/distribution.json",
-      "sha256": "f21723c2d580d8f5857a6e5802fe1fb50e565be4f5d74341f9cb494fd79fa260"
+      "sha256": "a02d2e6f15da03fffa219d650e43043460960e0a8c736b2b479b8d8b081b01b2"
     },
     {
       "kind": "src",
@@ -5092,7 +5092,7 @@
       "kind": "governance",
       "mode": "100644",
       "path": "POLICY_VERSION.json",
-      "sha256": "12f430dddac5a686dc84b95f122556e39280243e7782c41be36c08bb75b8c3b7"
+      "sha256": "cc7fe9dae4cf10db8c294e870490cea88730455be24f4d8a7d33ed13dce66023"
     },
     {
       "kind": "docs",

@@ -1,7 +1,7 @@
 {
   "last_updated": "2026-11-16",
-  "notes": "Bounded scanner coverage and safe output, baseline evidence validation, guarded publication reads and verification regressions.",
-  "pack_version": "1.7.0",
-  "policy_version": "1.7.0",
-  "release_manifest_sha256": "44644c8bc74338782c5d3a67cfda6630f40db70732464402bee737e9ee44e920"
+  "notes": "Supervised completion without agent polling (supervised-completion-v3); runtime 1.0.0; scoped guard failure.",
+  "pack_version": "1.8.0",
+  "policy_version": "1.8.0",
+  "release_manifest_sha256": "8dc62161068cfa4f0ea2058be402cb0f42a23ef4341840d3d2734913f89347bb"
 }
