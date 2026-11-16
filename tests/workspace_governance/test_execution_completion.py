@@ -19,15 +19,27 @@ def test_resolves_shared_policy_with_provenance(tmp_path):
     entry = result["entries"]["execution.completion"]
     assert entry["owner"] == "shared_pack"
     assert entry["source"].endswith("policies/execution.json")
-    assert entry["value"]["requirements"]["autonomous_polling"] == "forbidden"
-    assert entry["value"]["requirements"]["tool_watch_modes"] == "forbidden"
-    assert entry["value"]["id"] == "synchronous-completion-v2"
+    requirements = entry["value"]["requirements"]
+    assert requirements["agent_wait_polling"] == "forbidden"
+    assert requirements["cadence_owner"] == "adapter"
+    assert requirements["denial_scope"] == "offending_action_only"
+    assert requirements["tool_watch_modes"] == "forbidden_outside_approved_adapters"
+    assert entry["value"]["id"] == "supervised-completion-v3"
+    assert entry["value"]["primary_acceptance"] == "no_uncontrolled_agent_polling"
     assert len(entry["value"]["sha256"]) == 64
 
 
 @pytest.mark.parametrize(
     "defect",
-    ["missing_binding", "wrong_version", "missing_file", "weakened", "symlink"],
+    [
+        "missing_binding",
+        "wrong_version",
+        "missing_file",
+        "weakened",
+        "weakened_cadence",
+        "weakened_denial_scope",
+        "symlink",
+    ],
 )
 def test_policy_defects_fail_even_before_lock_repair(tmp_path, defect):
     root = build_checkout(tmp_path / "consumer")
@@ -43,7 +55,15 @@ def test_policy_defects_fail_even_before_lock_repair(tmp_path, defect):
         policy.unlink()
     elif defect == "weakened":
         data = json.loads(policy.read_text())
-        data["requirements"]["autonomous_polling"] = "allowed"
+        data["requirements"]["agent_wait_polling"] = "allowed"
+        policy.write_text(json.dumps(data))
+    elif defect == "weakened_cadence":
+        data = json.loads(policy.read_text())
+        data["requirements"]["cadence_owner"] = "agent"
+        policy.write_text(json.dumps(data))
+    elif defect == "weakened_denial_scope":
+        data = json.loads(policy.read_text())
+        data["requirements"]["guard_failure"] = "block_all_tool_calls"
         policy.write_text(json.dumps(data))
     else:
         outside = tmp_path / "foreign.json"
@@ -64,6 +84,8 @@ def test_both_skills_route_the_exported_authority():
         "execution_policy.py",
         "policies/execution.md",
         "policies/execution.json",
+        "policies/operation_profiles.json",
+        "operation_supervisor.py",
     } <= exported
     for name in ("governance-context", "governance-maintenance"):
         text = (PACK / "skills" / name / "SKILL.md").read_text()

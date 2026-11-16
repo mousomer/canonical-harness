@@ -409,27 +409,56 @@ def test_repeated_status_mcp_tool_is_denied(consumer):
     assert run_hook(consumer, other, "claude").returncode == 0
 
 
-@pytest.mark.parametrize(
-    "defect",
-    ["no_interpreter", "broken_classifier", "malformed_input", "unknown_runtime"],
-)
-def test_guard_failure_blocks_tool_calls(consumer, defect):
-    payload: dict | str = claude_payload("git status")
-    env: dict[str, str] = {}
-    runtime = "claude"
+GUARD_DEFECTS = [
+    "no_interpreter",
+    "broken_classifier",
+    "broken_registry",
+    "malformed_input",
+    "unknown_runtime",
+]
+
+
+def _break_guard(consumer: Path, defect: str) -> tuple[str, dict[str, str]]:
+    runtime, env = "claude", {}
     if defect == "no_interpreter":
         env["GOVERNANCE_PYTHON"] = str(consumer / "missing-python")
     elif defect == "broken_classifier":
         (consumer / "tools/workspace_governance/command_policy.py").write_text(
             "raise\n"
         )
-    elif defect == "malformed_input":
-        payload = "{not json"
-    else:
+    elif defect == "broken_registry":
+        (consumer / "tools/workspace_governance/operation_supervisor.py").write_text(
+            "raise\n"
+        )
+    elif defect == "unknown_runtime":
         runtime = "other"
-    result = run_hook(consumer, payload, runtime, env=env)
-    assert result.returncode == 2
-    assert "NO_AUTONOMOUS_POLLING (GUARD_FAILURE)" in result.stderr
+    return runtime, env
+
+
+@pytest.mark.parametrize("defect", GUARD_DEFECTS)
+def test_guard_failure_never_blocks_unrelated_work(consumer, defect):
+    """Regression: a guard failure used to deny every Bash call (blanket denial)."""
+    runtime, env = _break_guard(consumer, defect)
+    for command in ("git status", "git diff", "cat README.md", "python -m pytest -q"):
+        payload: dict | str = claude_payload(command)
+        if defect == "malformed_input":
+            payload = f'{{"tool_input": {{"command": "{command}"'
+        result = run_hook(consumer, payload, runtime, env=env)
+        assert result.returncode == 0, (command, result.stderr)
+        assert "GUARD_DEGRADED" in result.stderr
+
+
+@pytest.mark.parametrize("defect", GUARD_DEFECTS)
+def test_guard_failure_still_blocks_wait_and_status_probes(consumer, defect):
+    runtime, env = _break_guard(consumer, defect)
+    for command in ("gh run watch 1", "gh pr checks 3 --json state", "sleep 30"):
+        payload: dict | str = claude_payload(command)
+        if defect == "malformed_input":
+            payload = f'{{"tool_input": {{"command": "{command}"'
+        result = run_hook(consumer, payload, runtime, env=env)
+        assert result.returncode == 2, (command, result.stderr)
+        assert "NO_AUTONOMOUS_POLLING (GUARD_FAILURE)" in result.stderr
+        assert "Unrelated commands remain available" in result.stderr
 
 
 def test_guard_failure_never_blocks_a_user_prompt(consumer):
@@ -438,15 +467,17 @@ def test_guard_failure_never_blocks_a_user_prompt(consumer):
     assert run_hook(consumer, prompt, "claude", "prompt", env=env).returncode == 0
 
 
-def test_corrupt_observation_state_fails_closed_then_recovers(consumer):
+def test_corrupt_observation_state_resets_without_blocking(consumer):
     payload = claude_payload("gh pr checks 1")
     assert run_hook(consumer, payload, "claude").returncode == 0
     state_dir = consumer / "tmp" / "workspace-governance-no-polling"
     for path in state_dir.iterdir():
         path.write_text("[]")
-    failed = run_hook(consumer, payload, "claude")
-    assert failed.returncode == 2 and "GUARD_FAILURE" in failed.stderr
-    assert run_hook(consumer, payload, "claude").returncode == 0
+    reset = run_hook(consumer, payload, "claude")
+    assert reset.returncode == 0 and "GUARD_DEGRADED" in reset.stderr
+    repeated = run_hook(consumer, payload, "claude")
+    assert repeated.returncode == 2 and "REPEATED_STATUS_QUERY" in repeated.stderr
+    assert run_hook(consumer, claude_payload("git status"), "claude").returncode == 0
 
 
 # ------------------------------------------------------------ adapter binding
@@ -533,8 +564,8 @@ def test_pack_exports_enforcement_artifacts():
         "hooks/no_polling.sh",
         "ci_status.py",
     } <= exported
-    assert manifest["execution_policy"]["id"] == "synchronous-completion-v2"
-    assert "ci-status" in manifest["commands"]
+    assert manifest["execution_policy"]["id"] == "supervised-completion-v3"
+    assert "ci-status" in manifest["commands"] and "op" in manifest["commands"]
     text = (PACK / "policies/execution.md").read_text()
     assert "blocking watch's internal" not in text
     assert "does not add remote CI" in text
@@ -780,7 +811,7 @@ def test_command_traces_distinguish_blocked_executed_and_repeated():
 # ------------------------------------------------------------ acceptance repairs
 
 
-def test_hung_guard_blocks_before_the_runtime_timeout(consumer, tmp_path):
+def test_hung_guard_is_scoped_before_the_runtime_timeout(consumer, tmp_path):
     import time
 
     hang = tmp_path / "hang-python"
@@ -788,10 +819,12 @@ def test_hung_guard_blocks_before_the_runtime_timeout(consumer, tmp_path):
     hang.chmod(0o755)
     env = {"GOVERNANCE_PYTHON": str(hang), "NO_POLLING_GUARD_DEADLINE": "2"}
     started = time.monotonic()
-    result = run_hook(consumer, claude_payload("git status"), "claude", env=env)
+    unrelated = run_hook(consumer, claude_payload("git status"), "claude", env=env)
+    probe = run_hook(consumer, claude_payload("gh run watch 9"), "claude", env=env)
     elapsed = time.monotonic() - started
-    assert result.returncode == 2 and "deadline" in result.stderr
-    assert elapsed < 10
+    assert unrelated.returncode == 0 and "deadline" in unrelated.stderr
+    assert probe.returncode == 2 and "deadline" in probe.stderr
+    assert elapsed < 15
     prompt = {"session_id": "s", "hook_event_name": "UserPromptSubmit"}
     assert run_hook(consumer, prompt, "claude", "prompt", env=env).returncode == 0
 

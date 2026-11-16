@@ -150,3 +150,23 @@ verification separately. Stop rollout on failed acceptance and preserve evidence
 - Repair the 1.7.0 adoption registry generator and validate the coordinated
   project, fleet, and lock transition on the first direct consumer before
   applying the remaining selected checkouts. Retain the failed first receipt.
+
+## Supervised completion 1.8.0 (2026-11-16)
+
+- Source: `supervised-completion-v3`, runtime 1.0.0, revision
+  `v1.0-supervised-completion-1`, on branch `claude/supervised-completion-1.8.0`.
+  The published 1.6.0/1.6.2/1.7.0 source and release directories were first
+  recorded as their own commit, which a clean checkout verified with a
+  zero-finding publication gate.
+- Fixes the 1.6.2/1.7.0 guard that blocked every tool call on any guard
+  failure; failures are now scoped to wait and probe calls.
+- Adds the `gov op` supervisor, operation profiles with ordered completion
+  preference and authorized-only polling, per-operation budgets that persist
+  across waits and sessions, recorded transitions and the release-blocking
+  behavioural suite (`tests/workspace_governance/test_operation_supervision.py`).
+- Open, each separately authorized: export and verify immutable release 1.8.0;
+  commit, push and review; migrate the Tet4D checkouts (worktrees first) with
+  guarded receipts; live Claude Code acceptance in a migrated checkout; a Codex
+  adapter for continuation and background-output reads; a combined
+  lifecycle/v3 successor before any root coordination adoption. A pack version
+  change alone does not establish harness compliance.
