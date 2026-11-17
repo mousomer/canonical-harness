@@ -16,6 +16,7 @@ from .model import (
     timestamp,
     validate_bundle,
 )
+from .polling import blocked, classify
 from .redaction import sanitize
 
 
@@ -41,6 +42,9 @@ def extract(raw, provider, *, sanitize_output=True):
     ci_states = {}
     v2_poll_count = 0
     observed_shas = []
+    epoch = [0]
+    seen_targets = set()
+    pending_violations = {}
 
     def warn(line, code, record_type=None):
         warning = {"line": line, "code": code, "source_id": source_id}
@@ -88,6 +92,8 @@ def extract(raw, provider, *, sanitize_output=True):
             if name == "Bash"
             else None
         )
+        if name == "Monitor" and isinstance(args.get("command"), str):
+            polling(name, call_id, args["command"], line, ts, legacy=False)
         if isinstance(command, str):
             emit("command.started", {"call_id": call_id}, line, ts)
             # Narrow recognition: an attempted explicit query, never inferred completion detection.
@@ -102,6 +108,8 @@ def extract(raw, provider, *, sanitize_output=True):
                 ci_id = words[3]
                 ci_event = "ci.status_query"
             elif len(words) >= 4 and words[:3] == ["gh", "run", "watch"] and words[3].isdigit():
+                # Legacy taxonomy retained for metric stability; v2 policy
+                # classifies this separately as execution.polling_violation.
                 ci_id = words[3]
                 ci_event = "ci.blocking_watch"
             elif len(words) >= 3 and words[:3] == ["gh", "run", "list"]:
@@ -130,6 +138,7 @@ def extract(raw, provider, *, sanitize_output=True):
                     data["status"] = "poll_v2"
                     v2_poll_count += 1
                 emit(ci_event, data, line, ts)
+            polling(name, call_id, command, line, ts, legacy=ci_event is not None)
         if name in {"Read", "Write", "Edit"}:
             if args.get("file_path") is not None and not isinstance(args["file_path"], str):
                 raise RecordError()
@@ -140,9 +149,47 @@ def extract(raw, provider, *, sanitize_output=True):
                 ts,
             )
 
+    def polling(name, call_id, command, line, ts, legacy):
+        decision = classify("Monitor" if name == "Monitor" else "Bash", command)
+        if decision is None:
+            warn(line, "polling_classifier_unavailable")
+            return
+        data = {"call_id": call_id, "classifier": decision["classifier"]}
+        if decision["decision"] != "ALLOW":
+            pending_violations[call_id] = {**data, "violation": decision["violation"]}
+            return
+        for target in decision["observations"]:
+            key = (epoch[0], target)
+            if key in seen_targets:
+                pending_violations[call_id] = {**data, "violation": "REPEATED_STATUS_QUERY"}
+                return
+            seen_targets.add(key)
+        if decision["observations"] and not legacy:
+            emit(
+                "ci.single_status_query",
+                {**data, "observation_kind": "single_status_query"},
+                line,
+                ts,
+            )
+
+    def settle_polling(call_id, line, ts, body):
+        if blocked(body):
+            pending_violations.pop(call_id, None)
+            emit("execution.blocked_attempt", {"call_id": call_id}, line, ts)
+        elif call_id in pending_violations:
+            data = {**pending_violations.pop(call_id), "status": "executed"}
+            emit("execution.polling_violation", data, line, ts)
+
+    def boundary(kind, line, ts, body):
+        epoch[0] += 1
+        if is_notification(body):
+            emit("execution.external_notification", {}, line, ts)
+        emit(kind, {}, line, ts)
+
     def result(call_id, line, ts, body=None):
         if not isinstance(call_id, str):
             raise RecordError()
+        settle_polling(call_id, line, ts, body)
         data = {"call_id": call_id, "status": "response_observed"}
         if call_id not in calls:
             warn(line, "orphan_tool_result")
@@ -207,9 +254,10 @@ def extract(raw, provider, *, sanitize_output=True):
                     if sub == "message" and p.get("role") in {"user", "assistant"}:
                         if not isinstance(p.get("content"), list):
                             raise RecordError()
-                        emit(
-                            "user.message" if p["role"] == "user" else "agent.message", {}, line, ts
-                        )
+                        if p["role"] == "user":
+                            boundary("user.message", line, ts, p["content"])
+                        else:
+                            emit("agent.message", {}, line, ts)
                     elif sub in {"function_call", "custom_tool_call"}:
                         args = (
                             json.loads(p.get("arguments", "{}")) if sub == "function_call" else {}
@@ -254,7 +302,10 @@ def extract(raw, provider, *, sanitize_output=True):
                         raise RecordError()
                     if block.get("type") == "text":
                         if not emitted_message:
-                            emit("user.message" if typ == "user" else "agent.message", {}, line, ts)
+                            if typ == "user":
+                                boundary("user.message", line, ts, content)
+                            else:
+                                emit("agent.message", {}, line, ts)
                             emitted_message = True
                     elif block.get("type") == "tool_use":
                         tool(block.get("name"), block.get("id"), block.get("input"), line, ts)
@@ -269,6 +320,8 @@ def extract(raw, provider, *, sanitize_output=True):
             facts, calls = previous_facts, previous_calls
             warn(line, "malformed_record")
 
+    for call_id, data in pending_violations.items():
+        emit("execution.polling_violation", {**data, "status": "outcome_unobserved"}, 0, None)
     for name in [
         "session_id",
         "cwd",
@@ -488,3 +541,17 @@ def inspect_source(raw, provider):
             k for k, v in bundle["run"]["facts"].items() if v["value"] is not None
         ),
     }
+
+
+NOTIFICATION_MARKERS = ("<task-notification>", "<ci-monitor-event", "<side-sessions-event")
+
+
+def is_notification(content):
+    """Host-delivered completion notifications arrive as marked user records."""
+    if isinstance(content, str):
+        text = content
+    elif isinstance(content, list):
+        text = " ".join(str(block.get("text", "")) for block in content if isinstance(block, dict))
+    else:
+        return False
+    return text.lstrip().startswith(NOTIFICATION_MARKERS)

@@ -40,3 +40,10 @@ semantic labels, live telemetry, optimization, scientific/model/platform
 qualification and human acceptance remain separate work. Existing P1b/P1c/P6
 continuation decisions remain in force. Source consolidation activates none of
 those workflows and copies no private experiment findings into this backlog.
+
+## Shared synchronous execution migration
+
+- Broader consumer rollout beyond the explicitly authorized Tet4D checkout remains deferred; existing protected/worktree exclusions and blocked locations require their own approved scope.
+- Agent compliance is not authenticated by structural validation or synthetic traces. Observatory and transcript collection remain optional/deferred; do not claim global tool interception.
+
+- Completion release publication: bind the existing exact-hash synthetic fixture exception to the 1.5.0 path, verify both source/release paths and rejecting changed bytes, and rerun the bounded publication gate before push.

@@ -46,7 +46,11 @@
         "governance.discovered",
         "user.intervention",
         "agent.stop",
-        "agent.handoff"
+        "agent.handoff",
+        "ci.single_status_query",
+        "execution.polling_violation",
+        "execution.blocked_attempt",
+        "execution.external_notification"
       ]
     },
     "source": {
@@ -103,6 +107,12 @@
         },
         "ci_completed_at": {
           "$ref": "#/$defs/fact"
+        },
+        "classifier": {
+          "type": "string"
+        },
+        "violation": {
+          "type": "string"
         }
       },
       "required": [],
@@ -310,6 +320,71 @@
           "data": {
             "required": [
               "compaction_index"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "enum": [
+              "ci.single_status_query"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "required": [
+              "call_id",
+              "classifier",
+              "observation_kind"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "enum": [
+              "execution.polling_violation"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "required": [
+              "call_id",
+              "classifier",
+              "violation",
+              "status"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "enum": [
+              "execution.blocked_attempt"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "required": [
+              "call_id"
             ]
           }
         }

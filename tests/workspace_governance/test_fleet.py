@@ -1085,3 +1085,31 @@ def test_absence_audit_reaches_the_public_distribution_summary(setup, tmp_path, 
     assert summary["statuses"] == {"governed_absent": 1}
     assert summary["failures"] == 0
     assert summary["product_execution"] == "not_requested"
+
+
+def test_reapplication_updates_existing_hook_bindings_and_keeps_owner_hooks(
+    setup: tuple[Path, Path, Path],
+) -> None:
+    from tools.workspace_governance import hook_adapters
+
+    root, registry, release = setup
+    apply_fixture(setup)
+    settings = root / hook_adapters.CLAUDE_PATH
+    data = json.loads(settings.read_text())
+    data["hooks"]["PreToolUse"][-1]["hooks"][0].pop("onFailure")  # older binding
+    data["hooks"].setdefault("Stop", []).append(
+        {"hooks": [{"type": "command", "command": "owner-notify"}]}
+    )
+    settings.write_text(json.dumps(data))
+    plan_path = registry.parent / "plan-2.json"
+    plan_path.write_bytes(fleet.canonical(fleet.plan(registry, release)))
+    result = fleet.apply(plan_path, registry.parent / "receipt-2.json")
+    assert result["checkouts"][0]["status"] == "installed", result
+    merged = json.loads(settings.read_text())
+    assert merged["hooks"]["Stop"][-1]["hooks"][0]["command"] == "owner-notify"
+    # The synthetic release ships no pack payload, so only bindings are checked.
+    problems = [p for p in hook_adapters.check(root) if hook_adapters.GUARD not in p]
+    assert problems == []
+    again = registry.parent / "plan-3.json"
+    again.write_bytes(fleet.canonical(fleet.plan(registry, release)))
+    assert json.loads(again.read_text())["checkouts"][0]["status"] == "unchanged"

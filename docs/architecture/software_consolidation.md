@@ -77,3 +77,7 @@ scans. Verify isolated publication trees rather than relying on an unrelated
 installed package or a different dirty working tree. Consumer updates are
 separate, explicitly owner-approved migrations; all other repositories retain
 read-only preservation in the private registry.
+
+## Completion release publication
+
+Release 1.5.0 retains the existing private-policy non-disclosure synthetic fixture byte for byte. Its publication exception is confined to the named fixture path and existing exact content hash, including the new immutable release path. Changed bytes and other paths remain rejected; secret detection remains unconditional. No immutable release bytes are rewritten to resolve publication findings.

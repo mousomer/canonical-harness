@@ -9,13 +9,14 @@ from importlib.resources import files
 from jsonschema import Draft202012Validator, FormatChecker
 
 VERSION = "0.2"
-EXTRACTOR_VERSION = "0.3.0"
+EXTRACTOR_VERSION = "0.4.0"
 POLL_DEFINITION_VERSION = "2"
 EVENT_TYPES = """run.started run.finished user.message agent.message tool.started tool.finished
 command.started command.finished file.read file.write test.started test.finished ci.run_started
 ci.status_query ci.blocking_watch ci.run_list_query ci.pr_check_query ci.artifact_query
 ci.run_finished git.commit git.diff governance.discovered user.intervention agent.stop
-agent.handoff""".split()
+agent.handoff ci.single_status_query execution.polling_violation execution.blocked_attempt
+execution.external_notification""".split()
 
 
 def dumps(value):

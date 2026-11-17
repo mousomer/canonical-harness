@@ -127,6 +127,11 @@ def build_checkout(
         "Use declared governance and preserve human authority.\n"
     )
     (root / "CLAUDE.md").write_text("Follow AGENTS.md.\n")
+    from tools.workspace_governance import hook_adapters
+
+    for name, data in hook_adapters.render(root).items():
+        (root / name).parent.mkdir(parents=True, exist_ok=True)
+        (root / name).write_bytes(data)
     (root / "docs/governance.md").write_text("Require declared evidence for changes.\n")
     (root / "docs/design.md").write_text("The product owner chooses behavior.\n")
     (root / "docs/api").mkdir()
