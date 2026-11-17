@@ -188,3 +188,16 @@ verification separately. Stop rollout on failed acceptance and preserve evidence
 - Owner-approved 1.8.1 activation: candidate kit gate passed (932 tests, lint and
   formatting); Tet4D adoption uses guarded receipts and retains separate product,
   live-adapter and fleet acceptance duties. Other consumers are not migrated.
+
+## Supervised completion 1.8.2 (2026-11-17)
+
+- Runtime 1.0.2, revision `v1.0-supervised-completion-3`. A review of 1.8.1
+  showed the primary criterion did not hold; 1.8.1 is superseded and should
+  not be adopted.
+- Fixes: the command a `gov op run|submit` would start is probe-checked in the
+  hook and again in the supervisor before it starts; Glob patterns are matched
+  against operation artifacts; duplicate identity is the service identity, not
+  the profile; run references are judged by argument role; a GitHub run needs
+  a full `--head-sha`, and an unbound success is `unknown`.
+- 37 regression cases; 23 fail on 1.8.1. Classifier indirection limits remain
+  as declared in `operation_profiles.json`.
