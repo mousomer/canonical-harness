@@ -184,3 +184,7 @@ verification separately. Stop rollout on failed acceptance and preserve evidence
   `tests/unit/workspace_governance/test_native_integration.py`, and their
   generated `docs/CONFIGURATION_REFERENCE.md` and `CURRENT_STATE.md` refreshed
   by their own generators.
+
+- Owner-approved 1.8.1 activation: candidate kit gate passed (932 tests, lint and
+  formatting); Tet4D adoption uses guarded receipts and retains separate product,
+  live-adapter and fleet acceptance duties. Other consumers are not migrated.

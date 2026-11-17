@@ -16,7 +16,7 @@
       "kind": "governance",
       "mode": "100644",
       "path": ".governance/distribution.json",
-      "sha256": "a02d2e6f15da03fffa219d650e43043460960e0a8c736b2b479b8d8b081b01b2"
+      "sha256": "616ca74d1c9031f473dc29886274617f1730fa964e54c470cfb3de716b901768"
     },
     {
       "kind": "src",
@@ -5680,13 +5680,13 @@
       "kind": "docs",
       "mode": "100644",
       "path": "OPEN_WORK.md",
-      "sha256": "89aa27f4b22d8206b78145d882c8bb6b8c81b089eb7a9ea3b164e6b452534d0c"
+      "sha256": "24ff12ea19019d0dbb2f17ea29054959b0c3604758f511b7d7ac730756000bda"
     },
     {
       "kind": "governance",
       "mode": "100644",
       "path": "POLICY_VERSION.json",
-      "sha256": "cc7fe9dae4cf10db8c294e870490cea88730455be24f4d8a7d33ed13dce66023"
+      "sha256": "92a2ef0393b2fd63383259cabce8784824deacec5df99971c91ca1716c019ee9"
     },
     {
       "kind": "docs",
@@ -5710,7 +5710,7 @@
       "kind": "docs",
       "mode": "100644",
       "path": "docs/architecture/software_consolidation.md",
-      "sha256": "33ea9e69f1eed686a8a8278b2e3da6fcdb39cb50d7ee7cbce8446c9b3dee95dc"
+      "sha256": "b199fbf365df6f3a24884031e290af8538f71e5a4fc644a00406d059f1b005b3"
     },
     {
       "kind": "governance",
@@ -6076,7 +6076,7 @@
       "kind": "test",
       "mode": "100644",
       "path": "repository_tests/test_publication.py",
-      "sha256": "42cd94d1df37638e7457ee0253d53ce80e56f1170de0ba6694630eed6a0b87ca"
+      "sha256": "3c9a3824cca9acaa304feb767bc95cdddf07ab175fc49522c2eeaec77e21f90e"
     },
     {
       "kind": "test",
@@ -6154,7 +6154,7 @@
       "kind": "src",
       "mode": "100644",
       "path": "tools/publication/verify.py",
-      "sha256": "a777712ceae2b986ed90320005546a27b28dc0535e5a374489751cddd019e85d"
+      "sha256": "1b336eb38adbd49b8bfa1fbed5724c423065503da63b88c1c28d3d5d5795d7d9"
     },
     {
       "kind": "src",
