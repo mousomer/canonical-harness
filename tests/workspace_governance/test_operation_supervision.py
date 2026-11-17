@@ -1076,3 +1076,245 @@ def test_synchronous_deadline_preserves_the_running_process(consumer, state):
     assert second.allotment == 2 and second.mechanism == POLLING
     assert "user_instruction_renewed_budget" in reasons(second)
     assert second.log_tail.count("done") == 1  # started exactly once
+
+
+# ------------------------- 9. review findings: wrapped, globbed, re-profiled
+
+
+def run_gov(consumer, state, *args):
+    env = {**os.environ, ops.STATE_ENV: str(state)}
+    return subprocess.run(
+        [str(consumer / "gov"), "op", *args],
+        cwd=consumer,
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=60,
+        check=False,
+    )
+
+
+@pytest.mark.parametrize(
+    "wrapper",
+    [
+        "./gov op run --profile local-command -- cat {log}",
+        "./gov op submit --profile local-process -- /bin/sh -c 'tail -n 5 {log}'",
+        "./gov --root . op run --profile local-command -- test -f {exit_file}",
+        (
+            "python3 tools/workspace_governance/operation_supervisor.py run "
+            "--profile local-command -- cat {log}"
+        ),
+        (
+            "./gov op run --profile local-command -- ./gov op run --profile "
+            "local-command -- cat {log}"
+        ),
+        "./gov op run --profile local-command -- make test",
+        "./gov op run --profile local-command -- sleep 120",
+    ],
+)
+def test_probes_wrapped_in_a_new_operation_are_refused_by_the_hook(
+    consumer, state, wrapper
+):
+    clock = SimClock()
+    job = SimJob(clock, done_at=TEN_MINUTES)
+    _, record = submit_long_job(consumer, state, clock, job)
+    command = wrapper.format(**record["artifacts"])
+    result = hook(consumer, state, {**claude_payload(command), "cwd": str(consumer)})
+    assert result.returncode == 2, (command, result.stderr)
+    assert record["id"] in result.stderr
+    assert job.calls == [] and job.starts == 1
+
+
+def test_unrelated_supervised_commands_remain_available(consumer, state):
+    clock = SimClock()
+    job = SimJob(clock, done_at=TEN_MINUTES)
+    submit_long_job(consumer, state, clock, job)
+    for command in (
+        "./gov op run --profile local-command -- git status",
+        "./gov op run --profile local-command -- python -m pytest -q tests/unit",
+        "./gov op list",
+    ):
+        result = hook(
+            consumer, state, {**claude_payload(command), "cwd": str(consumer)}
+        )
+        assert result.returncode == 0, (command, result.stderr)
+
+
+def test_the_supervisor_refuses_a_submitted_probe_before_starting_it(consumer, state):
+    clock = SimClock()
+    job = SimJob(clock, done_at=TEN_MINUTES)
+    supervisor, record = submit_long_job(consumer, state, clock, job)
+    log = record["artifacts"]["log"]
+    for argv in (
+        ["cat", log],
+        ["/bin/sh", "-c", f"tail {log}"],
+        ["ps", "-p", str(FAKE_PID)],
+    ):
+        with pytest.raises(Refused) as refusal:
+            supervisor.submit("local-command", {"argv": argv, "cwd": str(consumer)})
+        assert refusal.value.operation == record["id"]
+    # The real CLI, with no hook in front of it, refuses too and starts nothing.
+    cli = run_gov(
+        consumer, state, "run", "--profile", "local-command", "--", "cat", log
+    )
+    assert cli.returncode == ops.REFUSED_EXIT, cli.stdout
+    assert json.loads(cli.stdout)["operation"] == record["id"]
+    assert [r["id"] for r in supervisor.registry.records()] == [record["id"]]
+    assert job.starts == 1 and job.calls == []
+
+
+@pytest.mark.parametrize(
+    ("tool_input", "denied"),
+    [
+        ({"pattern": "{log}"}, True),
+        ({"pattern": "{directory}/*"}, True),
+        ({"pattern": "*/exit_status", "path": "{parent}"}, True),
+        ({"pattern": "op-*/**", "path": "{parent}"}, True),
+        ({"pattern": "build/*.xml"}, True),
+        ({"pattern": "**/*.py"}, False),
+        ({"pattern": "src/**/*.md", "path": "{consumer}"}, False),
+    ],
+)
+def test_glob_patterns_are_matched_against_operation_artifacts(
+    consumer, state, tool_input, denied
+):
+    clock = SimClock()
+    job = SimJob(clock, done_at=TEN_MINUTES)
+    _, record = submit_long_job(consumer, state, clock, job)
+    names = {
+        **record["artifacts"],
+        "parent": os.path.dirname(record["artifacts"]["directory"]),
+        "consumer": str(consumer),
+    }
+    filled = {k: v.format(**names) for k, v in tool_input.items()}
+    payload = {**tool_payload("Glob", filled), "cwd": str(consumer)}
+    result = hook(consumer, state, payload)
+    assert (result.returncode == 2) is denied, (filled, result.stderr)
+    assert job.calls == []
+
+
+def test_duplicate_detection_spans_profiles_that_drive_the_same_service(
+    consumer, state
+):
+    clock = SimClock()
+    job = SimJob(clock, done_at=TEN_MINUTES)
+    services = {"local-process": job, "local-command": job}
+    supervisor = make_supervisor(consumer, state, clock, services)
+    identity = {"argv": ["make", "test"], "cwd": str(consumer)}
+    first = supervisor.submit("local-process", identity)
+    with pytest.raises(Refused) as refusal:
+        supervisor.submit("local-command", dict(identity))
+    assert refusal.value.operation == first["id"]
+    assert job.starts == 1
+    remote = SimJob(clock, done_at=TEN_MINUTES)
+    supervisor = make_supervisor(consumer, state, clock, {"github-actions-run": remote})
+    run = supervisor.submit(
+        "github-actions-run",
+        {"run_id": "55", "repository": "o/r", "head_sha": "a" * 40},
+    )
+    with pytest.raises(Refused) as refusal:
+        supervisor.submit(
+            "github-actions-run",
+            {"run_id": "55", "repository": "O/R", "head_sha": "b" * 40},
+        )
+    assert refusal.value.operation == run["id"]
+    assert len(supervisor.registry.open_records()) == 2
+
+
+@pytest.mark.parametrize(
+    ("command", "denied"),
+    [
+        ("git log -n 123", False),
+        ("python -m pytest --maxfail=123", False),
+        ("echo 123 && git show HEAD~1", False),
+        ("gh run list --limit 5", False),
+        ("gh pr view 123", False),
+        ("gh run view 123 --json status", True),
+        ("gh run watch 123", True),
+        ("gh run download 123 -n report", True),
+        ("bash -lc 'gh run view 123 --log'", True),
+        ("gh run list --json databaseId,status | grep 123", True),
+        ("gh api repos/o/r/actions/runs/123/jobs", True),
+        ("curl -s https://api.github.com/repos/o/r/actions/runs/123", True),
+    ],
+)
+def test_run_id_matching_follows_argument_roles(consumer, state, command, denied):
+    clock = SimClock()
+    remote = SimJob(clock, done_at=TEN_MINUTES)
+    supervisor = make_supervisor(consumer, state, clock, {"github-actions-run": remote})
+    record = supervisor.submit(
+        "github-actions-run",
+        {"run_id": "123", "repository": "o/r", "head_sha": "a" * 40},
+    )
+    result = hook(consumer, state, {**claude_payload(command), "cwd": str(consumer)})
+    assert (result.returncode == 2) is denied, (command, result.stderr)
+    if denied:
+        assert record["id"] in result.stderr
+    assert remote.calls == []
+
+
+@pytest.mark.parametrize(
+    ("tool", "tool_input", "denied"),
+    [
+        ("mcp__github__get_workflow_run", {"owner": "o", "run_id": 123}, True),
+        ("mcp__github__get_workflow_run", {"id": "123"}, True),
+        ("mcp__github__list_workflow_runs", {"per_page": 123}, False),
+        ("mcp__github__get_issue", {"issue_number": 123}, False),
+    ],
+)
+def test_mcp_run_references_follow_argument_roles(
+    consumer, state, tool, tool_input, denied
+):
+    clock = SimClock()
+    remote = SimJob(clock, done_at=TEN_MINUTES)
+    supervisor = make_supervisor(consumer, state, clock, {"github-actions-run": remote})
+    supervisor.submit(
+        "github-actions-run",
+        {"run_id": "123", "repository": "o/r", "head_sha": "a" * 40},
+    )
+    result = hook(
+        consumer, state, {**tool_payload(tool, tool_input), "cwd": str(consumer)}
+    )
+    assert (result.returncode == 2) is denied, (tool, result.stderr)
+
+
+def test_github_success_requires_the_source_commit_binding():
+    def service(head):
+        payload = {"status": "completed", "conclusion": "success"}
+        if head is not None:
+            payload["headSha"] = head
+        return ops.GitHubRunService(
+            lambda command, **_: subprocess.CompletedProcess(
+                command, 0, json.dumps(payload), ""
+            )
+        )
+
+    unbound = {"identity": {"run_id": "7", "repository": "o/r"}}
+    observed = service(None).status(unbound)
+    assert observed.state == ops.UNKNOWN  # terminal, never verification
+    bound = {"identity": {"run_id": "7", "repository": "o/r", "head_sha": "a" * 40}}
+    with pytest.raises(ops.MechanismError):
+        service(None).status(bound)  # a response without the commit is not evidence
+    assert service("A" * 40).status(bound).state == SUCCEEDED
+
+
+@pytest.mark.parametrize(
+    "extra",
+    [[], ["--head-sha", "abc1234"], ["--head-sha", "g" * 40]],
+)
+def test_cli_requires_a_full_head_sha_before_starting_a_run(consumer, state, extra):
+    result = run_gov(
+        consumer,
+        state,
+        "submit",
+        "--profile",
+        "github-actions-run",
+        "--run-id",
+        "8",
+        "--repo",
+        "o/r",
+        *extra,
+    )
+    assert result.returncode == ops.REFUSED_EXIT, result.stdout
+    assert "head-sha" in json.loads(result.stdout)["refused"]
+    assert ops.Registry(consumer, state).records() == []
