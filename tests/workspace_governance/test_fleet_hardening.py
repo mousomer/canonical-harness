@@ -820,3 +820,12 @@ def test_invalid_diagnostic_limits_reject_before_start(tmp_path, limit):
         fleet_execution.run_digest(
             ["/never-invoked"], tmp_path, {}, 5, diagnostic_limit=limit
         )
+
+
+def test_malformed_verification_cannot_select_default_environment():
+    from tools.workspace_governance.fleet_support import FleetError, execution_policy
+
+    assert execution_policy(None) == execution_policy({})
+    for supplied in ([], False, "", 0):
+        with pytest.raises(FleetError, match="Invalid verification declaration"):
+            execution_policy(supplied)

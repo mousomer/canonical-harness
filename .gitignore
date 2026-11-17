@@ -28,3 +28,6 @@ warehouses/
 analysis-output/
 local_runs/
 outputs/
+
+# Claude Code per-user local settings (never commit)
+.claude/settings.local.json

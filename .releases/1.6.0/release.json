@@ -129,7 +129,7 @@
     {
       "mode": 420,
       "path": "tools/workspace_governance/MANIFEST.json",
-      "sha256": "10ef79be6ffc789bea790757470060b2f178db0409c58065ff6f55487da04f70",
+      "sha256": "c711d104ca495bc2847f02d89abe9b78695da52ebbc8aa1caa57290d207b6db9",
       "source": "payload/tools/workspace_governance/MANIFEST.json"
     },
     {
@@ -152,12 +152,6 @@
     },
     {
       "mode": 420,
-      "path": "tools/workspace_governance/ci_status.py",
-      "sha256": "0bab8ad892e63900996c9b0a3366c44948301fdaf279c618e0989a8b3b4393b8",
-      "source": "payload/tools/workspace_governance/ci_status.py"
-    },
-    {
-      "mode": 420,
       "path": "tools/workspace_governance/cli/__init__.py",
       "sha256": "678afe53eed8737dbf991dba82d1e2c626af9341a54e35e5da1d61c46d67240e",
       "source": "payload/tools/workspace_governance/cli/__init__.py"
@@ -171,14 +165,8 @@
     {
       "mode": 420,
       "path": "tools/workspace_governance/cli/gov.py",
-      "sha256": "a6835162a8e8678c83aed018bd587d7eacda5465b03bc3e943c66badc0a3a1be",
+      "sha256": "d8b5275b14073047bf1bf31242baaf03b74e5697a59d455b721b597d2779c145",
       "source": "payload/tools/workspace_governance/cli/gov.py"
-    },
-    {
-      "mode": 420,
-      "path": "tools/workspace_governance/command_policy.py",
-      "sha256": "5c32ce1ab55dbba0f0f7ecf6cc7b4363f39fee81cccc5de79cb7e0b1287bb20d",
-      "source": "payload/tools/workspace_governance/command_policy.py"
     },
     {
       "mode": 420,
@@ -194,8 +182,14 @@
     },
     {
       "mode": 420,
+      "path": "tools/workspace_governance/execution_lifecycle.py",
+      "sha256": "67f6c25eaaa07d570b408760f90bf060367216e6c1b1737dca89248fb4e0e66c",
+      "source": "payload/tools/workspace_governance/execution_lifecycle.py"
+    },
+    {
+      "mode": 420,
       "path": "tools/workspace_governance/execution_policy.py",
-      "sha256": "0a0cc7ade949e218806d493a50408f4021e6d5581e0b9f5c9cfb6ae1ab520c20",
+      "sha256": "61216b7d38a1131b62910f1f3065fdb71b99a11c6c0676d9e2577d95902ef9a7",
       "source": "payload/tools/workspace_governance/execution_policy.py"
     },
     {
@@ -207,7 +201,7 @@
     {
       "mode": 420,
       "path": "tools/workspace_governance/fleet.py",
-      "sha256": "c1010f673a3bfb4cc1c6a1bf8a2f20ae5fdbb0600ef9408c7f5ca8139f1115c9",
+      "sha256": "d360df4f5056af631126a42477ef686294bad1431b3f27e96602d6dd2c323ab7",
       "source": "payload/tools/workspace_governance/fleet.py"
     },
     {
@@ -219,43 +213,19 @@
     {
       "mode": 420,
       "path": "tools/workspace_governance/fleet_support.py",
-      "sha256": "56bfc6cef0e030eb510a33b5d497864f982d7378abd60e1f431b795d162e0d7a",
+      "sha256": "830af54909529bf20202b8bca12bebb4e4a5af4bfc93e0aab6e18f0d13075884",
       "source": "payload/tools/workspace_governance/fleet_support.py"
     },
     {
       "mode": 420,
-      "path": "tools/workspace_governance/hook_adapters.py",
-      "sha256": "74a4c66e832db8b61181da23cf7dde9a80410c4b86bee0fced171313f6be79cd",
-      "source": "payload/tools/workspace_governance/hook_adapters.py"
-    },
-    {
-      "mode": 420,
-      "path": "tools/workspace_governance/hooks/codex_no_polling.rules",
-      "sha256": "1e7f5301f63ee73af8128517b33ffbcae359b1c957e32f62bbaae80492fa5ccb",
-      "source": "payload/tools/workspace_governance/hooks/codex_no_polling.rules"
-    },
-    {
-      "mode": 420,
-      "path": "tools/workspace_governance/hooks/no_polling.py",
-      "sha256": "442fc59d608e27a5b385b60a62dacac68e852e5cc70f6d2741a6c6ae2f1c1453",
-      "source": "payload/tools/workspace_governance/hooks/no_polling.py"
-    },
-    {
-      "mode": 493,
-      "path": "tools/workspace_governance/hooks/no_polling.sh",
-      "sha256": "0baabd4fcb334111e60b0b4371a62f9e2d2d1324b08ebeb156ca0e5151b1785d",
-      "source": "payload/tools/workspace_governance/hooks/no_polling.sh"
-    },
-    {
-      "mode": 420,
       "path": "tools/workspace_governance/policies/execution.json",
-      "sha256": "e5b4291e85f9c5085d34830e27438d5957ae07d1b494761f4078c43b7253a475",
+      "sha256": "bbcbee2fd65ef933f29d97e7edcf643d9c47367374c04fc26a2801175f64da6e",
       "source": "payload/tools/workspace_governance/policies/execution.json"
     },
     {
       "mode": 420,
       "path": "tools/workspace_governance/policies/execution.md",
-      "sha256": "8c6c216d189d7d3e6d8067c0f6d6ba057787828e07c3934d9b822b36c38531bc",
+      "sha256": "fe1c5fb76e8d3367da8c702de88ebc91fa757d4ffc78a94b5617a931989487b1",
       "source": "payload/tools/workspace_governance/policies/execution.md"
     },
     {
@@ -273,7 +243,7 @@
     {
       "mode": 420,
       "path": "tools/workspace_governance/policies/workspace_baseline.md",
-      "sha256": "e3a5a41a8eae7e112dc17c1d3a9b0798f1685244efff1211a6f0f2a495820d32",
+      "sha256": "8f8e3b4d179e966c2b996967f1c7b9ff4c7677f21350822acd53b46d5739cf6c",
       "source": "payload/tools/workspace_governance/policies/workspace_baseline.md"
     },
     {
@@ -339,13 +309,13 @@
     {
       "mode": 420,
       "path": "tools/workspace_governance/skills/governance-context/SKILL.md",
-      "sha256": "f1c6a3b347f9f94bc32e8d82f3ac018141d4a084489e9fb2dbd2094631a55ecc",
+      "sha256": "57c87c3968f057be8dc4d1b3fa11c0478fc9c1cbe10cdb931e80a846726174f7",
       "source": "payload/tools/workspace_governance/skills/governance-context/SKILL.md"
     },
     {
       "mode": 420,
       "path": "tools/workspace_governance/skills/governance-maintenance/SKILL.md",
-      "sha256": "e7bdc0a09bc90bcd6ef2b2a9b6add03a68bb429208d86dd3dab03e7374a4e03e",
+      "sha256": "967efb9cf22ad8a2c75d1515b432a68de98c3b3c1189ce7acf3dded18de88a75",
       "source": "payload/tools/workspace_governance/skills/governance-maintenance/SKILL.md"
     },
     {
@@ -369,14 +339,14 @@
     {
       "mode": 420,
       "path": "tools/workspace_governance/validators/core.py",
-      "sha256": "c933977b8d2ae639ccb13f23398fd07a04bd3a83e8c7321a8ff32d15182cd2a5",
+      "sha256": "f18ad316b0b928497c064ce167072a06d580102082b902219fe3e5e9bf59a289",
       "source": "payload/tools/workspace_governance/validators/core.py"
     }
   ],
   "name": "workspace/policy-kit",
   "provenance": {
     "legacy_policy_version": "1.1.3",
-    "payload_identity": "9a908b9149f4eb0a873eb82cb834ea3c7ea6d655333faa88d02f5bf709e4fc68",
+    "payload_identity": "3f5aa1e795e5facbe91c069ec966837cbfc3d7ac74cab8e98b0f63dfc67386b3",
     "publisher": "workspace-policy-owner",
     "runtime_name": "workspace-governance",
     "runtime_version": "0.9.0",
@@ -384,7 +354,7 @@
     "source_state": "retained-export-bytes; incidental source history is separate publication provenance"
   },
   "release_root": ".",
-  "revision": "v0.9-no-autonomous-polling-1",
+  "revision": "v0.9-execution-lifecycle-1",
   "schema_version": 2,
   "verification": {
     "files": [
@@ -445,7 +415,7 @@
       {
         "mode": 420,
         "path": "tests/workspace_governance/support.py",
-        "sha256": "c36213514171d4bb1a86ecf8edc5431d0f48b744de5105bf0229b02e7908a4a7",
+        "sha256": "125298ba7f9a5f400c3cb31b66ed67c23b31ac2f16a901ae12508ca8a20eaa03",
         "source": "verification/tests/workspace_governance/support.py"
       },
       {
@@ -475,8 +445,14 @@
       {
         "mode": 420,
         "path": "tests/workspace_governance/test_execution_completion.py",
-        "sha256": "be8c89e2deac76eda035bafeff6321ad2467bf2fa722d08076e5f0e8673d8748",
+        "sha256": "4d02a7e1c39a2dbe9149f3b22e18a6ae0355ab46ddad8712785e6e9ac5746cbc",
         "source": "verification/tests/workspace_governance/test_execution_completion.py"
+      },
+      {
+        "mode": 420,
+        "path": "tests/workspace_governance/test_execution_lifecycle.py",
+        "sha256": "7ae1e3064afbddeedc121bb4b7e1e81618d298d62e16980261951213d6aeac01",
+        "source": "verification/tests/workspace_governance/test_execution_lifecycle.py"
       },
       {
         "mode": 420,
@@ -525,12 +501,6 @@
         "path": "tests/workspace_governance/test_multi_worktree.py",
         "sha256": "d55c320e35a2f1bed419c6145dff3a504e56279d30f201866a76a7c626cb5874",
         "source": "verification/tests/workspace_governance/test_multi_worktree.py"
-      },
-      {
-        "mode": 420,
-        "path": "tests/workspace_governance/test_no_polling.py",
-        "sha256": "c6aad69a609b0e9906c3ce001a0799fd8618f6063ab4402e99f3cf14e7befc6c",
-        "source": "verification/tests/workspace_governance/test_no_polling.py"
       },
       {
         "mode": 420,
@@ -593,7 +563,7 @@
         "source": "verification/tests/workspace_governance/test_telemetry_readiness.py"
       }
     ],
-    "identity_sha256": "545196b5e1adb2decdfbb2d2361e1482bfec813d48464860a10fb0ac3c3d60c7",
+    "identity_sha256": "ff2f88da7a3637f7199a6383d8d5fd111cffeb1711cccb1bdbe80b5ba80c5c33",
     "schema_version": 1
   },
   "version": "1.6.0"

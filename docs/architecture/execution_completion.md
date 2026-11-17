@@ -2,10 +2,12 @@
 
 The shared governance pack owns completion-based execution for local tests,
 scripts and remote CI. MANIFEST.json binds policies/execution.json with the
-synchronous-completion-v2 identity, which supersedes v1 and withdraws its
-blocking-watch allowance. Runtime 0.9.0 requires the binding and its complete,
-exactly equal requirements; missing, weakened and foreign/symlinked policy bytes
-fail validation even if a caller regenerates the ordinary pack lock.
+supervised-completion-v3 identity, which supersedes synchronous-completion-v2
+(itself the successor of v1, whose blocking-watch allowance it withdrew).
+Runtime 1.0.0 requires the binding, its complete and exactly equal
+requirements, and valid operation profiles; missing, weakened, contradictory
+and foreign/symlinked policy or profile bytes fail validation even if a caller
+regenerates the ordinary pack lock.
 
 ## Root cause of the v1 defect
 
@@ -29,18 +31,48 @@ UNDETERMINED and denied. It never executes, contacts a service or writes.
 
 `hooks/no_polling.sh` launches `hooks/no_polling.py` under the consumer's
 governance bootstrap interpreter (`scripts/resolve_bootstrap_python.sh`, else
-`GOVERNANCE_PYTHON`). Any launcher or classifier failure exits 2, which both
-runtimes treat as a pre-execution block; the UserPromptSubmit mode never
-blocks. Repeated observations of the same target are denied within one epoch:
+`GOVERNANCE_PYTHON`). A guard failure (no approved interpreter, crash,
+deadline, unreadable state) is scoped: only a call that plainly waits or probes
+(watch modes, `sleep`, `tail -f`, process and run-status probes) exits 2; every
+other call proceeds with a `GUARD_DEGRADED` warning, recorded with the
+checkout's managed operations when the registry is reachable. The launcher uses
+only shell builtins on its failure paths, so a broken `PATH` cannot become a
+blanket denial. The UserPromptSubmit mode never blocks. Repeated observations of the same target are denied within one epoch:
 the Codex `turn_id`, or for Claude Code the span between UserPromptSubmit
 events. Epoch state is a small per-session file under the temporary directory.
 
 `hook_adapters.py` merges one managed entry per event into
-`.claude/settings.json` (`Bash|Monitor|mcp__.*`, UserPromptSubmit) and
+`.claude/settings.json` (`Bash|Monitor|Read|Grep|Glob|mcp__.*`,
+UserPromptSubmit) and
 `.codex/hooks.json` (`Bash|mcp__.*`, UserPromptSubmit), preserving unrelated
 configuration. The fleet installer renders them; `gov check` reports
 `execution.enforcement` PACK_DRIFT when either binding, the guard or its mode is
 missing or altered, or hooks are disabled.
+
+## Managed operations
+
+`operation_supervisor.py` (`./gov op`) runs operations whose completion an
+agent would otherwise poll. `policies/operation_profiles.json` declares, per
+service, the identity, an ordered completion preference (`synchronous_return`,
+`notification`, `blocking_wait`, `controlled_continuation`), whether adapter
+polling is authorized, polling limits and the operation budget. The supervisor
+selects the first mechanism the bound adapter can perform, else authorized
+polling; it never falls back after a mechanism failure. The budget (waiting
+time, requests, waits) and polling cadence belong to the operation and persist
+in a per-checkout registry under the user's state directory, across waits,
+fallbacks, interfaces and sessions. A new user instruction, advanced by the
+UserPromptSubmit hook, is required to resume a stalled operation and renews an
+exhausted budget at most `max_renewals` times. Every transition is recorded with
+a machine-readable reason; only `succeeded` is verification.
+
+The PreToolUse hook consults the registry before dispatch and denies, for a
+pending operation only, log and output reads, process and run-status probes,
+`sleep`, duplicate submissions, redundant waits and a repeated supervisor
+status report under one user instruction. `gov op` calls composed with other
+shell commands get every probe check. Enforced services are local commands,
+local processes and GitHub Actions runs through the `gh` CLI; continuation
+handles and notifications are fixture-only until a real adapter exists. The
+profiles file lists what is not covered.
 
 `gov ci-status <pr>` makes one GraphQL request and returns PASS (0), FAIL (10),
 PENDING (11), UNKNOWN (12) or ERROR (13); zero, truncated, missing or stale
@@ -51,8 +83,9 @@ check sets are UNKNOWN, and a failed request is ERROR, never a CI failure.
 - Timeouts: the managed Claude PreToolUse handler sets `onFailure: "block"`
   (honoured from Claude Code 2.1.295; observed blocking a hung hook in 2.1.317).
   Independently, the launcher kills the classifier at a 20 s deadline and the
-  classifier arms an 18 s alarm, both well inside the 30 s hook timeout, and
-  both turn a hang into a block (observed live with `onFailure: "continue"`).
+  classifier arms an 18 s alarm, both well inside the 30 s hook timeout. Both
+  treat a hang as a scoped guard failure: wait and probe calls are blocked,
+  other calls proceed with `GUARD_DEGRADED`.
   Remaining fail-open: a Claude runtime older than 2.1.295 or Codex whose hook
   process is killed or stalled outside the launcher (for example the shell
   itself never starts) before either deadline fires; a handler without
@@ -96,7 +129,7 @@ check sets are UNKNOWN, and a failed request is ERROR, never a CI failure.
   key that cannot be resolved statically.
 - Scheduled re-invocation (`ScheduleWakeup`, `CronCreate`, `/loop`) is agent
   callable in Claude Code and not intercepted; the matcher covers shell,
-  Monitor and MCP tools only.
+  Monitor, Read, Grep, Glob and MCP tools only.
 - The Codex rules file is installed manually; the pack neither installs nor
   checks it.
 - `gov check` reports an adapter that git ignores, because an ignored binding
@@ -112,3 +145,29 @@ loads the same `command_policy.py` by path, records the classifier version on
 every derived event, and reports `polling_classifier_unavailable` when it
 cannot. Historical normalized bundles are not rewritten: extractor 0.4.0
 reconstruction is versioned separately.
+
+## Canonical discovery handoff (2026-11-15)
+
+The reviewed 1.6.2 no-polling distribution becomes the canonical kit's active
+release and global skill discovery source. Its source is commit `8dc731b`;
+private guarded activation binds the complete immutable identity and preimages.
+Editable runtime and tests are brought forward from that committed snapshot,
+excluding all later uncommitted work in the existing source worktree.
+
+This is a distribution/discovery handoff, not fleet consumer adoption. Preserve
+the explicit registry, execution holds and existing consumer pins. Global links
+must target the canonical immutable 1.6.2 bodies, and machine configuration must
+name those same targets. Require source/publication gates, selected-component
+verification, canonical selfcheck, guarded preimages, idempotence and exclusion
+comparisons. Keep native hook trust and documented bypasses as separate duties.
+
+Two parallel branches assigned 1.6.0 to different content. The canonical store's
+existing 1.6.0 lifecycle release is immutable and remains intact; the no-polling
+branch's alternate 1.6.0 and intermediate 1.6.1 are not imported. The root
+coordination consumer retains its independently adopted lifecycle pin. Version
+1.6.2 lacks that API, so it cannot replace the root pack without a new reviewed
+combined successor, fresh unique version and consumer acceptance.
+
+Rollback uses the private activation receipt, refusing subsequent owner edits.
+No broad rollout, transcript collection, worktree installation or remote
+publication is authorized by this handoff.

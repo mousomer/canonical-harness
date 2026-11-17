@@ -12,6 +12,7 @@ import signal
 import stat
 import subprocess
 import time
+from contextlib import ExitStack
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 
@@ -88,7 +89,17 @@ SYNTHETIC_SOURCE_PATHS = {
     "tests/workspace_governance/test_fleet_metadata_projection.py",
     *{
         f".releases/{version}/verification/tests/workspace_governance/test_fleet_metadata_projection.py"
-        for version in ("1.3.1", "1.3.2", "1.4.0", "1.5.0", "1.6.0", "1.6.1", "1.6.2")
+        for version in (
+            "1.3.1",
+            "1.3.2",
+            "1.4.0",
+            "1.5.0",
+            "1.6.0",
+            "1.6.1",
+            "1.6.2",
+            "1.7.0",
+            "1.8.0",
+        )
     },
 }
 # Real interpreter paths existed in these public legacy launchers. They are not
@@ -272,16 +283,38 @@ class Scanner:
         return self.cache[oid]
 
     def disk(self, name: str) -> tuple[str, bytes]:
-        current = self.repo
-        for part in PurePosixPath(name).parts:
-            current = current / part
-            if current.is_symlink():
+        path = PurePosixPath(name)
+        if path.is_absolute() or not path.parts or ".." in path.parts:
+            raise Refusal("unsafe_source_path")
+        directory_flags = os.O_RDONLY | os.O_NOFOLLOW | os.O_DIRECTORY
+        with ExitStack() as stack:
+            parent = os.open(self.repo, directory_flags)
+            stack.callback(os.close, parent)
+            for component in path.parts[:-1]:
+                parent = os.open(component, directory_flags, dir_fd=parent)
+                stack.callback(os.close, parent)
+            expected = os.stat(path.name, dir_fd=parent, follow_symlinks=False)
+            if stat.S_ISLNK(expected.st_mode):
                 raise Refusal("source_symlink")
-        metadata = current.stat()
-        if not stat.S_ISREG(metadata.st_mode):
-            raise Refusal("non_regular_source")
-        with current.open("rb") as stream:
-            data = self.account(stream.read(self.limits.blob_bytes + 1))
+            if not stat.S_ISREG(expected.st_mode):
+                raise Refusal("non_regular_source")
+            fd = os.open(
+                path.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent
+            )
+            stack.callback(os.close, fd)
+            metadata = os.fstat(fd)
+            if not os.path.samestat(expected, metadata) or not stat.S_ISREG(
+                metadata.st_mode
+            ):
+                raise Refusal("source_changed")
+            with os.fdopen(fd, "rb", closefd=False) as stream:
+                data = self.account(stream.read(self.limits.blob_bytes + 1))
+            after = os.fstat(fd)
+            if (metadata.st_ctime_ns, metadata.st_size) != (
+                after.st_ctime_ns,
+                after.st_size,
+            ):
+                raise Refusal("source_changed")
         return ("100755" if metadata.st_mode & 0o111 else "100644"), data
 
     def tree(self, commit: str) -> dict:

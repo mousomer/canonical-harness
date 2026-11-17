@@ -2,7 +2,7 @@
   "schema_version": 1,
   "name": "workspace-governance",
   "version": "0.9.0",
-  "revision": "v0.9-no-autonomous-polling-1",
+  "revision": "v0.9-execution-lifecycle-1",
   "version_file": "VERSION",
   "lock_algorithm": "sha256-path-and-content-v1",
   "pack_hash_excludes": [
@@ -18,8 +18,7 @@
     "doctor",
     "sync",
     "env",
-    "telemetry",
-    "ci-status"
+    "telemetry"
   ],
   "diagnostics": [
     "DUPLICATE_AUTHORITY",
@@ -76,6 +75,14 @@
       "role": "executable_machinery"
     },
     {
+      "path": "execution_lifecycle.py",
+      "role": "executable_machinery"
+    },
+    {
+      "path": "execution_policy.py",
+      "role": "executable_machinery"
+    },
+    {
       "path": "field-usage.json",
       "role": "executable_machinery"
     },
@@ -90,6 +97,14 @@
     {
       "path": "fleet_support.py",
       "role": "executable_machinery"
+    },
+    {
+      "path": "policies/execution.json",
+      "role": "governance_treatment"
+    },
+    {
+      "path": "policies/execution.md",
+      "role": "governance_treatment"
     },
     {
       "path": "policies/external_checkouts.md",
@@ -166,42 +181,6 @@
     {
       "path": "validators/core.py",
       "role": "executable_machinery"
-    },
-    {
-      "path": "execution_policy.py",
-      "role": "executable_machinery"
-    },
-    {
-      "path": "policies/execution.json",
-      "role": "governance_treatment"
-    },
-    {
-      "path": "policies/execution.md",
-      "role": "governance_treatment"
-    },
-    {
-      "path": "command_policy.py",
-      "role": "executable_machinery"
-    },
-    {
-      "path": "hook_adapters.py",
-      "role": "executable_machinery"
-    },
-    {
-      "path": "hooks/no_polling.py",
-      "role": "executable_machinery"
-    },
-    {
-      "path": "hooks/no_polling.sh",
-      "role": "executable_machinery"
-    },
-    {
-      "path": "ci_status.py",
-      "role": "executable_machinery"
-    },
-    {
-      "path": "hooks/codex_no_polling.rules",
-      "role": "governance_treatment"
     }
   ],
   "bootstrap_roots": [
@@ -275,7 +254,7 @@
     "python_requires": ">=3.11"
   },
   "execution_policy": {
-    "id": "synchronous-completion-v2",
+    "id": "synchronous-completion-v1",
     "path": "policies/execution.json"
   }
 }

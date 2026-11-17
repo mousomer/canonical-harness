@@ -100,3 +100,22 @@ def test_partial_clone_declarations_refuse_without_contacting_a_remote(
     result = PUBLICATION.scan(root, base)
     assert not result["ok"] and result["input_refusal"]
     assert str(tmp_path) not in json.dumps(result)
+
+
+def test_publication_refuses_changed_file_before_read(tmp_path, monkeypatch):
+    source = tmp_path / "source.py"
+    source.write_text("original")
+    replacement = tmp_path / "replacement"
+    replacement.write_text("replacement")
+    scanner = PUBLICATION.Scanner(tmp_path, "", PUBLICATION.Limits())
+    assert scanner.disk(source.name)[1] == b"original"
+    original_open = PUBLICATION.os.open
+
+    def open_after_replacement(path, flags, **kwargs):
+        if path == source.name:
+            replacement.replace(source)
+        return original_open(path, flags, **kwargs)
+
+    monkeypatch.setattr(PUBLICATION.os, "open", open_after_replacement)
+    with pytest.raises(PUBLICATION.Refusal, match="source_changed"):
+        scanner.disk(source.name)

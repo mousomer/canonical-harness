@@ -1,7 +1,7 @@
 {
-  "last_updated": "2026-11-07",
-  "notes": "No-autonomous-polling completion contract (synchronous-completion-v2); 1.6.2 fixes the hook alarm to arm only in the hook entry point and makes the Codex binding fall back to the main checkout's guard in linked worktrees; runtime 0.9.2. Immutable compatibility baseline preserved.",
-  "pack_version": "1.6.2",
-  "policy_version": "1.6.2",
-  "release_manifest_sha256": "1899de856edd23996220ae2153634e2862c2cfe8c16b740f502f5b50e78543fb"
+  "last_updated": "2026-11-16",
+  "notes": "Supervised completion without agent polling (supervised-completion-v3); runtime 1.0.0; scoped guard failure.",
+  "pack_version": "1.8.0",
+  "policy_version": "1.8.0",
+  "release_manifest_sha256": "8dc62161068cfa4f0ea2058be402cb0f42a23ef4341840d3d2734913f89347bb"
 }
