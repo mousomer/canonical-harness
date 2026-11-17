@@ -1,7 +1,7 @@
 {
   "last_updated": "2026-11-17",
-  "notes": "Supervised completion v3; runtime 1.0.1; standard integer exit-status parsing for consumer compatibility.",
-  "pack_version": "1.8.1",
-  "policy_version": "1.8.1",
-  "release_manifest_sha256": "5379e20bca19304d8e077a34217552027d2aeb57061750065fcc590ef77f4d79"
+  "notes": "Supervised completion v3; runtime 1.0.2; wrapped-probe, Glob, service-identity, argument-role and head-SHA enforcement.",
+  "pack_version": "1.8.2",
+  "policy_version": "1.8.2",
+  "release_manifest_sha256": "a650d2fdf714ddb785c947b62ad4e94abcce303fa925ab12164699a0824cae95"
 }
