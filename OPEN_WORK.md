@@ -201,3 +201,7 @@ verification separately. Stop rollout on failed acceptance and preserve evidence
   a full `--head-sha`, and an unbound success is `unknown`.
 - 37 regression cases; 23 fail on 1.8.1. Classifier indirection limits remain
   as declared in `operation_profiles.json`.
+
+- Owner-approved 1.8.2 activation: candidate kit gate passed (969 tests, lint and
+  formatting); Tet4D adoption uses guarded receipts and retains separate product,
+  live-adapter and fleet acceptance duties. Other consumers are not migrated.

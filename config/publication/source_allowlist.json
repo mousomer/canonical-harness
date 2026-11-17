@@ -16,7 +16,7 @@
       "kind": "governance",
       "mode": "100644",
       "path": ".governance/distribution.json",
-      "sha256": "616ca74d1c9031f473dc29886274617f1730fa964e54c470cfb3de716b901768"
+      "sha256": "c8e9f642c51a5dba147deb732354c0fa60fc1bba0caff8e6d7a5994ebeb914c3"
     },
     {
       "kind": "src",
@@ -6274,13 +6274,13 @@
       "kind": "docs",
       "mode": "100644",
       "path": "OPEN_WORK.md",
-      "sha256": "9f63a5e3972c573fb377fb455f9d28bcfca63bb05858de536766786ca4ed080b"
+      "sha256": "65aa4fd2ce401f537f1a314f184e62601b1448ad4704b27c53a675b671308b8e"
     },
     {
       "kind": "governance",
       "mode": "100644",
       "path": "POLICY_VERSION.json",
-      "sha256": "92a2ef0393b2fd63383259cabce8784824deacec5df99971c91ca1716c019ee9"
+      "sha256": "fbfc6e1eb4da404139b98622b7649d9902dd8aa1e6b95fdb0bbfc1c08ec1ee16"
     },
     {
       "kind": "docs",
