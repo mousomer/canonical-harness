@@ -472,8 +472,9 @@ class LocalProcessService:
         except FileNotFoundError:
             text = None
         if text is not None:
-            code = int(text) if text.lstrip("-").isdigit() else None
-            if code is None:
+            try:
+                code = int(text)
+            except ValueError:
                 return Observation(UNKNOWN, "unreadable exit status")
             return Observation(SUCCEEDED if code == 0 else FAILED, f"exit {code}", code)
         pid = record["identity"].get("pid")

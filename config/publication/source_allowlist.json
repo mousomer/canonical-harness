@@ -5083,10 +5083,604 @@
       "sha256": "f353e88bd679ef7a267dc6d0a4a622841d6132ca9a3bc491d7d92e850fc969ae"
     },
     {
+      "kind": "src",
+      "mode": "100755",
+      "path": ".releases/1.8.1/distribution/scripts/audit_workspace_policy.sh",
+      "sha256": "ea5099683c5f0fded8deb437157f33539fd92c35e2d80aa803d3fa9266e76a4e"
+    },
+    {
+      "kind": "src",
+      "mode": "100755",
+      "path": ".releases/1.8.1/distribution/scripts/check_policy_kit_selftest.sh",
+      "sha256": "f4d93dffa085f18e94d9fff8bb5eab361c3d87d7c86a07a9edac267ae7ef10de"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/distribution/scripts/distribution_bootstrap.py",
+      "sha256": "650df8bf525e470825e3175dba15393ded8f24449ae4187aa09fe9643c57a302"
+    },
+    {
+      "kind": "src",
+      "mode": "100755",
+      "path": ".releases/1.8.1/distribution/scripts/sync_workspace_policy.sh",
+      "sha256": "7f8caae6207ef0f5acb9a5aae90a5a9ed5e108a0e769ab0fea1693667ea225dd"
+    },
+    {
+      "kind": "src",
+      "mode": "100755",
+      "path": ".releases/1.8.1/distribution/scripts/verify_policy_kit.sh",
+      "sha256": "c1fae4cf34ccb1b3b69f23dd81fed32675e8b2ded352dff64b4993d835dc8ea8"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/distribution/tools/policy_kit_distribution/__init__.py",
+      "sha256": "23b394a26448731581e105eb4fc44202a7a732f6dbc64e980427ba94d5e6f8e8"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/distribution/tools/policy_kit_distribution/activation.py",
+      "sha256": "112dabf630cb8f6f68ad12d8fb183bc60462fbf9d604cfe9d7f69105bca68b89"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/distribution/tools/policy_kit_distribution/cli.py",
+      "sha256": "c63233d362d035a8846b8026c681b507128eb6702ae2786c281d6a7ccfd776df"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/distribution/tools/policy_kit_distribution/contract.py",
+      "sha256": "2cd4e08a48c3d5182f7292048e900eb0fd00faa06dc7d2e205896b935bc5733d"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/distribution/tools/policy_kit_distribution/state.py",
+      "sha256": "40636c6eca6b1741337305a2a9a93351f59c3fa1138379ee2887151f4e2aa61f"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/distribution/tools/policy_kit_distribution/verification.py",
+      "sha256": "517b364501f38fa8db26610d8df106f8cef452656f87dbbe924aa20f7db587d2"
+    },
+    {
+      "kind": "src",
+      "mode": "100755",
+      "path": ".releases/1.8.1/payload/.governance/baseline/check_git_sanitation.sh",
+      "sha256": "8ca954fda1c9fa04565e9eece747d83f0d0257d8cdda90b18bd14471a04bd7af"
+    },
+    {
+      "kind": "src",
+      "mode": "100755",
+      "path": ".releases/1.8.1/payload/.governance/baseline/check_policy_compliance.sh",
+      "sha256": "9ca9725f88a31253d556c2e2a557264f66ddb45870e4cd5dcc87efd3ea9b7484"
+    },
+    {
+      "kind": "src",
+      "mode": "100755",
+      "path": ".releases/1.8.1/payload/.governance/baseline/check_policy_template_drift.sh",
+      "sha256": "2cf3d14d7ffdfa710aff8b68c7e515f5a94f1c446095a1183d3a138018710a4f"
+    },
+    {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/.governance/baseline/legacy-policy-version.json",
+      "sha256": "ddba9b636e255b8c1566986a8885dc29116e4630c8350b865a5754c43ac078d4"
+    },
+    {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/.governance/baseline/legacy-required-files.json",
+      "sha256": "0b7df49182645ff99b110603cff40c122270d39835f0449bc4f6c4a7403265d1"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/.governance/baseline/sanitation.gitignore",
+      "sha256": "b762f835e84dfb8548ebb81705a25d037973420e6c447e91c8e984bf8bf37246"
+    },
+    {
+      "kind": "src",
+      "mode": "100755",
+      "path": ".releases/1.8.1/payload/.governance/baseline/update_policy_template_hashes.sh",
+      "sha256": "08941c1b727a8ff3acc37a69690068990f11311488a4218725ba74899a64b245"
+    },
+    {
+      "kind": "src",
+      "mode": "100755",
+      "path": ".releases/1.8.1/payload/.governance/baseline/verify_template.sh",
+      "sha256": "c60d4ac60129a92d67504b3aac4dd4715b0dd1f53689e6741e63566b831bcf20"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/.ruff.toml",
+      "sha256": "4d718451bf60d94a8a997f51479858eb370c6233cd1b58a19d9a9a5d7a72ffe4"
+    },
+    {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/MANIFEST.json",
+      "sha256": "dcecc22094fd63f22e2d42853c59d95d6a7bd29d09fe9c3d54554847b3b3ab6b"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/VERSION",
+      "sha256": "44e161e4495cac2cf7858043e9e6418e9579f0ddcfae826f9a372622968ce066"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/__init__.py",
+      "sha256": "1fb1cf8fa4b59c720c34c4313607eb8394cce3a47ada1e8f0cd43884f1884e4b"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/baseline.py",
+      "sha256": "9462749855193726250cf09945b41dc09d6bb8369242d6b48719790d2b897f32"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/ci_status.py",
+      "sha256": "0bab8ad892e63900996c9b0a3366c44948301fdaf279c618e0989a8b3b4393b8"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/cli/__init__.py",
+      "sha256": "678afe53eed8737dbf991dba82d1e2c626af9341a54e35e5da1d61c46d67240e"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/cli/bootstrap.py",
+      "sha256": "d59acae60fad6ed7abb100b6158ff860866efe825fa0abd0f1451cfbe820d360"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/cli/gov.py",
+      "sha256": "c6c20d34132879c2c7cb5deace4a242900d0519524306506e3a950d174b82ac4"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/command_policy.py",
+      "sha256": "092453e97c6a0991aed3b4d5372e3373c1b72c90a21d9d583fd64a518e696a5c"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/dependency_compatibility.py",
+      "sha256": "6c6d85c500118b7ed3a2f03ec5bf222af49877343492e0b561e5898c59ffbc1f"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/diagnostics.py",
+      "sha256": "d01d5841c55904cfbf7b0ea8692e21e664f36b4677b4ee3c5578197cfa27122f"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/execution_policy.py",
+      "sha256": "dfa056f1849b9c4f2b1f9d062559197de074de52b3ae0b6e6033838c4ca443bd"
+    },
+    {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/field-usage.json",
+      "sha256": "f17bacff1c86f7d616500414e6f0d96c78c3ecacf1a7e877d8b6bae896ce6f22"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/fleet.py",
+      "sha256": "60dd5d9dd80503d6c2d541890d54eafa13a8fc0995816a5462954c6d00446902"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/fleet_execution.py",
+      "sha256": "39e36f923f78901198338febe39838c81d78f9a5d69facc902704bcedb166e80"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/fleet_support.py",
+      "sha256": "806f90e6d326601ce6aff4cbb3227d4a307f9493732635a44058cbd0fea3eb90"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/hook_adapters.py",
+      "sha256": "c7449f019387209ff020320f8fac127e0f5b36957a40f7f484f00e7d1d74b0f4"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/hooks/codex_no_polling.rules",
+      "sha256": "1e7f5301f63ee73af8128517b33ffbcae359b1c957e32f62bbaae80492fa5ccb"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/hooks/no_polling.py",
+      "sha256": "f68aeba9adf901f9cadc5794dd4685bc6865c2ef8a4e7001fac23c6c23b121ef"
+    },
+    {
+      "kind": "src",
+      "mode": "100755",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/hooks/no_polling.sh",
+      "sha256": "2af40eedf4647f7fc6c167312420da83cd264b978920632b1ed829c10df0cfa6"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/operation_supervisor.py",
+      "sha256": "bb69f9af89b15266149da4297b77b278a3f47c36a4a1c127839cb7442b8f52ea"
+    },
+    {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/policies/execution.json",
+      "sha256": "83c907e29b3a8b16bb974bad36a0700ad737864c4c90ee02614d1e2a818ee9fd"
+    },
+    {
+      "kind": "docs",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/policies/execution.md",
+      "sha256": "8980a5e607ae9d4d13befb07a901ad0d0b2c784b54ce630f62adb59d6bc62716"
+    },
+    {
+      "kind": "docs",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/policies/external_checkouts.md",
+      "sha256": "1a8eec92069aa6706203dd636a3542a2bcdfbc350bee1554322b334de87a6ef9"
+    },
+    {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/policies/operation_profiles.json",
+      "sha256": "6518d2e66b86af7883db56be9813d5bfddc40020abf918f9e6654c30434dfbfd"
+    },
+    {
+      "kind": "docs",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/policies/ownership.md",
+      "sha256": "5bb27b467b6a17bb2752fc8f0228a19639ea7fa1e67fd7a84ab801b784a26866"
+    },
+    {
+      "kind": "docs",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/policies/workspace_baseline.md",
+      "sha256": "3404cf6c442fc31dd09283bb7b563762abbdca908f78fbacae7c899466a7da58"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/release.py",
+      "sha256": "a8704b52b86e304b15d5cc8be7e28a7db8ce27919504635d897aadf8f78d17a6"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/resolver/__init__.py",
+      "sha256": "440803a71e46a5cabc5cf01367b420ccb700a301e99552e6c46944425a6cf90d"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/resolver/core.py",
+      "sha256": "f5ad9fcf283f8354d5305cf8651187efb4e9c1697b2e188b9850431f106007ab"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/resolver/roles.py",
+      "sha256": "58a9dfc266671690cf5cd32ebfdb4a5ebeecb1c99db26dc1ee5d1be142e0d5d3"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/runtime_floor.py",
+      "sha256": "7338eed1adaf8c9500f343af16f3f20715140b849ceb748762c9c430da9b5237"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/sanitation.py",
+      "sha256": "7ea7a82797d25cfc0f4c772451371a48aae1c988aae9508ea330635af07961d7"
+    },
+    {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/schemas/project.schema.json",
+      "sha256": "73507ea567aee573b3b144f9529b6e8aabdf90d8bc11ce7a833140a1b37a7b0f"
+    },
+    {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/schemas/telemetry-event.v1.schema.json",
+      "sha256": "27e6521457dd8631ee4ce07009f2fac02808e7a06df8d0eb4f6bc7d2c71217f4"
+    },
+    {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/schemas/workspace-local.schema.json",
+      "sha256": "f2b0ee8184742a47973002d15ba71f5273bba94379734d77d8a47087e458494f"
+    },
+    {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/schemas/workspace.schema.json",
+      "sha256": "d0b35faeadf88ec9885c7fcca54748dfabb736804e0e4bb74ee8320a580fce51"
+    },
+    {
+      "kind": "docs",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/skills/governance-context/SKILL.md",
+      "sha256": "f1c6a3b347f9f94bc32e8d82f3ac018141d4a084489e9fb2dbd2094631a55ecc"
+    },
+    {
+      "kind": "docs",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/skills/governance-maintenance/SKILL.md",
+      "sha256": "e7bdc0a09bc90bcd6ef2b2a9b6add03a68bb429208d86dd3dab03e7374a4e03e"
+    },
+    {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/synthetic-fixtures/contradictions.json",
+      "sha256": "6ae4d4aa8ed59412c34d053379078fd35f12acc2904c55f23757bee016243bbc"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/telemetry.py",
+      "sha256": "a0edf4cee4985a986f407b3c2c76a9eedc9ddc4c507168fe15cadc8cb165bfa6"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/validators/__init__.py",
+      "sha256": "db0c3b6034382e016c5f3a9926536304daa48b1775424a2cf37412be5f081af7"
+    },
+    {
+      "kind": "src",
+      "mode": "100644",
+      "path": ".releases/1.8.1/payload/tools/workspace_governance/validators/core.py",
+      "sha256": "ee04248f012089c61152944921b74eac19831063cd4e8a9c42ee02ee06995d50"
+    },
+    {
+      "kind": "governance",
+      "mode": "100644",
+      "path": ".releases/1.8.1/release.json",
+      "sha256": "5379e20bca19304d8e077a34217552027d2aeb57061750065fcc590ef77f4d79"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/.ruff.toml",
+      "sha256": "71ce55466668ebb8e2c2c707052a2e0061b2ccabaffe5e9146929da581893cf7"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/README.md",
+      "sha256": "ff08fd95015771254c258e7382cda72467e24bdc7bbba0932f164bfac52d867e"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/distribution/test_activation.py",
+      "sha256": "3562e91344d0a70899c80d077e0eafb7203a10eb5f443fa7607d0d746508f4e8"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/distribution/test_bootstrap_selection.py",
+      "sha256": "6ab42edc5e761d2cf21a3ba7175cb357eff5b403f6f967bea80377647ba2de23"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/distribution/test_runtime_style_gate.py",
+      "sha256": "844fb6c32bbb2c26fafc566a3c8371b02435e1d25a1dea551ff4bf13668ae07b"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/distribution/test_state.py",
+      "sha256": "fc0784022f8ae9f3a03005a1f877161c4924bbfee0ba66eedf74ef27dc1de9aa"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/distribution/test_verification_contract.py",
+      "sha256": "3f94bec430e591a664b94e47b0233a67d1c7dd8e3cc9296076767148934a368b"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/verification-dependencies.json",
+      "sha256": "633aae38688db537a23aeb6a2d4ee2f03081602bbfb08a399676e2f9a3084387"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/conftest.py",
+      "sha256": "53781dfb8d7f1a9b5dd0c3aea24efb8ef54b807d592adbb5d631ed3410d8e302"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/support.py",
+      "sha256": "c36213514171d4bb1a86ecf8edc5431d0f48b744de5105bf0229b02e7908a4a7"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_component_origins.py",
+      "sha256": "fd1f43a08cf09bad98c1b544ed4cc3cb24a0363f8470026cd4622341faa8e496"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_consumed_fields.py",
+      "sha256": "3015c83055bc3f3a037099ae27994d8c5ec69bded774d375dc3ee0656d4341c1"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_diagnostics.py",
+      "sha256": "6e6f9abb803f6ec39ca663cf32339f46d5f8f8ed2f39e7541d17b35befe152b4"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_distribution_cli.py",
+      "sha256": "f51d5eee50cec4e79f9afd05bb8844cd72df15b984e1185b0e9ac262a4f032ce"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_execution_completion.py",
+      "sha256": "9e83bf3eb93fb7eff19d284da8e7c0cd0ee5148bf011d1c45b5916e8f2a94f6e"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_fleet.py",
+      "sha256": "e6c5e01823b513160b2d8c5ef7ac76c11c9ef888c73336578a6ccfecf3dd59bf"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_fleet_hardening.py",
+      "sha256": "f5082e025d3874d7a264af85421394600912a3e9d5ce1bb9b69fd4c224201fa7"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_fleet_metadata_projection.py",
+      "sha256": "73be05a178dd505966057f488f8a05828e4fc2a6356dd0b7ba6dbca45cac9f2a"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_inherited_overlay.py",
+      "sha256": "c6596817f61027f022e462644927ea9f40bded838fc446ec2c091e5d758b77e4"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_integrity.py",
+      "sha256": "f052ff1bd4485becbf3766f11de9e90f7ef8f222bc5e159d68e17b1862844ad1"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_make_gate_ordering.py",
+      "sha256": "3fa277f4a8eb0f4b2e5a36a88cca2d354a478e165401a3312ebb0ee3ae50fcd4"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_manifest_contracts.py",
+      "sha256": "7c28a258231bc45c317f21b03b2b2e2f6b2d0c2e58ad3ae539890908c481c128"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_multi_worktree.py",
+      "sha256": "d55c320e35a2f1bed419c6145dff3a504e56279d30f201866a76a7c626cb5874"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_no_polling.py",
+      "sha256": "408466d2a4d2a4a5509aec3e573fe3ce2559504705da7e83ad53572595f6b2b4"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_operation_supervision.py",
+      "sha256": "1a7a2a13dd4d0c2d7326adfa706c2ea566812bced09d8c5a978a12c0a53d06ea"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_portable_consumers.py",
+      "sha256": "0019f59617f42526ccd80d61f7289c653064a664d2f065c562b18aedb495936d"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_portable_sanitation.py",
+      "sha256": "a0b503bf149ba5c600d6cfa3a7202ae096d25ec6a8cc5218deb1b4baa6517de3"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_project_independence.py",
+      "sha256": "ea17d305ed2e957e7cb5e5bc632163f305b2f40795ef82db298c9ac10ee8818b"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_release_export.py",
+      "sha256": "eb31f2233fc587b57f35f5667d8db6dc890a27830880ac1b0d3a3593085da55f"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_renderer_grouping.py",
+      "sha256": "f13084345eb5b794fa4409872749981b46f7bb953357d3410b9158f5f21b7bd5"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_runtime_floor.py",
+      "sha256": "fe0829f032308e476c1722d78f746c7155818b6b8719bc02c850a57bd850f98d"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_skill_adapters.py",
+      "sha256": "c7f353a2674b31173ffa4eeeb775b7549ef7680add5102fe865e4840f128a8a0"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_source_binding.py",
+      "sha256": "17ae7efa957f69e08785b5f4b6e521864196a0ba84388e9aff7e2b727b644299"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_telemetry.py",
+      "sha256": "f088ebcf150793395ef3742315f80b8e482b8dc04a70926e31bce57087ec32fc"
+    },
+    {
+      "kind": "test",
+      "mode": "100644",
+      "path": ".releases/1.8.1/verification/tests/workspace_governance/test_telemetry_readiness.py",
+      "sha256": "f353e88bd679ef7a267dc6d0a4a622841d6132ca9a3bc491d7d92e850fc969ae"
+    },
+    {
       "kind": "docs",
       "mode": "100644",
       "path": "OPEN_WORK.md",
-      "sha256": "541ffdd663b83494d81dcffc19573c74ee34f3f15496dc2ce9e948df8da96173"
+      "sha256": "89aa27f4b22d8206b78145d882c8bb6b8c81b089eb7a9ea3b164e6b452534d0c"
     },
     {
       "kind": "governance",
@@ -5536,7 +6130,7 @@
       "kind": "test",
       "mode": "100644",
       "path": "tests/workspace_governance/test_operation_supervision.py",
-      "sha256": "6f002db0aa6771c5c4494036062e3aa2470d74b1df96fb8a9aa1c426df306df4"
+      "sha256": "1a7a2a13dd4d0c2d7326adfa706c2ea566812bced09d8c5a978a12c0a53d06ea"
     },
     {
       "kind": "test",
@@ -5560,19 +6154,19 @@
       "kind": "src",
       "mode": "100644",
       "path": "tools/publication/verify.py",
-      "sha256": "2f7a97dfdfccc9e74823aea61feeee49cd0e4e20f624096bae397d8289859fa8"
+      "sha256": "a777712ceae2b986ed90320005546a27b28dc0535e5a374489751cddd019e85d"
     },
     {
       "kind": "src",
       "mode": "100644",
       "path": "tools/workspace_governance/MANIFEST.json",
-      "sha256": "ff3727ed6e1a241574106a00f94a1cf15b6b8b4f2fe065b6e97b13691561ce0f"
+      "sha256": "dcecc22094fd63f22e2d42853c59d95d6a7bd29d09fe9c3d54554847b3b3ab6b"
     },
     {
       "kind": "src",
       "mode": "100644",
       "path": "tools/workspace_governance/VERSION",
-      "sha256": "59854984853104df5c353e2f681a15fc7924742f9a2e468c29af248dce45ce03"
+      "sha256": "44e161e4495cac2cf7858043e9e6418e9579f0ddcfae826f9a372622968ce066"
     },
     {
       "kind": "src",
@@ -5644,7 +6238,7 @@
       "kind": "src",
       "mode": "100644",
       "path": "tools/workspace_governance/operation_supervisor.py",
-      "sha256": "c4872bcf986652b73ecc28720ed93f4aebae65ad3b8da2291eb559d39b4607d0"
+      "sha256": "bb69f9af89b15266149da4297b77b278a3f47c36a4a1c127839cb7442b8f52ea"
     },
     {
       "kind": "src",
