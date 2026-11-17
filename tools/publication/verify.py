@@ -99,6 +99,7 @@ SYNTHETIC_SOURCE_PATHS = {
             "1.6.2",
             "1.7.0",
             "1.8.0",
+            "1.8.1",
         )
     },
 }
@@ -486,7 +487,14 @@ class Scanner:
             if full_history
             else set()
         )
+        seen_trees = set()
         for commit in commits:
+            legacy = commit in old
+            tree_id = self.git("rev-parse", commit + "^{tree}").strip()
+            key = (tree_id, legacy)
+            if key in seen_trees:
+                continue
+            seen_trees.add(key)
             tree = self.tree(commit)
             manifest = tree.get(MANIFEST)
             artifacts = (

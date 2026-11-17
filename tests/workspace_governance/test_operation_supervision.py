@@ -195,6 +195,26 @@ def test_real_long_local_job_needs_one_call_and_one_request(consumer, state):
     assert "finished" in report["log_tail"]
 
 
+@pytest.mark.parametrize(
+    ("text", "status", "code"),
+    [
+        ("0\n", SUCCEEDED, 0),
+        ("3", ops.FAILED, 3),
+        ("-15", ops.FAILED, -15),
+        (" 7 ", ops.FAILED, 7),
+        ("killed", ops.UNKNOWN, None),
+        ("", ops.UNKNOWN, None),
+    ],
+)
+def test_local_exit_file_parses_with_int_not_digit_checks(tmp_path, text, status, code):
+    exit_file = tmp_path / "exit"
+    exit_file.write_text(text, encoding="utf-8")
+    record = {"artifacts": {"exit_file": str(exit_file)}, "identity": {}}
+    observed = ops.LocalProcessService().status(record)
+    assert observed.state == status
+    assert observed.exit_status == code
+
+
 # ------------------------------------- 2. long jobs: one submission, one wait
 
 

@@ -170,3 +170,21 @@ verification separately. Stop rollout on failed acceptance and preserve evidence
   adapter for continuation and background-output reads; a combined
   lifecycle/v3 successor before any root coordination adoption. A pack version
   change alone does not establish harness compliance.
+
+## Supervised completion 1.8.1 (2026-11-16)
+
+- Runtime 1.0.1, revision `v1.0-supervised-completion-2`. 1.8.0 was exported,
+  activated and installed in the Tet4D `tet4d-acceptance` worktree, where
+  Tet4D's own `wheel_reuse_rules` (`parsing_validation_reuse`,
+  `custom_numeric_text_parser`) rejected `LocalProcessService.status`: it
+  parsed the exit file with `isdigit` plus `int`. 1.8.1 parses with `int` and
+  `ValueError`, unchanged in behaviour, and adds a parametrized exit-file test.
+- Consumer note, not a pack change: Tet4D checkouts adopting 1.7.0 or later
+  also need the one-line schema-2 synthetic sanitation output in
+  `tests/unit/workspace_governance/test_native_integration.py`, and their
+  generated `docs/CONFIGURATION_REFERENCE.md` and `CURRENT_STATE.md` refreshed
+  by their own generators.
+
+- Owner-approved 1.8.1 activation: candidate kit gate passed (932 tests, lint and
+  formatting); Tet4D adoption uses guarded receipts and retains separate product,
+  live-adapter and fleet acceptance duties. Other consumers are not migrated.

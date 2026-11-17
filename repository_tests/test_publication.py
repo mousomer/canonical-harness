@@ -256,3 +256,32 @@ def test_existing_synthetic_source_exception_binds_rule_path_and_exact_bytes(
     target.write_bytes(target.read_bytes() + b"\n# Changed synthetic source\n")
     manifest(root, base, [name])
     assert "absolute_home" in codes(PUBLICATION.scan(root, base))
+
+
+def test_identical_commit_trees_fit_the_entry_budget_without_skipping_commits(
+    repository,
+):
+    root, base = repository
+    (root / "software.py").write_text("VALUE = 1\n")
+    manifest(root, base, ["software.py"])
+    git(root, "add", ".")
+    git(root, "commit", "-m", "Add synthetic software")
+    for index in range(20):
+        git(root, "commit", "--allow-empty", "-m", f"Synthetic unchanged tree {index}")
+    result = PUBLICATION.scan(root, base, limits=PUBLICATION.Limits(entries=16))
+    assert result["ok"], result
+    assert result["reachable_commits_checked"] == 21
+    assert result["entries_checked"] <= 16
+
+
+def test_duplicate_tree_does_not_skip_secret_in_commit_metadata(repository):
+    root, base = repository
+    (root / "software.py").write_text("VALUE = 1\n")
+    manifest(root, base, ["software.py"])
+    git(root, "add", ".")
+    git(root, "commit", "-m", "Add synthetic software")
+    token = "ghp_" + "s" * 36
+    git(root, "commit", "--allow-empty", "-m", "Synthetic credential " + token)
+    result = PUBLICATION.scan(root, base, limits=PUBLICATION.Limits(entries=16))
+    assert not result["ok"] and "credential_token" in codes(result)
+    assert token not in json.dumps(result)

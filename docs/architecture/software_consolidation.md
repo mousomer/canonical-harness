@@ -19,7 +19,11 @@ history is merged. Original source locations and external data remain intact.
 Publication checks cover the worktree, index and newly reachable history,
 including commit/tag messages. All source metadata remains subject to content
 checks; a filename extension or an ignored directory is not a safety exception.
-Limits and input errors reject rather than silently skip coverage.
+Limits and input errors reject rather than silently skip coverage. Identical
+historical trees are content-checked once per tree identity and legacy/current
+classification; every reachable commit/tag still receives metadata inspection.
+The commit, object, entry, byte and time bounds remain unchanged. This avoids
+charging identical merge/empty-commit trees repeatedly against the entry budget.
 
 Source review includes embedded numeric measurements as well as serialized
 artifacts. Routing reports derive counts and byte totals only from explicitly
